@@ -9,8 +9,8 @@
     "dry_run": true,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
-        "buy": 10,
-        "sell": 30,
+        "buy": 20,
+        "sell": 40,
         "unit": "minutes"
     },
     "bid_strategy": {
@@ -30,8 +30,8 @@
     },
     "exchange": {
         "name": "binance",
-        "key": "",
-        "secret": "",
+        "key": "FGecpSquGJFuS3bIoK73z8BoNBlz5H5X5gUAOOQ44eI8evO7kAnKYqEDpWlATZDl",
+        "secret": "AHQWtdbAKSgEUGwHM6F6w6fFlhkMASKyMldFbryi8XUmCWnsr2ugsU05qQ83xs4U",
         "ccxt_config": {},
         "ccxt_async_config": {},
         "pair_whitelist": [
@@ -51,7 +51,7 @@
             "method": "VolumePairList",
             "number_assets": 80,
             "sort_key": "quoteVolume",
-            "refresh_period": 1800
+            "refresh_period": 600
         },
 	{"method": "AgeFilter", "min_days_listed": 14},
 	{"method": "SpreadFilter", "max_spread_ratio": 0.005},
@@ -59,14 +59,14 @@
 		"method": "RangeStabilityFilter",
 		"lookback_days": 3,
 		"min_rate_of_change": 0.05,
-		"refresh_period": 1800
+		"refresh_period": 600
 	},
 	{
 		"method": "VolatilityFilter",
 		"lookback_days": 3,
 		"min_volatility": 0.02,
 		"max_volatility": 0.75,
-		"refresh_period": 43200
+		"refresh_period": 14400
 	},
         {"method": "ShuffleFilter"}
     ],
@@ -104,6 +104,6 @@
     "initial_state": "running",
     "forcebuy_enable": false,
     "internals": {
-        "process_throttle_secs": 5
+        "process_throttle_secs": 3
     }
 }
