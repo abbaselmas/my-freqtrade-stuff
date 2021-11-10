@@ -1,16 +1,17 @@
 
 {
-    "max_open_trades": 5,
+    "max_open_trades": 4,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
     "dry_run": true,
+    "dry_run_wallet": 100,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
-        "buy": 20,
-        "sell": 40,
+        "buy": 10,
+        "sell": 30,
         "unit": "minutes"
     },
     "bid_strategy": {
@@ -49,9 +50,9 @@
     "pairlists": [
         {
             "method": "VolumePairList",
-            "number_assets": 80,
+            "number_assets": 100,
             "sort_key": "quoteVolume",
-            "refresh_period": 600
+            "refresh_period": 1200
         },
 	{"method": "AgeFilter", "min_days_listed": 14},
 	{"method": "SpreadFilter", "max_spread_ratio": 0.005},
@@ -87,7 +88,12 @@
     "telegram": {
         "enabled": true,
         "token": "2056808401:AAH8fDohxbxzNuBoYD7B2iZ4zq3DCe9UXlc",
-        "chat_id": "1050789789"
+        "chat_id": "1050789789",
+	"keyboard": [
+            ["/daily", "/stats", "/balance", "/profit"],
+            ["/status table", "/performance"],
+            ["/reload_config", "/count", "/logs"]
+        ]
     },
     "api_server": {
         "enabled": true,
