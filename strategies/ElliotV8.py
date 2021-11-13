@@ -44,7 +44,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 
 
 
-class Elliotv8(IStrategy):
+class ElliotV8(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:

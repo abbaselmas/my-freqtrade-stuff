@@ -153,7 +153,7 @@ class SMAOffsetProtectOptV1(IStrategy):
 
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
-
+        
         # RSI
         dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
 

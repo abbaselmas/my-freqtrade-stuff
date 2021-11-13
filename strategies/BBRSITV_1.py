@@ -1,12 +1,12 @@
 # --- Do not remove these libs ---
 from freqtrade.strategy.interface import IStrategy
-from pandas import DataFrame
+from pandas import DataFrame, Series
 import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import numpy as np
-from freqtrade.strategy import DecimalParameter, IntParameter
-
-
+from freqtrade.strategy import DecimalParameter, IntParameter, stoploss_from_open
+from datetime import datetime, timedelta
+from functools import reduce
 
 # --------------------------------
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -16,6 +16,18 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['close'] * 100
     return emadif
 
+# Volume Weighted Moving Average
+def vwma(dataframe: DataFrame, length: int = 10):
+    """Indicator: Volume Weighted Moving Average (VWMA)"""
+    # Calculate Result
+    pv = dataframe['close'] * dataframe['volume']
+    vwma = Series(ta.SMA(pv, timeperiod=length) / ta.SMA(dataframe['volume'], timeperiod=length))
+    return vwma
+
+# Modified Elder Ray Index
+def moderi(dataframe: DataFrame, len_slow_ma: int = 32) -> Series:
+    slow_ma = Series(ta.EMA(vwma(dataframe, length=len_slow_ma), timeperiod=len_slow_ma))
+    return slow_ma >= slow_ma.shift(1)  # we just need true & false for ERI trend
 
 class BBRSITV(IStrategy):
     INTERFACE_VERSION = 2
@@ -57,20 +69,20 @@ class BBRSITV(IStrategy):
     startup_candle_count = 30
 
     protections = [
-        # 	{
-        # 		"method": "StoplossGuard",
-        # 		"lookback_period_candles": 12,
-        # 		"trade_limit": 1,
-        # 		"stop_duration_candles": 6,
-        # 		"only_per_pair": True
-        # 	},
-        # 	{
-        # 		"method": "StoplossGuard",
-        # 		"lookback_period_candles": 12,
-        # 		"trade_limit": 2,
-        # 		"stop_duration_candles": 6,
-        # 		"only_per_pair": False
-        # 	},
+        #   {
+        #       "method": "StoplossGuard",
+        #       "lookback_period_candles": 12,
+        #       "trade_limit": 1,
+        #       "stop_duration_candles": 6,
+        #       "only_per_pair": True
+        #   },
+        #   {
+        #       "method": "StoplossGuard",
+        #       "lookback_period_candles": 12,
+        #       "trade_limit": 2,
+        #       "stop_duration_candles": 6,
+        #       "only_per_pair": False
+        #   },
         {
             "method": "LowProfitPairs",
             "lookback_period_candles": 60,
@@ -83,7 +95,7 @@ class BBRSITV(IStrategy):
             "lookback_period_candles": 24,
             "trade_limit": 1,
             "stop_duration_candles": 12,
-            "max_allowed_drawdown": 0.14
+            "max_allowed_drawdown": 0.2
         },
     ]
 
@@ -120,6 +132,7 @@ class BBRSITV(IStrategy):
         # // Условия работы скрипта
         # current_rsi = rsi(src, for_rsi) // Текущее положение индикатора RSI
         dataframe['rsi'] = ta.RSI(dataframe[src], for_rsi)
+        dataframe['rsi_4'] = ta.RSI(dataframe[src], 4)
         if self.config['runmode'].value == 'hyperopt':
             for for_ma in range(5, 81):
                 # basis = ema(current_rsi, for_ma)
@@ -183,7 +196,7 @@ class BBRSITV(IStrategy):
                 # disp_up = basis + ((basis + dev * for_mult) - (basis - dev * for_mult)) * for_sigma) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (сверху)
                 # disp_up = basis + (basis + dev * for_mult - basis + dev * for_mult)) * for_sigma) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (сверху)
                 # disp_up = basis + (2 * dev * for_sigma * for_mult) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (сверху)
-                qtpylib.crossed_below(dataframe['rsi'], (dataframe[f'basis_{self.for_ma_length.value}'] - (dataframe[f'dev_{self.for_ma_length.value}'] * self.for_sigma.value))) &
+                (dataframe['rsi'] < (dataframe[f'basis_{self.for_ma_length.value}'] - (dataframe[f'dev_{self.for_ma_length.value}'] * self.for_sigma.value))) &
                 (dataframe['EWO'] >  self.ewo_high.value) &
                 (dataframe['volume'] > 0)
 
@@ -200,7 +213,7 @@ class BBRSITV(IStrategy):
                     # lower = basis - dev
                     # disp_down = basis - ((upper - lower) * for_sigma) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (снизу)
                     # disp_down = basis - ((2* dev * for_sigma) // Минимально-допустимый порог в области мувинга, который должен преодолеть RSI (снизу)
-                    qtpylib.crossed_above(dataframe['rsi'], dataframe[f'basis_{self.for_ma_length_sell.value}'] + ((dataframe[f'dev_{self.for_ma_length_sell.value}'] * self.for_sigma_sell.value)))
+                    (dataframe['rsi'] > dataframe[f'basis_{self.for_ma_length_sell.value}'] + ((dataframe[f'dev_{self.for_ma_length_sell.value}'] * self.for_sigma_sell.value)))
                 ) &
                 (dataframe['volume'] > 0)
 
@@ -208,6 +221,43 @@ class BBRSITV(IStrategy):
             'sell'] = 1
         return dataframe
 
+class BBRSITV4(BBRSITV):
+    minimal_roi = {
+        "0": 0.07
+    }
+    ignore_roi_if_buy_signal = True
+    startup_candle_count = 400
+
+    stoploss = -0.3  # value loaded from strategy
+
+    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[
+            (
+                (dataframe['rsi'] < (dataframe[f'basis_{self.for_ma_length.value}'] - (dataframe[f'dev_{self.for_ma_length.value}'] * self.for_sigma.value)))
+                &
+                (
+                    (
+                        (dataframe['EWO'] > self.ewo_high.value)
+                        &
+                        (dataframe['EWO'] < 10)
+                    )
+                    |
+                    (
+                        (dataframe['EWO'] >= 10)
+                        &
+                        (dataframe['rsi'] < 40)
+                    )
+                )
+                &
+                (dataframe['rsi_4'] < 25)
+                &
+                (dataframe['volume'] > 0)
+                # &
+                # (dataframe["roc_bbwidth_max"] < 70)
+            ),
+            'buy'] = 1
+
+        return dataframe
 
 class BBRSITV1(BBRSITV):
     """
@@ -249,44 +299,6 @@ class BBRSITV1(BBRSITV):
     trailing_stop_positive = 0.005  # value loaded from strategy
     trailing_stop_positive_offset = 0.025  # value loaded from strategy
     trailing_only_offset_is_reached = True  # value loaded from strategy
-
-
-
-class BBRSITV1_SL20(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.20  # value loaded from strategy
-
-
-
-class BBRSITV1_SL18(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.18  # value loaded from strategy
-
-
-class BBRSITV1_SL15(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.15  # value loaded from strategy
-
-
-class BBRSITV1_SL12(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.12  # value loaded from strategy
-
-
-class BBRSITV1_SL10(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.1  # value loaded from strategy
-
-
-class BBRSITV1_SL08(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.08  # value loaded from strategy
-
-
-class BBRSITV1_SL06(BBRSITV1):
-    # Stoploss:
-    stoploss = -0.06  # value loaded from strategy
-
 
 class BBRSITV2(BBRSITV):
     """
@@ -368,3 +380,87 @@ class BBRSITV3(BBRSITV):
     trailing_stop_positive = 0.078
     trailing_stop_positive_offset = 0.095
     trailing_only_offset_is_reached = False
+    
+class BBRSITV5(BBRSITV):
+    minimal_roi = {
+        "0": 0.04
+    }
+    ignore_roi_if_buy_signal = True
+    startup_candle_count = 400
+    use_custom_stoploss = True
+
+    stoploss = -0.3  # value loaded from strategy
+    sell_params = {
+        ##
+        "pHSL": -0.178,
+        "pPF_1": 0.01,
+        "pPF_2": 0.048,
+        "pSL_1": 0.009,
+        "pSL_2": 0.043,
+    }
+    
+    is_optimize_trailing = True
+    pHSL = DecimalParameter(-0.200, -0.040, default=-0.08, decimals=3, space='sell', optimize=is_optimize_trailing , load=True)
+    # profit threshold 1, trigger point, SL_1 is used
+    pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', optimize=is_optimize_trailing , load=True)
+    pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', optimize=is_optimize_trailing , load=True)
+
+    # profit threshold 2, SL_2 is used
+    pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', optimize=is_optimize_trailing , load=True)
+    pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', optimize=is_optimize_trailing , load=True)
+
+    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime,
+                        current_rate: float, current_profit: float, **kwargs) -> float:
+
+        # hard stoploss profit
+        HSL = self.pHSL.value
+        PF_1 = self.pPF_1.value
+        SL_1 = self.pSL_1.value
+        PF_2 = self.pPF_2.value
+        SL_2 = self.pSL_2.value
+
+        # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
+        # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
+        # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
+
+        if (current_profit > PF_2):
+            sl_profit = SL_2 + (current_profit - PF_2)
+        elif (current_profit > PF_1):
+            sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
+        else:
+            sl_profit = HSL
+
+        # Only for hyperopt invalid return
+        if (sl_profit >= current_profit):
+            return -0.99
+
+        return stoploss_from_open(sl_profit, current_profit)
+
+    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[
+            (
+                (dataframe['rsi'] < (dataframe[f'basis_{self.for_ma_length.value}'] - (dataframe[f'dev_{self.for_ma_length.value}'] * self.for_sigma.value)))
+                &
+                (
+                    (
+                        (dataframe['EWO'] > self.ewo_high.value)
+                        &
+                        (dataframe['EWO'] < 10)
+                    )
+                    |
+                    (
+                        (dataframe['EWO'] >= 10)
+                        &
+                        (dataframe['rsi'] < 40)
+                    )
+                )
+                &
+                (dataframe['rsi_4'] < 25)
+                &
+                (dataframe['volume'] > 0)
+                # &
+                # (dataframe["roc_bbwidth_max"] < 70)
+            ),
+            'buy'] = 1
+
+        return dataframe
