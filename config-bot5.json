@@ -1,3 +1,4 @@
+
 {
     "max_open_trades": 4,
     "stake_currency": "USDT",
@@ -5,7 +6,7 @@
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
-    "dry_run": false,
+    "dry_run": true,
     "dry_run_wallet": 100,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
@@ -28,9 +29,6 @@
         "use_order_book": true,
         "order_book_top": 1
     },
-    "exchange": {
-	"name": "binance"
-    },
     "edge": {
         "enabled": false,
         "process_throttle_secs": 3600,
@@ -46,46 +44,26 @@
         "remove_pumps": false
     },
     "telegram": {
-        "enabled": true,
-	"token": "",
-	"chat_id": "",
-        "keyboard": [
-            [
-                "/start",
-                "/stop",
-                "/stopbuy"
-            ],
-            [
-                "/trades",
-                "/profit",
-                "/status table"
-            ],
-            [
-                "/balance",
-                "/stats",
-                "/logs"
-            ],
-            [
-                "/show_config",
-                "/reload_config"
-            ]
-        ]
+        "enabled": false,
+        "token": "",
+        "chat_id": ""
     },
     "api_server": {
         "enabled": true,
         "listen_ip_address": "127.0.0.1",
-        "listen_port": 8080,
+        "listen_port": 8085,
         "verbosity": "error",
         "enable_openapi": false,
-        "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d9",
-        "CORS_origins": [],
-        "username": "freqtrader",
+        "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d8",
+        "CORS_origins": ["http://localhost:8081"],
+        "username": "freqtrader5",
         "password": "73"
     },
-    "bot_name": "freqtrade",
+    "bot_name": "freqtrade5",
     "initial_state": "running",
     "forcebuy_enable": false,
     "internals": {
         "process_throttle_secs": 3
-    }
+    },
+    "db_url": "sqlite:///bot5.sqlite"
 }
