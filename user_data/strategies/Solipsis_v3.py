@@ -36,7 +36,7 @@ and the rest of the community. Also, please don't nag us with a million question
 We take no responsibility for any success or failure you have using this strategy.
 """
 
-class Solipsis3(IStrategy):
+class Solipsis_v3(IStrategy):
 
     # Recommended for USD/USDT/etc.
     timeframe = '5m'
@@ -533,26 +533,3 @@ class Solipsis3(IStrategy):
 
         return trade_data
 
-# Sub-strategy with parameters specific to BTC stake
-class Solipsis3_BTC(Solipsis3):
-
-    timeframe = '15m'
-    inf_timeframe = '1h'
-
-    minimal_roi = {
-        "0": 0.01,
-        "720": 0.005,
-        "1440": 0
-    }
-
-# Sub-strategy with parameters specific to ETH stake
-class Solipsis3_ETH(Solipsis3):
-
-    timeframe = '15m'
-    inf_timeframe = '1h'
-
-    minimal_roi = {
-        "0": 0.01,
-        "720": 0.005,
-        "1440": 0
-    }

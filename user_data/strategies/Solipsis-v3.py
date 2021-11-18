@@ -75,7 +75,7 @@ TODO:
     - Develop a PR to fully support hyperopting the custom_stoploss and dynamic_roi spaces?
 """
 
-class Solipsis3(IStrategy):
+class Solipsis_v3(IStrategy):
 
     # Recommended for USD/USDT/etc.
     timeframe = '5m'
@@ -543,54 +543,3 @@ class Solipsis3(IStrategy):
 
         return False
 
-# Sub-strategy with parameters specific to BTC stake
-class Solipsis3_BTC(Solipsis3):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 64,
-        'mp': 55,
-        'rmi-fast': 31,
-        'rmi-slow': 16,
-        'xinf-stake-rmi': 67,
-        'xtf-fiat-rsi': 17,
-        'xtf-stake-rsi': 57
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "240": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    stoploss = -0.30
-    use_custom_stoploss = False
-
-# Sub-strategy with parameters specific to ETH stake
-class Solipsis3_ETH(Solipsis3):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 13,
-        'inf-stake-rmi': 69,
-        'mp': 40,
-        'rmi-fast': 42,
-        'rmi-slow': 17,
-        'tf-fiat-rsi': 15,
-        'tf-stake-rsi': 92
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "240": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    stoploss = -0.30
-    use_custom_stoploss = False

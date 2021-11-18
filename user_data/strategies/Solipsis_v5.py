@@ -40,7 +40,7 @@ VERSION: 5.2.1
 """
 
 
-class Solipsis5(IStrategy):
+class Solipsis_v5(IStrategy):
     ## Buy Space Hyperopt Variables
 
     # Base Pair Params

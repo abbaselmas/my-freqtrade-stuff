@@ -11,7 +11,7 @@ def hull_moving_average(dataframe, period, field='close') -> ndarray:
     return hma(dataframe[field], period)
 """
 
-class YOLO(IStrategy):
+class FisherHull(IStrategy):
 
     # Buy hyperspace params:
     buy_params = {

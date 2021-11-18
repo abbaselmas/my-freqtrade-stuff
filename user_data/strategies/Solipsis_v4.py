@@ -35,7 +35,7 @@ and the rest of the community. Also, please don't nag us with a million question
 We take no responsibility for any success or failure you have using this strategy.
 """
 
-class Solipsis4(IStrategy):
+class Solipsis_v4(IStrategy):
 
     ## Buy Space Hyperopt Variables
 
@@ -420,24 +420,3 @@ class Solipsis4(IStrategy):
             return True
         return False
 
-# Sub-strategy with parameters specific to BTC stake
-class Solipsis4_BTC(Solipsis4):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    minimal_roi = {
-        "0": 0.01,
-        "1440": 0
-    }
-
-# Sub-strategy with parameters specific to ETH stake
-class Solipsis4_ETH(Solipsis4):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    minimal_roi = {
-        "0": 0.01,
-        "1440": 0
-    }

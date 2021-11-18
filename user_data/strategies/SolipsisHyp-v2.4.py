@@ -11,7 +11,7 @@ from freqtrade.optimize.hyperopt_interface import IHyperOpt
 import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 
-class SolipsisHyp(IHyperOpt):
+class SolipsisHyp_v24(IHyperOpt):
 
     @staticmethod
     def indicator_space() -> List[Dimension]:

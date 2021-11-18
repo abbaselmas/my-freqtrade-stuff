@@ -23,7 +23,7 @@ sys.path.append(str(Path(__file__).parent))
 import custom_indicators as cta
 from technical.consensus import Consensus
 
-class Solipsis(IStrategy):
+class Solipsis_v24(IStrategy):
 
     # Recommended for USD/USDT/etc.
     timeframe = '5m'
@@ -528,54 +528,3 @@ class Solipsis(IStrategy):
 
         return False
 
-# Sub-strategy with parameters specific to BTC stake
-class Solipsis_BTC(Solipsis):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 64,
-        'mp': 55,
-        'rmi-fast': 31,
-        'rmi-slow': 16,
-        'xinf-stake-rmi': 67,
-        'xtf-fiat-rsi': 17,
-        'xtf-stake-rsi': 57
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "240": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    stoploss = -0.30
-    use_custom_stoploss = False
-
-# Sub-strategy with parameters specific to ETH stake
-class Solipsis_ETH(Solipsis):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 13,
-        'inf-stake-rmi': 69,
-        'mp': 40,
-        'rmi-fast': 42,
-        'rmi-slow': 17,
-        'tf-fiat-rsi': 15,
-        'tf-stake-rsi': 92
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "240": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    stoploss = -0.30
-    use_custom_stoploss = False

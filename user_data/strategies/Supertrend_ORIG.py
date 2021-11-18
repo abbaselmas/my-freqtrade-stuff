@@ -54,7 +54,7 @@ def supertrend(dataframe: DataFrame, multiplier=3) -> DataFrame:
     return dataframe
 
 
-class Supertrend(IStrategy):
+class Supertrend_ORIG(IStrategy):
 
     """
     PASTE OUTPUT FROM HYPEROPT HERE
