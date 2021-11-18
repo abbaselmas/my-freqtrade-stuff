@@ -75,7 +75,7 @@ TODO:
     - Develop a PR to fully support hyperopting the custom_stoploss and dynamic_roi spaces?
 """
 
-class Solipsis_v3(IStrategy):
+class Solipsisv3(IStrategy):
 
     # Recommended for USD/USDT/etc.
     timeframe = '5m'

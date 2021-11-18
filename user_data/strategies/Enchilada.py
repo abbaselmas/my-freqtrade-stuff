@@ -207,19 +207,3 @@ class Enchilada(IStrategy):
         if current_price > rate * 1.01:
             return False
         return True
-
-class Enchilada_Slow(Enchilada):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    # ROI table:
-    minimal_roi = {
-        "0": 0.15,
-        "30": 0.05,
-        "60": 0.025,
-        "120": 0.015
-    }
-
-    # Stoploss:
-    stoploss = -0.085
