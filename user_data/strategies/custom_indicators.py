@@ -75,7 +75,7 @@ def mastreak(dataframe: DataFrame, period: int = 4, field='close') -> Series:
     """
     MA Streak
     Port of: https://www.tradingview.com/script/Yq1z7cIv-MA-Streak-Can-Show-When-a-Run-Is-Getting-Long-in-the-Tooth/
-    """
+    """    
     df = dataframe.copy()
 
     avgval = zema(df, period, field)

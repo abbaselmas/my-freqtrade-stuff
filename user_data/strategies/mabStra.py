@@ -35,18 +35,14 @@ class mabStra(IStrategy):
     buy_mojo_ma_timeframe = IntParameter(2, 100, default=7, space='buy')
     buy_fast_ma_timeframe = IntParameter(2, 100, default=14, space='buy')
     buy_slow_ma_timeframe = IntParameter(2, 100, default=28, space='buy')
-    buy_div_max = DecimalParameter(
-        0, 2, decimals=4, default=2.25446, space='buy')
-    buy_div_min = DecimalParameter(
-        0, 2, decimals=4, default=0.29497, space='buy')
+    buy_div_max = DecimalParameter(0, 2, decimals=4, default=2.25446, space='buy')
+    buy_div_min = DecimalParameter(0, 2, decimals=4, default=0.29497, space='buy')
     # sell params
     sell_mojo_ma_timeframe = IntParameter(2, 100, default=7, space='sell')
     sell_fast_ma_timeframe = IntParameter(2, 100, default=14, space='sell')
     sell_slow_ma_timeframe = IntParameter(2, 100, default=28, space='sell')
-    sell_div_max = DecimalParameter(
-        0, 2, decimals=4, default=1.54593, space='sell')
-    sell_div_min = DecimalParameter(
-        0, 2, decimals=4, default=2.81436, space='sell')
+    sell_div_max = DecimalParameter(0, 2, decimals=4, default=1.54593, space='sell')
+    sell_div_min = DecimalParameter(0, 2, decimals=4, default=2.81436, space='sell')
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # SMA - ex Moving Average

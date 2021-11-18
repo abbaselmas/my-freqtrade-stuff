@@ -1,6 +1,7 @@
 # --- Do not remove these libs ---
-from freqtrade.strategy import IStrategy
-from freqtrade.strategy import IntParameter
+from freqtrade.strategy.interface import IStrategy
+from typing import Dict, List
+from functools import reduce
 from pandas import DataFrame
 import numpy as np
 # --------------------------------
@@ -18,32 +19,49 @@ def bollinger_bands(stock_price, window_size, num_of_std):
 
 
 class BinHV45(IStrategy):
-    INTERFACE_VERSION = 2
-
-    minimal_roi = {
-        "0": 0.0125
+    order_types = {
+        'buy': 'limit',
+        'sell': 'limit',
+        'emergencysell': 'market',
+        'stoploss': 'market',
+        'stoploss_on_exchange': True,
+        'stoploss_on_exchange_interval': 60,
+        'stoploss_on_exchange_limit_ratio': 0.99
     }
 
-    stoploss = -0.05
+    # Buy hyperspace params:
+    buy_params = {
+        'bbdelta': 11, 'closedelta': 15, 'tail': 25
+    }
+
+    # Sell hyperspace params:
+    sell_params = {
+
+    }
+
+    # ROI table:
+    minimal_roi = {
+        '0': 0.20233,
+        '26': 0.06166,
+        '85': 0.01367,
+        '186': 0
+    }
+
+    # Stoploss:
+    stoploss = -0.13348
+
+    # Trailing stop:
+    trailing_stop = True
+    trailing_stop_positive = 0.30436
+    trailing_stop_positive_offset = 0.31289
+    trailing_only_offset_is_reached = False
+
     timeframe = '1m'
 
-    buy_bbdelta = IntParameter(low=1, high=15, default=30, space='buy', optimize=True)
-    buy_closedelta = IntParameter(low=15, high=20, default=30, space='buy', optimize=True)
-    buy_tail = IntParameter(low=20, high=30, default=30, space='buy', optimize=True)
-
-    # Hyperopt parameters
-    buy_params = {
-        "buy_bbdelta": 7,
-        "buy_closedelta": 17,
-        "buy_tail": 25,
-    }
-
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        bollinger = qtpylib.bollinger_bands(dataframe['close'], window=40, stds=2)
-
-        dataframe['upper'] = bollinger['upper']
-        dataframe['mid'] = bollinger['mid']
-        dataframe['lower'] = bollinger['lower']
+        mid, lower = bollinger_bands(dataframe['close'], window_size=40, num_of_std=2)
+        dataframe['mid'] = np.nan_to_num(mid)
+        dataframe['lower'] = np.nan_to_num(lower)
         dataframe['bbdelta'] = (dataframe['mid'] - dataframe['lower']).abs()
         dataframe['pricedelta'] = (dataframe['open'] - dataframe['close']).abs()
         dataframe['closedelta'] = (dataframe['close'] - dataframe['close'].shift()).abs()
@@ -54,9 +72,9 @@ class BinHV45(IStrategy):
         dataframe.loc[
             (
                 dataframe['lower'].shift().gt(0) &
-                dataframe['bbdelta'].gt(dataframe['close'] * self.buy_bbdelta.value / 1000) &
-                dataframe['closedelta'].gt(dataframe['close'] * self.buy_closedelta.value / 1000) &
-                dataframe['tail'].lt(dataframe['bbdelta'] * self.buy_tail.value / 1000) &
+                dataframe['bbdelta'].gt(dataframe['close'] * 11 / 1000) &
+                dataframe['closedelta'].gt(dataframe['close'] * 15 / 1000) &
+                dataframe['tail'].lt(dataframe['bbdelta'] * 25 / 1000) &
                 dataframe['close'].lt(dataframe['lower'].shift()) &
                 dataframe['close'].le(dataframe['close'].shift())
             ),
@@ -67,5 +85,5 @@ class BinHV45(IStrategy):
         """
         no sell signal
         """
-        dataframe.loc[:, 'sell'] = 0
+        dataframe['sell'] = 0
         return dataframe
