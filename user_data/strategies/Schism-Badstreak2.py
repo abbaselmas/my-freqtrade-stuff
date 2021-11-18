@@ -369,59 +369,7 @@ class Schism_Badstreak2(IStrategy):
             return False
         return True
 
-"""
-Sub-strategy overrides
-Anything not explicity defined here will follow the settings in the base strategy
-"""
-# Sub-strategy with parameters specific to BTC stake
-class Schism_BTC(Schism):
 
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 14,
-        'inf-stake-rmi': 51,
-        'mp': 66,
-        'rmi-fast': 34,
-        'rmi-slow': 19,
-        'tf-fiat-rsi': 38,
-        'tf-stake-rsi': 60
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "360": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    use_sell_signal = False
-
-# Sub-strategy with parameters specific to ETH stake
-class Schism_ETH(Schism):
-
-    timeframe = '1h'
-    inf_timeframe = '4h'
-
-    buy_params = {
-        'inf-rsi': 13,
-        'inf-stake-rmi': 69,
-        'mp': 40,
-        'rmi-fast': 42,
-        'rmi-slow': 17,
-        'tf-fiat-rsi': 15,
-        'tf-stake-rsi': 92
-    }
-
-    minimal_roi = {
-        "0": 0.05,
-        "360": 0.025,
-        "1440": 0.01,
-        "4320": 0
-    }
-
-    use_sell_signal = False
 
 """
 Custom Indicators

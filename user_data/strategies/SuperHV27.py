@@ -384,25 +384,3 @@ class SuperHV27(IStrategy):
             return False
         return True
 
-
-"""
-Sub-strategy overrides
-Anything not explicity defined here will follow the settings in the base strategy
-"""
-# Sub-strategy with parameters specific to BTC stake
-class SuperHV27_BTC(SuperHV27):
-
-    timeframe = '5m'
-
-
-
-    use_sell_signal = False
-
-# Sub-strategy with parameters specific to ETH stake
-class SuperHV27_ETH(SuperHV27):
-
-    timeframe = '5m'
-
-
-
-    use_sell_signal = False

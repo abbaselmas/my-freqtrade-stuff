@@ -308,34 +308,3 @@ class Schism_v1(IStrategy):
             return False
         return True
 
-
-"""
-Sub-strategy overrides
-"""
-# Sub-strategy with parameters specific to BTC stake
-class Schism_BTC(Schism):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    # ROI table:
-    minimal_roi = {
-        "0": 0.05,
-        "10": 0.025,
-        "20": 0.015,
-        "30": 0.01
-    }
-
-# Sub-strategy with parameters specific to ETH stake
-class Schism_ETH(Schism):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    # ROI table:
-    minimal_roi = {
-        "0": 0.05,
-        "10": 0.025,
-        "20": 0.015,
-        "30": 0.01
-    }

@@ -327,47 +327,6 @@ class Schism_Badstreak(IStrategy):
         # Use a minimum of 0.5%
         return max(desired_stoploss, 0.005)
 
-"""
-Sub-strategy overrides
-Anything not explicity defined here will follow the settings in the base strategy
-"""
-# Sub-strategy with parameters specific to BTC stake
-class Schism_BTC(Schism):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    buy_params = {
-        'mp': 66,
-        'tf-fiat-rsi': 38,
-        'tf-stake-rsi': 60,
-        'inf-rsi': 14,
-        'inf-stake-rmi': 51
-    }
-
-    use_sell_signal = False
-
-# Sub-strategy with parameters specific to ETH stake
-class Schism_ETH(Schism):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    buy_params = {
-        'mp': 40,
-        'tf-fiat-rsi': 15,
-        'tf-stake-rsi': 92,
-        'inf-rsi': 13,
-        'inf-stake-rmi': 69,
-    }
-
-    trailing_stop = True
-    trailing_stop_positive = 0.014
-    trailing_stop_positive_offset = 0.022
-    trailing_only_offset_is_reached = False
-
-    use_sell_signal = False
-
 
 """
 Custom Indicators

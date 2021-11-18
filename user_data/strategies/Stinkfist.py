@@ -377,38 +377,3 @@ class Stinkfist(IStrategy):
             return False
         return True
 
-
-"""
-Sub-strategy overrides
-Anything not explicity defined here will follow the settings in the base strategy
-"""
-# Sub-strategy with parameters specific to BTC stake
-class Stinkfist_BTC(Stinkfist):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    buy_params = {
-        'inf-pct-adr': 0.91556,
-        'mp': 66,
-    }
-
-    use_sell_signal = False
-
-# Sub-strategy with parameters specific to ETH stake
-class Stinkfist_ETH(Stinkfist):
-
-    timeframe = '5m'
-    inf_timeframe = '1h'
-
-    buy_params = {
-        'inf-pct-adr': 0.81628,
-        'mp': 40,
-    }
-
-    trailing_stop = True
-    trailing_stop_positive = 0.014
-    trailing_stop_positive_offset = 0.022
-    trailing_only_offset_is_reached = False
-
-    use_sell_signal = False
