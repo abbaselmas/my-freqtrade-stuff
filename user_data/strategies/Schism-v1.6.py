@@ -46,7 +46,7 @@ NOTES:
       ROI based sells will be higher than the backtest shows.
 """
 
-class Schism6(IStrategy):
+class Schism_v16(IStrategy):
 
     timeframe = '5m'
     inf_timeframe = '1h'

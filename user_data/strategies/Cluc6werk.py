@@ -11,7 +11,7 @@ def bollinger_bands(stock_price, window_size, num_of_std):
     lower_band = rolling_mean - (rolling_std * num_of_std)
     return np.nan_to_num(rolling_mean), np.nan_to_num(lower_band)
 
-class Cluc4werk(IStrategy):
+class Cluc6werk(IStrategy):
 
     # Used for "informative pairs"
     stake = 'BTC'

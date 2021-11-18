@@ -19,7 +19,7 @@ TODO:
 
 """
 
-class Schism4(IStrategy):
+class Schism_v14(IStrategy):
     """
     Strategy Configuration Items
     """

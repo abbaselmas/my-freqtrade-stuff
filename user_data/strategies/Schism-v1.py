@@ -21,7 +21,7 @@ TODO:
         - We're getting stuck in too many losing trades and it creates a domino effect.
 """
 
-class Schism(IStrategy):
+class Schism_v1(IStrategy):
 
     timeframe = '5m'
     inf_timeframe = '1h'

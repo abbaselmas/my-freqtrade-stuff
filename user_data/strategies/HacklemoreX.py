@@ -14,7 +14,7 @@ TODO:
     - Better buy signal.
 """
 
-class Hacklemore(IStrategy):
+class HacklemoreX(IStrategy):
 
     timeframe = '5m'
 

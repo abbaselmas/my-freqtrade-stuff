@@ -41,7 +41,7 @@ TODO:
     - Per-pair automatic ROI based on ADR or something similar?
 """
 
-class Schism2(IStrategy):
+class Schism_v2(IStrategy):
     """
     Strategy Configuration Items
     """

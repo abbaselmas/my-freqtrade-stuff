@@ -29,7 +29,7 @@ TODO:
     - Figure out a way to directly feed a daily hyperopt output into a running strategy and reload it?
 """
 
-class Schism(IStrategy):
+class Schism_0318(IStrategy):
     """
     Strategy Configuration Items
     """

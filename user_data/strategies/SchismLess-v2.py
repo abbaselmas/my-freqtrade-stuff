@@ -13,7 +13,7 @@ from statistics import mean
 from cachetools import TTLCache
 
 
-class Schism(IStrategy):
+class SchismLess_v2(IStrategy):
 
     timeframe = '5m'
     inf_timeframe = '1h'

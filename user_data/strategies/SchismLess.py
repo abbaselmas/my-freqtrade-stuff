@@ -13,7 +13,7 @@ from technical.indicators import RMI
 from statistics import mean
 from cachetools import TTLCache
 
-class Schism(IStrategy):
+class SchismLess(IStrategy):
     timeframe = '15m'
     inf_timeframe = '4h'
 

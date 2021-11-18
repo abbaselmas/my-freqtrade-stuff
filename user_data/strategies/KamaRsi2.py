@@ -60,7 +60,7 @@ def supertrend(dataframe, multiplier=3, period=10):
         'STX' : df[stx]
     })
 
-class Kamaflage(IStrategy):
+class KamaRsi2(IStrategy):
 
     """
     PASTE OUTPUT FROM HYPEROPT HERE

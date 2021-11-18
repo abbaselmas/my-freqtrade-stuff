@@ -34,7 +34,7 @@ Loosely based on:
 https://github.com/nicolay-zlobin/jesse-indicators/blob/main/strategies/BadStreak/__init__.py
 """
 
-class Schism(IStrategy):
+class Schism_Badstreak(IStrategy):
     """
     Strategy Configuration Items
     """

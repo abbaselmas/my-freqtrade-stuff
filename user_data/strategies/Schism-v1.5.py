@@ -14,7 +14,7 @@ from statistics import mean
 from cachetools import TTLCache
 
 
-class Schism5(IStrategy):
+class Schism_v15(IStrategy):
     """
     Strategy Configuration Items
     """
