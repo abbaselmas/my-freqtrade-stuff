@@ -86,6 +86,6 @@
     "initial_state": "running",
     "forcebuy_enable": false,
     "internals": {
-        "process_throttle_secs": 3
+        "process_throttle_secs": 2
     }
 }
