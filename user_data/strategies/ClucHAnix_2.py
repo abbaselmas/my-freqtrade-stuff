@@ -228,7 +228,7 @@ class ClucHAnix_2(IStrategy):
 
         return dataframe
 
-class ClucHAnix_ETH(ClucHAnix):
+class ClucHAnix_ETH(ClucHAnix_2):
 
     # Buy hyperspace params:
     buy_params = {
@@ -266,7 +266,7 @@ class ClucHAnix_ETH(ClucHAnix):
     trailing_stop_positive_offset = 0.0116
     trailing_only_offset_is_reached = False
 
-class ClucHAnix_BTC(ClucHAnix):
+class ClucHAnix_BTC(ClucHAnix_2):
 
     # Buy hyperspace params:
     buy_params = {
@@ -304,7 +304,7 @@ class ClucHAnix_BTC(ClucHAnix):
     trailing_stop_positive_offset = 0.11438
     trailing_only_offset_is_reached = False
 
-class ClucHAnix_USD(ClucHAnix):
+class ClucHAnix_USD(ClucHAnix_2):
 
     # Buy hyperspace params:
     buy_params = {

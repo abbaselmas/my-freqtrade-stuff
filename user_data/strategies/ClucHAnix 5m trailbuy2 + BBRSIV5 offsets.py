@@ -242,7 +242,7 @@ class ClucHAnix_5m1_trailbuy2_BBRSIV5(IStrategy):
 
 
 
-class ClucHAnix_5mTB1(ClucHAnix_5m1):
+class ClucHAnix_5mTB1(ClucHAnix_5m1_trailbuy2_BBRSIV5):
 
     process_only_new_candles = True
 
