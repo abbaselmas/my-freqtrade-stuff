@@ -18,7 +18,7 @@ def bollinger_bands(stock_price, window_size, num_of_std):
     return rolling_mean, lower_band
 
 
-class BinHV45(IStrategy):
+class BinHV45_2(IStrategy):
     minimal_roi = {
         "0": 0.0125
     }

@@ -1,37 +1,54 @@
+
 # --- Do not remove these libs ---
-import freqtrade.vendor.qtpylib.indicators as qtpylib
-import talib.abstract as ta
 from freqtrade.strategy.interface import IStrategy
+from typing import Dict, List
+from functools import reduce
 from pandas import DataFrame
-
-
 # --------------------------------
 
+import talib.abstract as ta
 
-class CofiBitStrategy(IStrategy):
+
+class MACDStrategy_2(IStrategy):
     """
-    taken from slack by user CofiBit
+
+    author@: Gert Wohlgemuth
+
+    idea:
+
+        uptrend definition:
+            MACD above MACD signal
+            and CCI < -50
+
+        downtrend definition:
+            MACD below MACD signal
+            and CCI > 100
+
     """
 
     # Minimal ROI designed for the strategy.
     # This attribute will be overridden if the config file contains "minimal_roi"
-    minimal_roi = {"40": 0.05, "30": 0.06, "20": 0.07, "0": 0.10}
+    minimal_roi = {
+        "60":  0.01,
+        "30":  0.03,
+        "20":  0.04,
+        "0":  0.05
+    }
 
     # Optimal stoploss designed for the strategy
     # This attribute will be overridden if the config file contains "stoploss"
-    stoploss = -0.25
+    stoploss = -0.3
 
     # Optimal timeframe for the strategy
-    timeframe = "5m"
+    timeframe = '5m'
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        stoch_fast = ta.STOCHF(dataframe, 5, 3, 0, 3, 0)
-        dataframe["fastd"] = stoch_fast["fastd"]
-        dataframe["fastk"] = stoch_fast["fastk"]
-        dataframe["ema_high"] = ta.EMA(dataframe, timeperiod=5, price="high")
-        dataframe["ema_close"] = ta.EMA(dataframe, timeperiod=5, price="close")
-        dataframe["ema_low"] = ta.EMA(dataframe, timeperiod=5, price="low")
-        dataframe["adx"] = ta.ADX(dataframe)
+
+        macd = ta.MACD(dataframe)
+        dataframe['macd'] = macd['macd']
+        dataframe['macdsignal'] = macd['macdsignal']
+        dataframe['macdhist'] = macd['macdhist']
+        dataframe['cci'] = ta.CCI(dataframe)
 
         return dataframe
 
@@ -43,14 +60,10 @@ class CofiBitStrategy(IStrategy):
         """
         dataframe.loc[
             (
-                (dataframe["open"] < dataframe["ema_low"])
-                & (qtpylib.crossed_above(dataframe["fastk"], dataframe["fastd"]))
-                & (dataframe["fastk"] < 30)
-                & (dataframe["fastd"] < 30)
-                & (dataframe["adx"] > 30)
+                (dataframe['macd'] > dataframe['macdsignal']) &
+                (dataframe['cci'] <= -50.0)
             ),
-            "buy",
-        ] = 1
+            'buy'] = 1
 
         return dataframe
 
@@ -61,10 +74,10 @@ class CofiBitStrategy(IStrategy):
         :return: DataFrame with buy column
         """
         dataframe.loc[
-            ((dataframe["open"] >= dataframe["ema_high"]))
-            | (dataframe["fastk"] > 70)
-            | (qtpylib.crossed_above(dataframe["fastd"], 70)),
-            "sell",
-        ] = 1
+            (
+                (dataframe['macd'] < dataframe['macdsignal']) &
+                (dataframe['cci'] >= 100.0)
+            ),
+            'sell'] = 1
 
         return dataframe

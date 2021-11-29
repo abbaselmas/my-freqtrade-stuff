@@ -14,7 +14,7 @@ import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 
 
-class KAMACCIRSI(IStrategy):
+class KAMACCIRSI_2(IStrategy):
     """
     author@: werkkrew
     github@: https://github.com/werkkrew/freqtrade-strategies

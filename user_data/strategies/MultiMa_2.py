@@ -16,7 +16,7 @@ import freqtrade.vendor.qtpylib.indicators as qtpylib
 from functools import reduce
 
 
-class MultiMa(IStrategy):
+class MultiMa_2(IStrategy):
 
     buy_ma_count = IntParameter(0, 10, default=10, space="buy")
     buy_ma_gap = IntParameter(2, 10, default=2, space="buy")

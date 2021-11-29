@@ -448,7 +448,7 @@ def condition_generator(dataframe, operator, indicator, crossed_indicator, real_
     return condition, dataframe
 
 
-class GodStraNew(IStrategy):
+class GodStraNew_3(IStrategy):
     # #################### RESULTS PASTE PLACE ####################
 
     # #################### END OF RESULT PLACE ####################

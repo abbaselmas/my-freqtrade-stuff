@@ -7,7 +7,7 @@ import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 
 
-class AverageStrategy(IStrategy):
+class AverageStrategy_2(IStrategy):
     """
 
     author@: Gert Wohlgemuth

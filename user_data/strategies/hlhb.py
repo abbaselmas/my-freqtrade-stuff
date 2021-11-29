@@ -8,7 +8,7 @@ import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 
 
-class hlhb(IStrategy):
+class HLHB(IStrategy):
     """
     The HLHB ("Huck loves her bucks!") System simply aims to catch short-term forex trends.
     More information in https://www.babypips.com/trading/forex-hlhb-system-explained
@@ -16,7 +16,7 @@ class hlhb(IStrategy):
 
     INTERFACE_VERSION = 2
 
-    position_stacking = "True"
+    position_stacking = "True",
 
     # Minimal ROI designed for the strategy.
     # This attribute will be overridden if the config file contains "minimal_roi".
@@ -25,11 +25,11 @@ class hlhb(IStrategy):
         "703": 0.2187,
         "2849": 0.0363,
         "5520": 0
-    }
+    },
 
     # Optimal stoploss designed for the strategy.
     # This attribute will be overridden if the config file contains "stoploss".
-    stoploss = -0.3211
+    stoploss = -0.3211,
 
     # Trailing stoploss
     trailing_stop = True
@@ -64,7 +64,7 @@ class hlhb(IStrategy):
         'buy': 'gtc',
         'sell': 'gtc'
     }
-    
+
     plot_config = {
         # Main plot indicators (Moving averages, ...)
         'main_plot': {
@@ -81,7 +81,7 @@ class hlhb(IStrategy):
             }
         }
     }
-    
+
     def informative_pairs(self):
         return []
 
@@ -125,4 +125,3 @@ class hlhb(IStrategy):
             ),
             'sell'] = 1
         return dataframe
-    

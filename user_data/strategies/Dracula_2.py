@@ -108,7 +108,7 @@ class SupResFinder():
         return levels
 
 
-class Dracula(IStrategy):
+class Dracula_2(IStrategy):
 
     # Buy hyperspace params:
     buy_params = {
