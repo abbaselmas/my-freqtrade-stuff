@@ -102,7 +102,7 @@ else:
 ###########################################################################################################
 
 
-class NostalgiaForInfinityNext(IStrategy):
+class NostalgiaForInfinityNext7_15_5(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:

@@ -26,7 +26,7 @@ def ha_typical_price(bars):
     return Series(index=bars.index, data=res)
 
 
-class ClucHAnix_5m1(IStrategy):
+class ClucHAnix_5mTB1(IStrategy):
     """
     PASTE OUTPUT FROM HYPEROPT HERE
     Can be overridden for specific sub-strategies (stake currencies) at the bottom.

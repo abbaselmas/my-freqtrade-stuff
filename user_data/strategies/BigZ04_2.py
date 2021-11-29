@@ -51,7 +51,7 @@ from functools import reduce
 ###########################################################################################################
 
 
-class BigZ04(IStrategy):
+class BigZ04_2(IStrategy):
     INTERFACE_VERSION = 2
 
     minimal_roi = {

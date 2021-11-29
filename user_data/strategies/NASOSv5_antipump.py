@@ -50,7 +50,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     return emadif
 
 
-class NASOSv5(IStrategy):
+class NASOSv5_1(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:
@@ -362,7 +362,7 @@ class NASOSv5(IStrategy):
 
         return dataframe
 
-class NASOSv5_antipump(NASOSv5):
+class NASOSv5_antipump(NASOSv5_1):
     antipump_threshold = DecimalParameter(0, 0.4, default=0.113, space='buy', optimize=True)
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:

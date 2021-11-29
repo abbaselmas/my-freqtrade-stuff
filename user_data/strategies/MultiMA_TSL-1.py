@@ -32,7 +32,7 @@ from technical.indicators import zema, VIDYA
 # I hope you do enough testing before proceeding, either backtesting and/or dry run.
 # Any profits and losses are all your responsibility
 
-class MultiMA_TSL3(IStrategy):
+class MultiMA_TSL_1(IStrategy):
     INTERFACE_VERSION = 2
 
     DATESTAMP = 0

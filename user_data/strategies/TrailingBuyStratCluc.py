@@ -29,7 +29,7 @@ def ha_typical_price(bars):
 
 logger = logging.getLogger(__name__)
 
-class ClucHAnix(IStrategy):
+class TrailingBuyStratCluc(IStrategy):
     
     """
     PASTE OUTPUT FROM HYPEROPT HERE
@@ -317,7 +317,7 @@ class ClucHAnix_BTC(ClucHAnix):
     trailing_stop_positive_offset = 0.11438
     trailing_only_offset_is_reached = False
 
-class ClucHAnix_USD(ClucHAnix):
+class TrailingBuyStratCluc_USD(ClucHAnix):
 
     # Buy hyperspace params:
     buy_params = {
@@ -356,7 +356,7 @@ class ClucHAnix_USD(ClucHAnix):
     trailing_only_offset_is_reached = False
 
 
-class TrailingBuyStratCluc(ClucHAnix):
+class TrailingBuyStratCluc2(TrailingBuyStratCluc):
     # Original idea by @MukavaValkku, code by @tirail and @stash86
     #
     # This class is designed to inherit from yours and starts trailing buy with your buy signals

@@ -18,7 +18,7 @@ def ha_typical_price(bars):
     res = (bars['ha_high'] + bars['ha_low'] + bars['ha_close']) / 3.
     return Series(index=bars.index, data=res)
 
-class ClucHAnix(IStrategy):
+class ClucHAnix_E01VE(IStrategy):
 
     """
     VERSION MODIFIED BY REUNIWARE (InvestDataSystems@Yahoo.Com / 2021)
