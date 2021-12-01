@@ -73,7 +73,7 @@ class GodStra(IStrategy):
     trailing_only_offset_is_reached = True
     # Buy hypers
     timeframe = '12h'
-    print('Add {\n\t"method": "AgeFilter",\n\t"min_days_listed": 30\n},\n to your pairlists in config (Under StaticPairList)')
+    #print('Add {\n\t"method": "AgeFilter",\n\t"min_days_listed": 30\n},\n to your pairlists in config (Under StaticPairList)')
 
     def dna_size(self, dct: dict):
         def int_from_str(st: str):
