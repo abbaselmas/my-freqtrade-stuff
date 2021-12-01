@@ -33,7 +33,7 @@
         },
         {
             "method": "ShuffleFilter",
-	    "seed": 73
+            "seed": 73
         }
     ],
     "exchange": {
