@@ -275,7 +275,7 @@ class TrailingBuy_ClucHAnix_5m_E0V1E_by_TraNz(IStrategy):
 logger = logging.getLogger(__name__)
 
 
-class TrailingBuyStratCluc5m(ClucHAnix5m):
+class TrailingBuyStratCluc5m(TrailingBuy_ClucHAnix_5m_E0V1E_by_TraNz):
     # Original idea by @MukavaValkku, code by @tirail and @stash86
     #
     # This class is designed to inherit from yours and starts trailing buy with your buy signals
