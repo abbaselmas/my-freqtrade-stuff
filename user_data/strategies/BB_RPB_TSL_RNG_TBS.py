@@ -494,7 +494,7 @@ class BB_RPB_TSL_RNG_TBS(IStrategy):
         return dataframe
         
         
-class TrailingBuyStrat2(BB_RPB_TSL_RNG_TBS):
+class TrailingBuyStrat2_BB_RPB_TSL_RNG_TBS(BB_RPB_TSL_RNG_TBS):
     # Original idea by @MukavaValkku, code by @tirail and @stash86
     #
     # This class is designed to inherit from yours and starts trailing buy with your buy signals

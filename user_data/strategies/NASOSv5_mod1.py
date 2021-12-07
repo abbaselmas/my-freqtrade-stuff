@@ -565,7 +565,7 @@ class NASOSv5SL(NASOSv5_mod1):
         return stoploss_from_open(sl_profit, current_profit)
 
 
-class TrailingBuyStrat(NASOSv5_mod1):
+class TrailingBuyStrat_NASOSv5_mod1(NASOSv5_mod1):
     # if process_only_new_candles = True, then you need to use 1m timeframe (and normal strat timeframe as informative)
 
     trailing_buy_order_enabled = True

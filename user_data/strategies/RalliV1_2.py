@@ -45,7 +45,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 
 
 
-class RalliV1(IStrategy):
+class RalliV1_2(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:

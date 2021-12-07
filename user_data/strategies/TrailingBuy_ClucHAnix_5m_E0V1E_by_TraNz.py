@@ -27,7 +27,7 @@ def ha_typical_price(bars):
     return Series(index=bars.index, data=res)
 
 
-class ClucHAnix5m(IStrategy):
+class TrailingBuy_ClucHAnix_5m_E0V1E_by_TraNz(IStrategy):
     """
     VERSION MODIFIED BY REUNIWARE (InvestDataSystems@Yahoo.Com / 2021)
     THIS VERSION CONTAINS HYPEROPT SETTINGS FROM E0V1E (cf. https://discord.gg/Ayvcvs6N )
