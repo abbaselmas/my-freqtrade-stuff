@@ -2,7 +2,8 @@
     "exchange": {
         "name": "binance",
         "ccxt_config": {
-            "enableRateLimit": false,
+            "enableRateLimit": true,
+            "rateLimit": 100
             "urls": {
                 "api": {
                     "public": "http://127.0.01:8099/api/v3",
@@ -11,7 +12,8 @@
             }
         },
         "ccxt_async_config": {
-            "enableRateLimit": false
+            "enableRateLimit": true,
+            "rateLimit": 100
         }
     }
 }
