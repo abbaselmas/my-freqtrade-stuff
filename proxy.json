@@ -3,11 +3,11 @@
         "name": "binance",
         "ccxt_config": {
             "enableRateLimit": true,
-            "rateLimit": 100
+            "rateLimit": 100,
             "urls": {
                 "api": {
-                    "public": "http://127.0.01:8099/api/v3",
-                    "fapiPublic": "http://127.0.01:8098/fapi/v1"
+                    "public": "http://127.0.0.1:8099/api/v3",
+                    "fapiPublic": "http://127.0.0.1:8098/fapi/v1"
                 }
             }
         },
