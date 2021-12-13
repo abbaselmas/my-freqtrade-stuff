@@ -10,7 +10,7 @@
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
         "buy": 10,
-        "sell": 30,
+        "sell": 10,
         "unit": "minutes"
     },
     "bid_strategy": {

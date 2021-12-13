@@ -5,7 +5,7 @@
         },
         {
             "method": "AgeFilter",
-            "min_days_listed": 14
+            "min_days_listed": 2
         }
     ],
     "exchange": {
