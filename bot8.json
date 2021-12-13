@@ -13,10 +13,20 @@
         "sell": 10,
         "unit": "minutes"
     },
+    "order_types": {
+        "buy": "limit",
+        "sell": "market",
+        "emergencysell": "market",
+        "forcebuy": "market",
+        "forcesell": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60
+    },
     "bid_strategy": {
-        "price_side": "bid",
-        "ask_last_balance": 0.0,
-        "use_order_book": true,
+        "price_side": "ask",
+        "ask_last_balance": 0,
+        "use_order_book": false,
         "order_book_top": 1,
         "check_depth_of_market": {
             "enabled": false,
@@ -24,7 +34,7 @@
         }
     },
     "ask_strategy": {
-        "price_side": "ask",
+        "price_side": "bid",
         "use_order_book": true,
         "order_book_top": 1
     },
