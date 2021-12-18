@@ -1,5 +1,4 @@
 # --- Do not remove these libs ---
-# --- Do not remove these libs ---
 from logging import FATAL
 from freqtrade.strategy.interface import IStrategy
 from typing import Dict, List
@@ -14,10 +13,11 @@ from technical.util import resample_to_interval, resampled_merge
 from datetime import datetime, timedelta
 from freqtrade.persistence import Trade
 from freqtrade.strategy import stoploss_from_open, merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter
-import technical.indicators as ftt
+#import technical.indicators as ftt
 
 # @Rallipanos
 # @pluxury
+# @volk (antipump)
 # with help from @stash86 and @Perkmeister
 
 # Buy hyperspace params:
@@ -115,7 +115,7 @@ class NASOSv5(IStrategy):
     # Optional order time in force.
     order_time_in_force = {
         'buy': 'gtc',
-        'sell': 'ioc'
+        'sell': 'gtc'
     }
 
     # Optimal timeframe for the strategy
@@ -129,17 +129,21 @@ class NASOSv5(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'ma_buy': {'color': 'orange'},
-            'ma_sell': {'color': 'orange'},
+            'ma_buy_8': {'color': 'orange'},
+            'ma_sell_16': {'color': 'orange'},
         },
         'subplots': {
             'rsi': {
                 'rsi': {'color': 'orange'},
+#                'mfi': {'color': 'blue'},
                 'rsi_fast': {'color': 'red'},
                 'rsi_slow': {'color': 'green'},
             },
             'ewo': {
-                'EWO': {'color': 'orange'}
+                'EWO': {'color': 'blue'}
+            },
+            'ps': {
+                'pump_strength': {'color': 'yellow'}
             },
         }
     }
@@ -165,7 +169,7 @@ class NASOSv5(IStrategy):
         elif (current_profit > 0.018):
             return 0.005
 
-        return 0.15
+        return self.stoploss
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float,
                            rate: float, time_in_force: str, sell_reason: str,
@@ -253,6 +257,11 @@ class NASOSv5(IStrategy):
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+
+        #pump stregth
+        dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
+        dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
+        dataframe['pump_strength'] = (dataframe['ema_50'] - dataframe['ema_200']) / dataframe['ema_50']
 
         # RSI
         dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
@@ -352,3 +361,93 @@ class NASOSv5(IStrategy):
             ]=1
 
         return dataframe
+
+class NASOSv5_antipump(NASOSv5):
+    antipump_threshold = DecimalParameter(0, 0.4, default=0.113, space='buy', optimize=True)
+
+    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+
+        dont_buy_conditions = []
+
+        dont_buy_conditions.append(
+            # don't buy if there isn't 3% profit to be made
+            (dataframe['close_15m'].rolling(self.lookback_candles.value).max()
+             < (dataframe['close'] * self.profit_threshold.value))
+        )
+
+        dataframe.loc[
+            (
+                (dataframe['pump_strength'] < self.antipump_threshold.value) &
+                (dataframe['rsi_fast'] < self.rsi_fast_buy.value) &
+                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
+                (dataframe['EWO'] > self.ewo_high.value) &
+                (dataframe['rsi'] < self.rsi_buy.value) &
+                (dataframe['volume'] > 0) &
+                (dataframe['close'] < (
+                    dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
+            ),
+            ['buy', 'buy_tag']] = (1, 'ewo1')
+
+        dataframe.loc[
+            (
+                (dataframe['rsi_fast'] < self.rsi_fast_buy.value) &
+                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset_2.value)) &
+                (dataframe['EWO'] > self.ewo_high_2.value) &
+                (dataframe['rsi'] < self.rsi_buy.value) &
+                (dataframe['volume'] > 0) &
+                (dataframe['close'] < (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
+                (dataframe['rsi'] < 25)
+            ),
+            ['buy', 'buy_tag']] = (1, 'ewo2')
+
+        dataframe.loc[
+            (
+                (dataframe['rsi_fast'] < self.rsi_fast_buy.value) &
+                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
+                (dataframe['EWO'] < self.ewo_low.value) &
+                (dataframe['volume'] > 0) &
+                (dataframe['close'] < (
+                    dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
+            ),
+            ['buy', 'buy_tag']] = (1, 'ewolow')
+
+        if dont_buy_conditions:
+            for condition in dont_buy_conditions:
+                dataframe.loc[condition, 'buy'] = 0
+
+        return dataframe
+
+    def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        conditions = []
+
+        conditions.append( # 4 consecutive equal highs, a whale gets rid off a fortune, go away before is too late
+            (dataframe['high'] == dataframe['high'].shift(1)) &
+            (dataframe['high'].shift(1) == dataframe['high'].shift(2)) &
+            (dataframe['high'].shift(2) == dataframe['high'].shift(3))
+        )
+
+        conditions.append(
+            ((dataframe['close'] > dataframe['sma_9']) &
+                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset_2.value)) &
+                (dataframe['rsi'] > 50) &
+                (dataframe['volume'] > 0) &
+                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
+             )
+            |
+            (
+                (dataframe['close'] < dataframe['hma_50']) &
+                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
+                (dataframe['volume'] > 0) &
+                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
+            )
+
+        )
+
+        if conditions:
+            dataframe.loc[
+                reduce(lambda x, y: x | y, conditions),
+                'sell'
+            ]=1
+
+        return dataframe
+        

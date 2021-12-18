@@ -486,7 +486,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class TrailingBuyStrat2(ClucHAnix_BB_RPB_MOD):
+class TrailingBuyStrat2_ClucHAnix_BB_RPB_MOD(ClucHAnix_BB_RPB_MOD):
     # Original idea by @MukavaValkku, code by @tirail and @stash86
     #
     # This class is designed to inherit from yours and starts trailing buy with your buy signals

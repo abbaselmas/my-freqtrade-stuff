@@ -27,7 +27,7 @@ def ha_typical_price(bars):
     return Series(index=bars.index, data=res)
 
 
-class ClucHAnix5m(IStrategy):
+class TrailingBuy_ClucHAnix_5m_E0V1E_by_TraNz(IStrategy):
     """
     VERSION MODIFIED BY REUNIWARE (InvestDataSystems@Yahoo.Com / 2021)
     THIS VERSION CONTAINS HYPEROPT SETTINGS FROM E0V1E (cf. https://discord.gg/Ayvcvs6N )
@@ -275,7 +275,7 @@ class ClucHAnix5m(IStrategy):
 logger = logging.getLogger(__name__)
 
 
-class TrailingBuyStratCluc5m(ClucHAnix5m):
+class TrailingBuyStratCluc5m(TrailingBuy_ClucHAnix_5m_E0V1E_by_TraNz):
     # Original idea by @MukavaValkku, code by @tirail and @stash86
     #
     # This class is designed to inherit from yours and starts trailing buy with your buy signals
