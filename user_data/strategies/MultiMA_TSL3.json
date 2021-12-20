@@ -1,5 +1,5 @@
 {
-  "strategy_name": "MultiMA_TSL",
+  "strategy_name": "MultiMA_TSL3",
   "params": {
     "buy": {
       "base_nb_candles_buy_ema": 41,
