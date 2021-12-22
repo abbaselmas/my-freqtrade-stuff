@@ -25,8 +25,6 @@ import numpy as np
 
 class Zeusv2(IStrategy):
 
-    # 53/167:    167 trades. 96/66/5 Wins/Draws/Losses. Avg profit   3.00%. Median profit   2.70%. Total profit  0.16479843 BTC ( 164.80Σ%). Avg duration 22:04:00 min. Objective: -63.49577
-
     # Buy hyperspace params:
     buy_params = {
         "buy_cat": "<R",

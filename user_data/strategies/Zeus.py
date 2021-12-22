@@ -25,14 +25,6 @@ import numpy as np
 
 class Zeus(IStrategy):
 
-    # *    1/43:     86 trades. 72/6/8 Wins/Draws/Losses. Avg profit  12.66%. Median profit  11.99%. Total profit  0.10894395 BTC ( 108.94Σ%). Avg duration 3 days, 0:31:00 min. Objective: -48.48793
-    # "max_open_trades": 10,
-    # "stake_currency": "BTC",
-    # "stake_amount": 0.01,
-    # "tradable_balance_ratio": 0.99,
-    # "timeframe": "4h",
-    # "dry_run_wallet": 0.1,
-
     # Buy hyperspace params:
     buy_params = {
         "buy_cat": "<R",
