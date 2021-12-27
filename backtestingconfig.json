@@ -53,7 +53,7 @@
         "remove_pumps": false
     },
     "telegram": {
-        "enabled": true,
+        "enabled": false,
         "token": "",
         "chat_id": "",
         "balance_dust_level": 0.01,
@@ -80,7 +80,7 @@
         ]
     },
     "api_server": {
-        "enabled": true,
+        "enabled": false,
         "listen_ip_address": "0.0.0.0",
         "listen_port": 8080,
         "verbosity": "error",
