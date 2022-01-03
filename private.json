@@ -1,0 +1,11 @@
+{
+    "exchange": {
+        "name": "binance",
+        "key": "",
+        "secret": "",
+    },
+    "telegram": {
+        "token": "",
+        "chat_id": ""
+    },
+}
