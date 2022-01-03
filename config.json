@@ -80,7 +80,29 @@
                 "/show_config",
                 "/reload_config"
             ]
-        ]
+        ],
+        "notification_settings": {
+            "status": "silent",
+            "warning": "on",
+            "startup": "silent",
+            "buy": "silent",
+            "sell": {
+                "roi": "silent",
+                "emergency_sell": "on",
+                "force_sell": "on",
+                "sell_signal": "silent",
+                "trailing_stop_loss": "on",
+                "stop_loss": "on",
+                "stoploss_on_exchange": "on",
+                "custom_sell": "silent"
+            },
+            "buy_cancel": "silent",
+            "sell_cancel": "on",
+            "buy_fill": "silent",
+            "sell_fill": "silent",
+            "protection_trigger": "silent",
+            "protection_trigger_global": "on"
+        }
     },
     "api_server": {
         "enabled": true,
