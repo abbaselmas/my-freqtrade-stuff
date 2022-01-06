@@ -137,14 +137,15 @@ class abbas(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "0": 0.239,
-        "16": 0.046,
-        "55": 0.022,
-        "155": 0
+        # "0": 0.283,
+        # "40": 0.086,
+        # "99": 0.036,
+        "0": 0.10,
+        
     }
 
     # Stoploss:
-    stoploss = -0.079
+    stoploss = -0.07
 
     # SMAOffset
     high_offset_ema = DecimalParameter(0.99, 1.1, default=1.012, load=True, space='sell', optimize=False)
@@ -217,8 +218,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.346
-    trailing_stop_positive_offset = 0.391
+    trailing_stop_positive = 0.001
+    trailing_stop_positive_offset = 0.018
     trailing_only_offset_is_reached = True
 
     # Sell signal
