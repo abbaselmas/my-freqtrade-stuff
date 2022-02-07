@@ -1,12 +1,12 @@
 {
-    "max_open_trades": 5,
+    "max_open_trades": 6,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
     "dry_run": false,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 300,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
         "buy": 10,
@@ -78,7 +78,8 @@
             ],
             [
                 "/show_config",
-                "/reload_config"
+                "/reload_config",
+                "/performance"
             ]
         ],
         "notification_settings": {
