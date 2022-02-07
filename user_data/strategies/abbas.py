@@ -219,7 +219,7 @@ class abbas(IStrategy):
     # Trailing stop:
     trailing_stop = True
     trailing_stop_positive = 0.001
-    trailing_stop_positive_offset = 0.018
+    trailing_stop_positive_offset = 0.016
     trailing_only_offset_is_reached = True
 
     # Sell signal
