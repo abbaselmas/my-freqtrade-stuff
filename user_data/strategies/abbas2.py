@@ -72,16 +72,20 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas(IStrategy):
+class abbas2(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:
     minimal_roi = {
-         "0"  : 100
+         "0"  : 0.103,
+#         "19" : 0.087,
+#         "76" : 0.037,
+#         "135": 0
     }
 
     # Stoploss:
-    stoploss = -0.98
+    stoploss = -0.073
+    #stoploss = -0.98
 
     # SMAOffset
     high_offset_ema = DecimalParameter(0.99, 1.1, default=1.012, load=True, space='sell', optimize=False)
