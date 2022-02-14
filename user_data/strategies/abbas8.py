@@ -18,13 +18,13 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 13,
-    "ewo_high": 2.177,
-    "ewo_high_2": -0.121,
-    "ewo_low": -12.135,
-    "low_offset": 0.988,
-    "low_offset_2": 0.918,
-    "rsi_buy": 61,
+    "base_nb_candles_buy": 11,
+    "ewo_high": 2.17,
+    "ewo_high_2": -0.119,
+    "ewo_low": -11.804,
+    "low_offset": 0.99,
+    "low_offset_2": 0.922,
+    "rsi_buy": 54,
 }
 
 # Sell hyperspace params:
@@ -73,15 +73,15 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas8(IStrategy):
+class abbas8trail(IStrategy):
     INTERFACE_VERSION = 2
 
     class HyperOpt:
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
-                SKDecimal(0.0005, 0.002, decimals=4, name='trailing_stop_positive'),
-                SKDecimal(0.005, 0.02, decimals=3, name='trailing_stop_positive_offset_p1'),
+                SKDecimal(0.0001, 0.0020, decimals=4, name='trailing_stop_positive'),
+                SKDecimal(0.005, 0.020, decimals=3, name='trailing_stop_positive_offset_p1'),
                 Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
 
@@ -147,15 +147,13 @@ class abbas8(IStrategy):
     slow_ewo = 200
     ewo_low = DecimalParameter(-20.0, -8.0,default=buy_params['ewo_low'], space='buy', optimize=True)
     ewo_high = DecimalParameter(2.0, 12.0, default=buy_params['ewo_high'], space='buy', optimize=True)
-
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params['ewo_high_2'], space='buy', optimize=True)
-
     rsi_buy = IntParameter(30, 70, default=buy_params['rsi_buy'], space='buy', optimize=True)
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0005
-    trailing_stop_positive_offset = 0.0165
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.0151
     trailing_only_offset_is_reached = True
 
     # Sell signal
