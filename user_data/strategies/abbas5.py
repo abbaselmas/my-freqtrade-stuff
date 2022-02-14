@@ -17,52 +17,52 @@ from freqtrade.exchange import timeframe_to_prev_date
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 19,
-    "ewo_high": 3.646,
-    "ewo_high_2": -4.428,
-    "ewo_low": -8.546,
-    "low_offset": 0.985,
-    "low_offset_2": 0.959,
-    "rsi_buy": 57,
+    "base_nb_candles_buy": 9,
+    "ewo_high": 2.408,
+    "ewo_high_2": 11.432,
+    "ewo_low": -10.115,
+    "low_offset": 0.99,
+    "low_offset_2": 0.922,
+    "rsi_buy": 54,
 }
 
 # Sell hyperspace params:
 sell_params = {
-   "base_nb_candles_sell": 18,
-   "high_offset": 1.001,
-   "high_offset_2": 1.051,
-   "high_offset_ema": 1.04,
-   "sell_custom_dec_profit_1": 0.013,
-   "sell_custom_dec_profit_2": 0.05,
-   "sell_custom_profit_0": 0.064,
-   "sell_custom_profit_1": 0.019,
-   "sell_custom_profit_2": 0.057,
-   "sell_custom_profit_3": 0.221,
-   "sell_custom_profit_4": 0.407,
-   "sell_custom_profit_under_rel_1": 0.011,
-   "sell_custom_profit_under_rsi_diff_1": 19.348,
-   "sell_custom_rsi_0": 31.399,
-   "sell_custom_rsi_1": 33.34,
-   "sell_custom_rsi_2": 45.94,
-   "sell_custom_rsi_3": 41.81,
-   "sell_custom_rsi_4": 45.26,
-   "sell_custom_stoploss_under_rel_1": 0.005,
-   "sell_custom_stoploss_under_rsi_diff_1": 3.24,
-   "sell_custom_under_profit_1": 0.053,
-   "sell_custom_under_profit_2": 0.061,
-   "sell_custom_under_profit_3": 0.096,
-   "sell_custom_under_rsi_1": 39.7,
-   "sell_custom_under_rsi_2": 54.9,
-   "sell_custom_under_rsi_3": 56.4,
-   "sell_trail_down_1": 0.185,
-   "sell_trail_down_2": 0.185,
-   "sell_trail_down_3": 0.012,
-   "sell_trail_profit_max_1": 0.27,
-   "sell_trail_profit_max_2": 0.16,
-   "sell_trail_profit_max_3": 0.12,
-   "sell_trail_profit_min_1": 0.24,
-   "sell_trail_profit_min_2": 0.068,
-   "sell_trail_profit_min_3": 0.017,
+    "base_nb_candles_sell": 15,
+    "high_offset": 1.0,
+    "high_offset_2": 1.327,
+    "high_offset_ema": 1.057,
+    "sell_custom_dec_profit_1": 0.024,
+    "sell_custom_dec_profit_2": 0.185,
+    "sell_custom_profit_0": 0.089,
+    "sell_custom_profit_1": 0.063,
+    "sell_custom_profit_2": 0.048,
+    "sell_custom_profit_3": 0.258,
+    "sell_custom_profit_4": 0.457,
+    "sell_custom_profit_under_rel_1": 0.04,
+    "sell_custom_profit_under_rsi_diff_1": 1.825,
+    "sell_custom_rsi_0": 32.3,
+    "sell_custom_rsi_1": 47.9,
+    "sell_custom_rsi_2": 38.3,
+    "sell_custom_rsi_3": 42.2,
+    "sell_custom_rsi_4": 57.5,
+    "sell_custom_stoploss_under_rel_1": 0.007,
+    "sell_custom_stoploss_under_rsi_diff_1": 10.538,
+    "sell_custom_under_profit_1": 0.094,
+    "sell_custom_under_profit_2": 0.031,
+    "sell_custom_under_profit_3": 0.015,
+    "sell_custom_under_rsi_1": 38.3,
+    "sell_custom_under_rsi_2": 57.1,
+    "sell_custom_under_rsi_3": 65.9,
+    "sell_trail_down_1": 0.1,
+    "sell_trail_down_2": 0.167,
+    "sell_trail_down_3": 0.016,
+    "sell_trail_profit_max_1": 0.04,
+    "sell_trail_profit_max_2": 0.11,
+    "sell_trail_profit_max_3": 0.14,
+    "sell_trail_profit_min_1": 0.092,
+    "sell_trail_profit_min_2": 0.058,
+    "sell_trail_profit_min_3": 0.058,
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -72,7 +72,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas5(IStrategy):
+class abbas5buysell(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:
