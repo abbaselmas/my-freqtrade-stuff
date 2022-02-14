@@ -14,6 +14,7 @@ from freqtrade.persistence import Trade
 from freqtrade.strategy import stoploss_from_open, merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
+from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
 # Buy hyperspace params:
 buy_params = {
@@ -74,6 +75,15 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 
 class abbas8(IStrategy):
     INTERFACE_VERSION = 2
+
+    class HyperOpt:
+        def trailing_space() -> List[Dimension]:
+            return[
+                Categorical([True], name='trailing_stop'),
+                SKDecimal(0.0005, 0.002, decimals=4, name='trailing_stop_positive'),
+                SKDecimal(0.005, 0.02, decimals=3, name='trailing_stop_positive_offset_p1'),
+                Categorical([True, False], name='trailing_only_offset_is_reached'),
+            ]
 
     # ROI table:
     minimal_roi = {
@@ -144,8 +154,8 @@ class abbas8(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.001
-    trailing_stop_positive_offset = 0.016
+    trailing_stop_positive = 0.0005
+    trailing_stop_positive_offset = 0.0165
     trailing_only_offset_is_reached = True
 
     # Sell signal
