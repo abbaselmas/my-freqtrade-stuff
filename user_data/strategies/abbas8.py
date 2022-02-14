@@ -75,13 +75,6 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 class abbas8(IStrategy):
     INTERFACE_VERSION = 2
 
-    class HyperOpt:
-        def trailing_space():
-            return [
-                SKDecimal(0.0015, 0.0005, decimals=4, name='trailing_stop_positive'),
-                SKDecimal(0.001, 0.02, decimals=4, name='trailing_stop_positive_offset')
-                ]
-
     # ROI table:
     minimal_roi = {
         "0": 0.103
@@ -151,8 +144,8 @@ class abbas8(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.001
-    trailing_stop_positive_offset = 0.016
+    trailing_stop_positive = DecimalParameter(0.0005, 0.0015,default=0.001, space='trailing', optimize=True)
+    trailing_stop_positive_offset = DecimalParameter(0.001, 0.02,default=0.016, space='trailing', optimize=True)
     trailing_only_offset_is_reached = True
 
     # Sell signal
