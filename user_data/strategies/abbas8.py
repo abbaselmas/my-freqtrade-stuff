@@ -15,26 +15,15 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 
-## Buy hyperspace params:
-#buy_params = {
-# "base_nb_candles_buy": 9,
-#  "ewo_high": 2.533,
-#  "ewo_high_2": 4.277,
-#  "ewo_low": -9.201,
-#  "low_offset": 0.984,
-#  "low_offset_2": 0.99,
-#  "rsi_buy": 52,
-#}
-
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 19,
-    "ewo_high": 3.646,
-    "ewo_high_2": -4.428,
-    "ewo_low": -8.546,
-    "low_offset": 0.985,
-    "low_offset_2": 0.959,
-    "rsi_buy": 57,
+    "base_nb_candles_buy": 13,
+    "ewo_high": 2.177,
+    "ewo_high_2": -0.121,
+    "ewo_low": -12.135,
+    "low_offset": 0.988,
+    "low_offset_2": 0.918,
+    "rsi_buy": 61,
 }
 
 # Sell hyperspace params:
@@ -83,7 +72,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas7(IStrategy):
+class abbas8(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:

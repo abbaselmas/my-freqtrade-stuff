@@ -15,65 +15,54 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 
-## Buy hyperspace params:
-#buy_params = {
-# "base_nb_candles_buy": 9,
-#  "ewo_high": 2.533,
-#  "ewo_high_2": 4.277,
-#  "ewo_low": -9.201,
-#  "low_offset": 0.984,
-#  "low_offset_2": 0.99,
-#  "rsi_buy": 52,
-#}
-
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 19,
-    "ewo_high": 3.646,
-    "ewo_high_2": -4.428,
-    "ewo_low": -8.546,
-    "low_offset": 0.985,
-    "low_offset_2": 0.959,
-    "rsi_buy": 57,
+    "base_nb_candles_buy": 9,
+    "ewo_high": 2.408,
+    "ewo_high_2": 11.432,
+    "ewo_low": -10.115,
+    "low_offset": 0.99,
+    "low_offset_2": 0.922,
+    "rsi_buy": 54,
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 11,
-    "high_offset": 1.014,
-    "high_offset_2": 1.268,
-    "high_offset_ema": 0.993,
-    "sell_custom_dec_profit_1": 0.023,
-    "sell_custom_dec_profit_2": 0.18,
-    "sell_custom_profit_0": 0.057,
-    "sell_custom_profit_1": 0.093,
-    "sell_custom_profit_2": 0.083,
-    "sell_custom_profit_3": 0.158,
-    "sell_custom_profit_4": 0.178,
-    "sell_custom_profit_under_rel_1": 0.024,
-    "sell_custom_profit_under_rsi_diff_1": 2.105,
-    "sell_custom_rsi_0": 34.3,
-    "sell_custom_rsi_1": 34.7,
-    "sell_custom_rsi_2": 47.0,
-    "sell_custom_rsi_3": 53.3,
-    "sell_custom_rsi_4": 47.8,
-    "sell_custom_stoploss_under_rel_1": 0.006,
-    "sell_custom_stoploss_under_rsi_diff_1": 11.99,
-    "sell_custom_under_profit_1": 0.015,
-    "sell_custom_under_profit_2": 0.076,
+    "base_nb_candles_sell": 15,
+    "high_offset": 1.0,
+    "high_offset_2": 1.327,
+    "high_offset_ema": 1.057,
+    "sell_custom_dec_profit_1": 0.024,
+    "sell_custom_dec_profit_2": 0.185,
+    "sell_custom_profit_0": 0.089,
+    "sell_custom_profit_1": 0.063,
+    "sell_custom_profit_2": 0.048,
+    "sell_custom_profit_3": 0.258,
+    "sell_custom_profit_4": 0.457,
+    "sell_custom_profit_under_rel_1": 0.04,
+    "sell_custom_profit_under_rsi_diff_1": 1.825,
+    "sell_custom_rsi_0": 32.3,
+    "sell_custom_rsi_1": 47.9,
+    "sell_custom_rsi_2": 38.3,
+    "sell_custom_rsi_3": 42.2,
+    "sell_custom_rsi_4": 57.5,
+    "sell_custom_stoploss_under_rel_1": 0.007,
+    "sell_custom_stoploss_under_rsi_diff_1": 10.538,
+    "sell_custom_under_profit_1": 0.094,
+    "sell_custom_under_profit_2": 0.031,
     "sell_custom_under_profit_3": 0.015,
-    "sell_custom_under_rsi_1": 54.4,
-    "sell_custom_under_rsi_2": 53.9,
-    "sell_custom_under_rsi_3": 66.5,
-    "sell_trail_down_1": 0.08,
-    "sell_trail_down_2": 0.07,
-    "sell_trail_down_3": 0.021,
-    "sell_trail_profit_max_1": 0.13,
-    "sell_trail_profit_max_2": 0.1,
-    "sell_trail_profit_max_3": 0.13,
-    "sell_trail_profit_min_1": 0.198,
-    "sell_trail_profit_min_2": 0.016,
-    "sell_trail_profit_min_3": 0.057,
+    "sell_custom_under_rsi_1": 38.3,
+    "sell_custom_under_rsi_2": 57.1,
+    "sell_custom_under_rsi_3": 65.9,
+    "sell_trail_down_1": 0.1,
+    "sell_trail_down_2": 0.167,
+    "sell_trail_down_3": 0.016,
+    "sell_trail_profit_max_1": 0.04,
+    "sell_trail_profit_max_2": 0.11,
+    "sell_trail_profit_max_3": 0.14,
+    "sell_trail_profit_min_1": 0.092,
+    "sell_trail_profit_min_2": 0.058,
+    "sell_trail_profit_min_3": 0.058,
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -83,7 +72,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas7(IStrategy):
+class abbas5buysell(IStrategy):
     INTERFACE_VERSION = 2
 
     # ROI table:
@@ -104,15 +93,15 @@ class abbas7(IStrategy):
     high_offset_2 = DecimalParameter(0.99, 1.5, default=sell_params['high_offset_2'], space='sell', optimize=True)
 
     sell_custom_profit_0 = DecimalParameter(0.001, 0.1, default=sell_params['sell_custom_profit_0'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_rsi_0 = DecimalParameter(30.0, 40.0, default=sell_params['sell_custom_rsi_0'], space='sell', decimals=3, optimize=True, load=True)
+    sell_custom_rsi_0 = DecimalParameter(30.0, 40.0, default=sell_params['sell_custom_rsi_0'], space='sell', decimals=1, optimize=True, load=True)
     sell_custom_profit_1 = DecimalParameter(0.005, 0.1, default=sell_params['sell_custom_profit_1'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_rsi_1 = DecimalParameter(30.0, 50.0, default=sell_params['sell_custom_rsi_1'], space='sell', decimals=2, optimize=True, load=True)
+    sell_custom_rsi_1 = DecimalParameter(30.0, 50.0, default=sell_params['sell_custom_rsi_1'], space='sell', decimals=1, optimize=True, load=True)
     sell_custom_profit_2 = DecimalParameter(0.007, 0.1, default=sell_params['sell_custom_profit_2'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_rsi_2 = DecimalParameter(34.0, 50.0, default=sell_params['sell_custom_rsi_2'], space='sell', decimals=2, optimize=True, load=True)
+    sell_custom_rsi_2 = DecimalParameter(34.0, 50.0, default=sell_params['sell_custom_rsi_2'], space='sell', decimals=1, optimize=True, load=True)
     sell_custom_profit_3 = DecimalParameter(0.009, 0.30, default=sell_params['sell_custom_profit_3'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_rsi_3 = DecimalParameter(38.0, 55.0, default=sell_params['sell_custom_rsi_3'], space='sell', decimals=2, optimize=True, load=True)
+    sell_custom_rsi_3 = DecimalParameter(38.0, 55.0, default=sell_params['sell_custom_rsi_3'], space='sell', decimals=1, optimize=True, load=True)
     sell_custom_profit_4 = DecimalParameter(0.01, 0.6, default=sell_params['sell_custom_profit_4'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_rsi_4 = DecimalParameter(40.0, 58.0, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=2, optimize=True, load=True)
+    sell_custom_rsi_4 = DecimalParameter(40.0, 58.0, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=1, optimize=True, load=True)
 
     sell_custom_under_profit_1 = DecimalParameter(0.001, 0.10, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=3, optimize=True, load=True)
     sell_custom_under_rsi_1 = DecimalParameter(36.0, 60.0, default=sell_params['sell_custom_under_rsi_1'], space='sell', decimals=1, optimize=True, load=True)
