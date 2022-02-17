@@ -87,21 +87,10 @@ class abbas8(IStrategy):
 
     # Protection hyperspace params:
     protection_params = {
-        "low_profit_lookback": 48,
-        "low_profit_min_req": 0.04,
-        "low_profit_stop_duration": 14,
-
-        "cooldown_lookback": 2,  # value loaded from strategy
-        "stoploss_lookback": 72,  # value loaded from strategy
-        "stoploss_stop_duration": 20,  # value loaded from strategy
+        "cooldown": 2
     }
 
-    cooldown_lookback = IntParameter(2, 48, default=30, space="protection", optimize=False)
-
-    low_profit_optimize = False
-    low_profit_lookback = IntParameter(2, 60, default=20, space="protection", optimize=low_profit_optimize)
-    low_profit_stop_duration = IntParameter(12, 200, default=20, space="protection", optimize=low_profit_optimize)
-    low_profit_min_req = DecimalParameter(-0.05, 0.05, default=-0.05, space="protection", decimals=2, optimize=low_profit_optimize)
+    cooldown = IntParameter(2, 60, default=30, space="protection", optimize=True)
 
     @property
     def protections(self):
@@ -109,15 +98,8 @@ class abbas8(IStrategy):
 
         prot.append({
             "method": "CooldownPeriod",
-            "stop_duration_candles": self.cooldown_lookback.value
+            "stop_duration": self.cooldown.value
         })
-        #prot.append({
-        #    "method": "LowProfitPairs",
-        #    "lookback_period_candles": self.low_profit_lookback.value,
-        #    "trade_limit": 1,
-        #    "stop_duration": int(self.low_profit_stop_duration.value),
-        #    "required_profit": self.low_profit_min_req.value
-        #})
 
         return prot
 

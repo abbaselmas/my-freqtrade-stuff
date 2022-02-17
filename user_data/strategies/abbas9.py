@@ -74,16 +74,6 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-@property
-def protections(self):
-    return [
-        {
-            "method": "CooldownPeriod",
-            #"stop_duration_candles": 5
-            "stop_duration": 30
-        }
-    ]
-
 class abbas9(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -95,6 +85,24 @@ class abbas9(IStrategy):
                 SKDecimal(0.005, 0.020, decimals=3, name='trailing_stop_positive_offset_p1'),
                 Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
+
+    # Protection hyperspace params:
+    protection_params = {
+        "cooldown": 2
+    }
+
+    cooldown = IntParameter(2, 60, default=30, space="protection", optimize=True)
+
+    @property
+    def protections(self):
+        prot = []
+
+        prot.append({
+            "method": "CooldownPeriod",
+            "stop_duration": self.cooldown.value
+        })
+
+        return prot
 
     # ROI table:
     minimal_roi = {
