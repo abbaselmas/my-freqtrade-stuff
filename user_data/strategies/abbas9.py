@@ -91,7 +91,7 @@ class abbas9(IStrategy):
         "cooldown": 2
     }
 
-    cooldown = IntParameter(2, 60, default=30, space="protection", optimize=True)
+    cooldown = IntParameter(1, 48, default=2, space="protection", optimize=True)
 
     @property
     def protections(self):
@@ -99,7 +99,7 @@ class abbas9(IStrategy):
 
         prot.append({
             "method": "CooldownPeriod",
-            "stop_duration": self.cooldown.value
+            "stop_duration_candles": self.cooldown.value
         })
 
         return prot
