@@ -75,6 +75,16 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 class abbas5buysell(IStrategy):
     INTERFACE_VERSION = 2
 
+    @property
+    def protections(self):
+        return [
+            {
+                "method": "CooldownPeriod",
+                #"stop_duration_candles": 5
+                "stop_duration": 30
+            }
+        ]
+
     # ROI table:
     minimal_roi = {
         "0": 0.103

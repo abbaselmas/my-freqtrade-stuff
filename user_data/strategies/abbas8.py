@@ -85,6 +85,17 @@ class abbas8trail(IStrategy):
                 Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
 
+
+    @property
+    def protections(self):
+        return [
+            {
+                "method": "CooldownPeriod",
+                #"stop_duration_candles": 5
+                "stop_duration": 30
+            }
+        ]
+
     # ROI table:
     minimal_roi = {
         "0": 0.103
