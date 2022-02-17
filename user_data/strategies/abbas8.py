@@ -73,16 +73,6 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-@property
-def protections(self):
-    return [
-        {
-            "method": "CooldownPeriod",
-            #"stop_duration_candles": 5
-            "stop_duration": 30
-        }
-    ]
-
 class abbas8(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -94,6 +84,42 @@ class abbas8(IStrategy):
                 SKDecimal(0.005, 0.020, decimals=3, name='trailing_stop_positive_offset_p1'),
                 Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
+
+    # Protection hyperspace params:
+    protection_params = {
+        "low_profit_lookback": 48,
+        "low_profit_min_req": 0.04,
+        "low_profit_stop_duration": 14,
+
+        "cooldown_lookback": 2,  # value loaded from strategy
+        "stoploss_lookback": 72,  # value loaded from strategy
+        "stoploss_stop_duration": 20,  # value loaded from strategy
+    }
+
+    cooldown_lookback = IntParameter(2, 48, default=30, space="protection", optimize=False)
+
+    low_profit_optimize = False
+    low_profit_lookback = IntParameter(2, 60, default=20, space="protection", optimize=low_profit_optimize)
+    low_profit_stop_duration = IntParameter(12, 200, default=20, space="protection", optimize=low_profit_optimize)
+    low_profit_min_req = DecimalParameter(-0.05, 0.05, default=-0.05, space="protection", decimals=2, optimize=low_profit_optimize)
+
+    @property
+    def protections(self):
+        prot = []
+
+        prot.append({
+            "method": "CooldownPeriod",
+            "stop_duration_candles": self.cooldown_lookback.value
+        })
+        #prot.append({
+        #    "method": "LowProfitPairs",
+        #    "lookback_period_candles": self.low_profit_lookback.value,
+        #    "trade_limit": 1,
+        #    "stop_duration": int(self.low_profit_stop_duration.value),
+        #    "required_profit": self.low_profit_min_req.value
+        #})
+
+        return prot
 
     # ROI table:
     minimal_roi = {
