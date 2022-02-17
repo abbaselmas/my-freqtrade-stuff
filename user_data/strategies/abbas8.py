@@ -81,9 +81,9 @@ def protections(self):
             #"stop_duration_candles": 5
             "stop_duration": 30
         }
-    ]    
+    ]
 
-class abbas8trail(IStrategy):
+class abbas8(IStrategy):
     INTERFACE_VERSION = 2
 
     class HyperOpt:
