@@ -88,10 +88,10 @@ class abbas9(IStrategy):
 
     # Protection hyperspace params:
     protection_params = {
-        "cooldown": 2
+        "cooldown": 0
     }
 
-    cooldown = IntParameter(1, 48, default=2, space="protection", optimize=True)
+    cooldown = IntParameter(0, 48, default=2, space="protection", optimize=True)
 
     @property
     def protections(self):
@@ -110,7 +110,7 @@ class abbas9(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.036
+    stoploss = -0.063
 
     # SMAOffset
     high_offset_ema = DecimalParameter(0.99, 1.1, default=1.012, load=True, space='sell', optimize=True)
