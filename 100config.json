@@ -6,7 +6,7 @@
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
     "dry_run": true,
-    "dry_run_wallet": 300,
+    "dry_run_wallet": 100,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
         "buy": 10,
@@ -15,7 +15,7 @@
     },
     "order_types": {
         "buy": "limit",
-        "sell": "market",
+        "sell": "limit",
         "emergencysell": "market",
         "forcebuy": "market",
         "forcesell": "market",
@@ -77,25 +77,11 @@
     "pairlists": [
         {
             "method": "StaticPairList"
-        },
-        {
-            "method": "AgeFilter",
-            "min_days_listed": 2
         }
     ],
     "exchange": {
         "name": "binance",
-        "pair_whitelist": [
-            ".*/USDT"
-        ],
-        "pair_blacklist": [
-            "(BNB)/.*",
-            ".*(_PREMIUM|BEAR|BULL|DOWN|HALF|HEDGE|UP|[1235][SL])/.*",
-            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
-            "(BUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDP|USDT|VAI)/.*",
-            "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
-            "(BOBA|CTXC|HBAR|NMR|SLP|OMG|ONG|ARDR)/.*"
-        ],
+        "pair_whitelist": ["PYR/USDT","EPS/USDT","CAKE/USDT","BLZ/USDT","GRT/USDT","LRC/USDT","DYDX/USDT","FIDA/USDT","SNX/USDT","GALA/USDT","LTC/USDT","FTT/USDT","MBOX/USDT","BTC/USDT","XLM/USDT","NULS/USDT","SUN/USDT","SPELL/USDT","AR/USDT","NEAR/USDT","OGN/USDT","PEOPLE/USDT","RUNE/USDT","COCOS/USDT","ENS/USDT","ETH/USDT","CELO/USDT","QNT/USDT","FTM/USDT","SKL/USDT","ICP/USDT","ALICE/USDT","DUSK/USDT","CELR/USDT","HNT/USDT","OM/USDT","SAND/USDT","ONE/USDT","EOS/USDT","KLAY/USDT","FLOW/USDT","JST/USDT","KEEP/USDT","DOGE/USDT","BCH/USDT","JASMY/USDT","WAVES/USDT","RNDR/USDT","DENT/USDT","FIL/USDT","SUSHI/USDT","DOT/USDT","EGLD/USDT","THETA/USDT","GXS/USDT","XMR/USDT","OOKI/USDT","UNI/USDT","WIN/USDT","FXS/USDT","REQ/USDT","IOTX/USDT","ANT/USDT","ANC/USDT","ETC/USDT","CHZ/USDT","ATOM/USDT","RARE/USDT","CHR/USDT","AVAX/USDT","FLUX/USDT","INJ/USDT","CHESS/USDT","OXT/USDT","SOL/USDT","REEF/USDT","CRV/USDT","KAVA/USDT","DASH/USDT","ROSE/USDT","MATIC/USDT","AVA/USDT","TLM/USDT","GTC/USDT","TRX/USDT","MASK/USDT","ATA/USDT","ACH/USDT","AXS/USDT","LUNA/USDT","AAVE/USDT","ALGO/USDT","ENJ/USDT","HOT/USDT","PHA/USDT","XTZ/USDT","API3/USDT","MDT/USDT","XRP/USDT","IMX/USDT","DAR/USDT","SHIB/USDT","BETA/USDT","FORTH/USDT","LINK/USDT","NEO/USDT","KEY/USDT","LOKA/USDT","BTTC/USDT","ADA/USDT","VOXEL/USDT","VET/USDT","ZEC/USDT","IDEX/USDT","WING/USDT","ONT/USDT","BAND/USDT","MANA/USDT","ARPA/USDT"],
         "ccxt_config": {
             "enableRateLimit": true,
             "rateLimit": 100,
