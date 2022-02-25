@@ -91,7 +91,7 @@ class abbas11(IStrategy):
         "cooldown": 0
     }
 
-    cooldown = IntParameter(0, 48, default=2, space="protection", optimize=True)
+    cooldown = IntParameter(0, 48, default=0, space="protection", optimize=True)
 
     @property
     def protections(self):
@@ -114,7 +114,7 @@ class abbas11(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.063
+    stoploss = -0.061
 
     # SMAOffset
     high_offset_ema = DecimalParameter(0.99, 1.1, default=1.012, load=True, space='sell', optimize=True)
