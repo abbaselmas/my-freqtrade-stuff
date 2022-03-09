@@ -80,8 +80,8 @@ class abbas(IStrategy):
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
-                SKDecimal(0.0001, 0.0020, decimals=4, name='trailing_stop_positive'),
-                SKDecimal(0.005, 0.020, decimals=3, name='trailing_stop_positive_offset_p1'),
+                SKDecimal(0.0001, 0.0010, decimals=4, name='trailing_stop_positive'),
+                SKDecimal(0.0100, 0.0200, decimals=4, name='trailing_stop_positive_offset_p1'),
                 Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
 
@@ -173,8 +173,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0151
+    trailing_stop_positive = 0.0002
+    trailing_stop_positive_offset = 0.0144
     trailing_only_offset_is_reached = True
 
     # Sell signal
