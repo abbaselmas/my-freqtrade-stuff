@@ -15,7 +15,7 @@
     },
     "order_types": {
         "buy": "limit",
-        "sell": "limit",
+        "sell": "market",
         "emergencysell": "market",
         "forcebuy": "market",
         "forcesell": "market",

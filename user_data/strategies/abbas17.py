@@ -19,13 +19,13 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 13,
-    "ewo_high": 2.101,
-    "ewo_high_2": -2.933,
-    "ewo_low": -16.241,
-    "low_offset": 0.99,
-    "low_offset_2": 0.929,
-    "rsi_buy": 62,
+    "ewo_high": 2.021,
+    "ewo_high_2": 0.721,
+    "ewo_low": -8.728,
+    "rsi_buy": 59,
+    "base_nb_candles_buy": 13,  # value loaded from strategy
+    "low_offset": 0.99,  # value loaded from strategy
+    "low_offset_2": 0.929,  # value loaded from strategy
 }
 
 # Sell hyperspace params:
@@ -74,7 +74,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas15(IStrategy):
+class abbas17(IStrategy):
     INTERFACE_VERSION = 2
 
     class HyperOpt:
@@ -167,10 +167,10 @@ class abbas15(IStrategy):
     # Protection
     fast_ewo = 50
     slow_ewo = 200
-    ewo_low = DecimalParameter(-20.0, -8.0,default=buy_params['ewo_low'], space='buy', optimize=False)
-    ewo_high = DecimalParameter(2.0, 12.0, default=buy_params['ewo_high'], space='buy', optimize=False)
-    ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params['ewo_high_2'], space='buy', optimize=False)
-    rsi_buy = IntParameter(30, 70, default=buy_params['rsi_buy'], space='buy', optimize=False)
+    ewo_low = DecimalParameter(-20.0, -8.0,default=buy_params['ewo_low'], space='buy', optimize=True)
+    ewo_high = DecimalParameter(2.0, 12.0, default=buy_params['ewo_high'], space='buy', optimize=True)
+    ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params['ewo_high_2'], space='buy', optimize=True)
+    rsi_buy = IntParameter(30, 70, default=buy_params['rsi_buy'], space='buy', optimize=True)
 
     # Trailing stop:
     trailing_stop = True
