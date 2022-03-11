@@ -34,18 +34,18 @@ sell_params = {
     "high_offset_ema": 1.033,
     "sell_custom_dec_profit_1": 0.046,
     "sell_custom_dec_profit_2": 0.191,
-    "sell_custom_profit_0": 0.077,
+    "sell_custom_profit_0": 0.008,
     "sell_custom_profit_1": 0.025,
-    "sell_custom_profit_2": 0.008,
+    "sell_custom_profit_2": 0.077,
     "sell_custom_profit_3": 0.156,
     "sell_custom_profit_4": 0.404,
     "sell_custom_profit_under_rel_1": 0.02,
     "sell_custom_profit_under_rsi_diff_1": 0.8,
     "sell_custom_rsi_0": 31.992,
     "sell_custom_rsi_1": 32.6,
-    "sell_custom_rsi_2": 48.34,
-    "sell_custom_rsi_3": 54.24,
-    "sell_custom_rsi_4": 45.68,
+    "sell_custom_rsi_2": 45.68,
+    "sell_custom_rsi_3": 48.34,
+    "sell_custom_rsi_4": 54.24,
     "sell_custom_stoploss_under_rel_1": 0.017,
     "sell_custom_stoploss_under_rsi_diff_1": 0.1,
     "sell_custom_under_profit_1": 0.114,
@@ -90,7 +90,7 @@ class abbas(IStrategy):
                 SKDecimal(0.01, 0.07, decimals=3, name='roi_p2'),
                 SKDecimal(0.01, 0.20, decimals=3, name='roi_p3'),
             ]
-
+        # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
