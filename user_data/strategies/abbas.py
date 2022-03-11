@@ -17,52 +17,52 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "ewo_high": 1.854,
-    "ewo_high_2": -3.14,
-    "ewo_low": -11.0,
-    "rsi_buy": 78,
-    "base_nb_candles_buy": 28,
-    "low_offset": 1.075,
-    "low_offset_2": 0.956
+    "base_nb_candles_buy": 17,
+    "ewo_high": 1.964,
+    "ewo_high_2": -2.91,
+    "ewo_low": -8.27,
+    "low_offset": 1.068,
+    "low_offset_2": 0.941,
+    "rsi_buy": 84,
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "sell_custom_profit_0": 0.006,
-    "sell_custom_profit_1": 0.094,
-    "sell_custom_profit_2": 0.021,
-    "sell_custom_profit_3": 0.292,
-    "sell_custom_profit_4": 0.013,
-    "sell_custom_rsi_0": 37.885,
-    "sell_custom_rsi_1": 49.19,
-    "sell_custom_rsi_2": 45.16,
-    "sell_custom_rsi_3": 52.86,
-    "sell_custom_rsi_4": 44.72,
-    "base_nb_candles_sell": 21,
-    "high_offset": 1.027,
-    "high_offset_2": 1.297,
-    "high_offset_ema": 1.012,
-    "sell_custom_dec_profit_1": 0.053,
-    "sell_custom_dec_profit_2": 0.182,
-    "sell_custom_profit_under_rel_1": 0.029,
-    "sell_custom_profit_under_rsi_diff_1": 10.361,
-    "sell_custom_stoploss_under_rel_1": 0.014,
-    "sell_custom_stoploss_under_rsi_diff_1": 2.0,
-    "sell_custom_under_profit_1": 0.093,
-    "sell_custom_under_profit_2": 0.098,
-    "sell_custom_under_profit_3": 0.091,
-    "sell_custom_under_rsi_1": 44.3,
-    "sell_custom_under_rsi_2": 53.2,
-    "sell_custom_under_rsi_3": 51.3,
-    "sell_trail_down_1": 0.066,
-    "sell_trail_down_2": 0.093,
-    "sell_trail_down_3": 0.037,
-    "sell_trail_profit_max_1": 0.17,
+    "base_nb_candles_sell": 7,
+    "high_offset": 1.055,
+    "high_offset_2": 1.249,
+    "high_offset_ema": 1.033,
+    "sell_custom_dec_profit_1": 0.046,
+    "sell_custom_dec_profit_2": 0.191,
+    "sell_custom_profit_0": 0.077,
+    "sell_custom_profit_1": 0.025,
+    "sell_custom_profit_2": 0.008,
+    "sell_custom_profit_3": 0.156,
+    "sell_custom_profit_4": 0.404,
+    "sell_custom_profit_under_rel_1": 0.02,
+    "sell_custom_profit_under_rsi_diff_1": 0.8,
+    "sell_custom_rsi_0": 31.992,
+    "sell_custom_rsi_1": 32.6,
+    "sell_custom_rsi_2": 48.34,
+    "sell_custom_rsi_3": 54.24,
+    "sell_custom_rsi_4": 45.68,
+    "sell_custom_stoploss_under_rel_1": 0.017,
+    "sell_custom_stoploss_under_rsi_diff_1": 0.1,
+    "sell_custom_under_profit_1": 0.114,
+    "sell_custom_under_profit_2": 0.099,
+    "sell_custom_under_profit_3": 0.095,
+    "sell_custom_under_rsi_1": 58.8,
+    "sell_custom_under_rsi_2": 64.6,
+    "sell_custom_under_rsi_3": 58.5,
+    "sell_trail_down_1": 0.057,
+    "sell_trail_down_2": 0.066,
+    "sell_trail_down_3": 0.049,
+    "sell_trail_profit_max_1": 0.43,
     "sell_trail_profit_max_2": 0.15,
-    "sell_trail_profit_max_3": 0.12,
-    "sell_trail_profit_min_1": 0.054,
-    "sell_trail_profit_min_2": 0.097,
-    "sell_trail_profit_min_3": 0.048,
+    "sell_trail_profit_max_3": 0.09,
+    "sell_trail_profit_min_1": 0.085,
+    "sell_trail_profit_min_2": 0.06,
+    "sell_trail_profit_min_3": 0.1,
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -75,6 +75,30 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 class abbas(IStrategy):
     INTERFACE_VERSION = 2
 
+    class HyperOpt:
+        # Define a custom stoploss space.
+        def stoploss_space():
+            return [SKDecimal(-0.08, -0.04, decimals=3, name='stoploss')]
+
+        # Define custom ROI space
+        def roi_space() -> List[Dimension]:
+            return [
+                Integer(10, 120, name='roi_t1'),
+                Integer(10, 60, name='roi_t2'),
+                Integer(10, 40, name='roi_t3'),
+                SKDecimal(0.01, 0.04, decimals=3, name='roi_p1'),
+                SKDecimal(0.01, 0.07, decimals=3, name='roi_p2'),
+                SKDecimal(0.01, 0.20, decimals=3, name='roi_p3'),
+            ]
+
+        def trailing_space() -> List[Dimension]:
+            return[
+                Categorical([True], name='trailing_stop'),
+                SKDecimal(0.0001, 0.0004, decimals=4, name='trailing_stop_positive'),
+                SKDecimal(0.0100, 0.0200, decimals=3, name='trailing_stop_positive_offset_p1'),
+                Categorical([True, False], name='trailing_only_offset_is_reached'),
+            ]
+
     # ROI table:
     minimal_roi = {
         "0": 0.092,
@@ -84,12 +108,12 @@ class abbas(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.039
+    stoploss = -0.071
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0002
-    trailing_stop_positive_offset = 0.0144
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.0121
     trailing_only_offset_is_reached = True
 
     # Sell signal
@@ -125,26 +149,26 @@ class abbas(IStrategy):
     sell_custom_under_profit_3 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_3'], space='sell', decimals=3, optimize=True, load=True)
     sell_custom_under_rsi_3 = DecimalParameter(48.0, 68.0, default=sell_params['sell_custom_under_rsi_3'], space='sell', decimals=1, optimize=True, load=True)
 
-    sell_custom_dec_profit_1 = DecimalParameter(0.001, 0.10, default=sell_params['sell_custom_dec_profit_1'], space='sell', decimals=3, optimize=True, load=True)
-    sell_custom_dec_profit_2 = DecimalParameter(0.05, 0.2, default=sell_params['sell_custom_dec_profit_2'], space='sell', decimals=3, optimize=True, load=True)
+    sell_custom_dec_profit_1 = DecimalParameter(0.001, 0.100, default=sell_params['sell_custom_dec_profit_1'], space='sell', decimals=3, optimize=True, load=True)
+    sell_custom_dec_profit_2 = DecimalParameter(0.100, 0.200, default=sell_params['sell_custom_dec_profit_2'], space='sell', decimals=3, optimize=True, load=True)
 
     sell_trail_profit_min_1 = DecimalParameter(0.001, 0.25, default=sell_params['sell_trail_profit_min_1'], space='sell', decimals=3, optimize=True, load=True)
     sell_trail_profit_max_1 = DecimalParameter(0.03, 0.5, default=sell_params['sell_trail_profit_max_1'], space='sell', decimals=2, optimize=True, load=True)
-    sell_trail_down_1 = DecimalParameter(0.04, 0.2, default=sell_params['sell_trail_down_1'], space='sell', decimals=3, optimize=True, load=True)
+    sell_trail_down_1 = DecimalParameter(0.040, 0.100, default=sell_params['sell_trail_down_1'], space='sell', decimals=3, optimize=True, load=True)
 
-    sell_trail_profit_min_2 = DecimalParameter(0.004, 0.1, default=sell_params['sell_trail_profit_min_2'], space='sell', decimals=3, optimize=True, load=True)
+    sell_trail_profit_min_2 = DecimalParameter(0.004, 0.100, default=sell_params['sell_trail_profit_min_2'], space='sell', decimals=3, optimize=True, load=True)
     sell_trail_profit_max_2 = DecimalParameter(0.08, 0.25, default=sell_params['sell_trail_profit_max_2'], space='sell', decimals=2, optimize=True, load=True)
-    sell_trail_down_2 = DecimalParameter(0.04, 0.2, default=sell_params['sell_trail_down_2'], space='sell', decimals=3, optimize=True, load=True)
+    sell_trail_down_2 = DecimalParameter(0.040, 0.120, default=sell_params['sell_trail_down_2'], space='sell', decimals=3, optimize=True, load=True)
 
-    sell_trail_profit_min_3 = DecimalParameter(0.006, 0.1, default=sell_params['sell_trail_profit_min_3'], space='sell', decimals=3, optimize=True, load=True)
+    sell_trail_profit_min_3 = DecimalParameter(0.006, 0.100, default=sell_params['sell_trail_profit_min_3'], space='sell', decimals=3, optimize=True, load=True)
     sell_trail_profit_max_3 = DecimalParameter(0.08, 0.16, default=sell_params['sell_trail_profit_max_3'], space='sell', decimals=2, optimize=True, load=True)
-    sell_trail_down_3 = DecimalParameter(0.01, 0.04, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=True, load=True)
+    sell_trail_down_3 = DecimalParameter(0.03, 0.05, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=True, load=True)
 
-    sell_custom_profit_under_rel_1 = DecimalParameter(0.01, 0.04, default=sell_params['sell_custom_profit_under_rel_1'], space='sell', optimize=True, load=True)
-    sell_custom_profit_under_rsi_diff_1 = DecimalParameter(0.0, 20.0, default=sell_params['sell_custom_profit_under_rsi_diff_1'], space='sell', optimize=True, load=True)
+    sell_custom_profit_under_rel_1 = DecimalParameter(0.010, 0.040, default=sell_params['sell_custom_profit_under_rel_1'], space='sell', decimals=3, optimize=True, load=True)
+    sell_custom_profit_under_rsi_diff_1 = DecimalParameter(0.0, 20.0, default=sell_params['sell_custom_profit_under_rsi_diff_1'], space='sell', decimals=1, optimize=True, load=True)
 
-    sell_custom_stoploss_under_rel_1 = DecimalParameter(0.001, 0.02, default=sell_params['sell_custom_stoploss_under_rel_1'], space='sell', optimize=True, load=True)
-    sell_custom_stoploss_under_rsi_diff_1 = DecimalParameter(0.0, 20.0, default=sell_params['sell_custom_stoploss_under_rsi_diff_1'], space='sell', optimize=True, load=True)
+    sell_custom_stoploss_under_rel_1 = DecimalParameter(0.001, 0.020, default=sell_params['sell_custom_stoploss_under_rel_1'], space='sell', decimals=3, optimize=True, load=True)
+    sell_custom_stoploss_under_rsi_diff_1 = DecimalParameter(0.0, 10.0, default=sell_params['sell_custom_stoploss_under_rsi_diff_1'], space='sell', decimals=1, optimize=True, load=True)
 
     # Protection
     fast_ewo = 50
