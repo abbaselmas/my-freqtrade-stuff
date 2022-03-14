@@ -17,13 +17,13 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 17,
     "ewo_high": 1.964,
     "ewo_high_2": -2.91,
     "ewo_low": -8.27,
+    "rsi_buy": 84,
+    "base_nb_candles_buy": 17,
     "low_offset": 1.068,
     "low_offset_2": 0.941,
-    "rsi_buy": 84,
 }
 
 # Sell hyperspace params:
@@ -39,15 +39,11 @@ sell_params = {
     "sell_custom_profit_2": 0.077,
     "sell_custom_profit_3": 0.156,
     "sell_custom_profit_4": 0.404,
-    "sell_custom_profit_under_rel_1": 0.02,
-    "sell_custom_profit_under_rsi_diff_1": 0.8,
     "sell_custom_rsi_0": 31.992,
     "sell_custom_rsi_1": 32.6,
     "sell_custom_rsi_2": 45.68,
     "sell_custom_rsi_3": 48.34,
     "sell_custom_rsi_4": 54.24,
-    "sell_custom_stoploss_under_rel_1": 0.017,
-    "sell_custom_stoploss_under_rsi_diff_1": 0.1,
     "sell_custom_under_profit_1": 0.114,
     "sell_custom_under_profit_2": 0.099,
     "sell_custom_under_profit_3": 0.095,
@@ -112,8 +108,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0121
+    trailing_stop_positive = 0.0002
+    trailing_stop_positive_offset = 0.0135
     trailing_only_offset_is_reached = True
 
     # Sell signal
@@ -123,7 +119,7 @@ class abbas(IStrategy):
     ignore_roi_if_buy_signal = False
 
     # SMAOffset
-    smaoffset_optimize = False
+    smaoffset_optimize = True
     high_offset_ema = DecimalParameter(0.90, 1.1, default=1.012, load=True, space='sell', decimals=3, optimize=smaoffset_optimize)
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params['base_nb_candles_buy'], space='buy', optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params['base_nb_candles_sell'], space='sell', optimize=smaoffset_optimize)
@@ -139,28 +135,28 @@ class abbas(IStrategy):
     sell_custom_profit_3 = DecimalParameter(0.009, 0.30, default=sell_params['sell_custom_profit_3'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
     sell_custom_profit_4 = DecimalParameter(0.01, 0.6, default=sell_params['sell_custom_profit_4'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
 
-    sell_custom_rsi_optimize = False
+    sell_custom_rsi_optimize = True
     sell_custom_rsi_0 = DecimalParameter(30.0, 40.0, default=sell_params['sell_custom_rsi_0'], space='sell', decimals=3, optimize=sell_custom_rsi_optimize, load=True)
     sell_custom_rsi_1 = DecimalParameter(30.0, 50.0, default=sell_params['sell_custom_rsi_1'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
     sell_custom_rsi_2 = DecimalParameter(34.0, 50.0, default=sell_params['sell_custom_rsi_2'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
     sell_custom_rsi_3 = DecimalParameter(38.0, 55.0, default=sell_params['sell_custom_rsi_3'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
     sell_custom_rsi_4 = DecimalParameter(40.0, 58.0, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
 
-    sell_custom_under_profit_optimize = False
+    sell_custom_under_profit_optimize = True
     sell_custom_under_profit_1 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
     sell_custom_under_profit_2 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_2'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
     sell_custom_under_profit_3 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_3'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
 
-    sell_custom_under_rsi_optimize = False
+    sell_custom_under_rsi_optimize = True
     sell_custom_under_rsi_1 = DecimalParameter(36.0, 60.0, default=sell_params['sell_custom_under_rsi_1'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
     sell_custom_under_rsi_2 = DecimalParameter(46.0, 66.0, default=sell_params['sell_custom_under_rsi_2'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
     sell_custom_under_rsi_3 = DecimalParameter(48.0, 68.0, default=sell_params['sell_custom_under_rsi_3'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
 
-    sell_custom_dec_profit_optimize = False
+    sell_custom_dec_profit_optimize = True
     sell_custom_dec_profit_1 = DecimalParameter(0.001, 0.100, default=sell_params['sell_custom_dec_profit_1'], space='sell', decimals=3, optimize=sell_custom_dec_profit_optimize, load=True)
     sell_custom_dec_profit_2 = DecimalParameter(0.100, 0.200, default=sell_params['sell_custom_dec_profit_2'], space='sell', decimals=3, optimize=sell_custom_dec_profit_optimize, load=True)
 
-    sell_trail_optimize = False
+    sell_trail_optimize = True
     sell_trail_profit_min_1 = DecimalParameter(0.001, 0.25, default=sell_params['sell_trail_profit_min_1'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
     sell_trail_profit_max_1 = DecimalParameter(0.03, 0.5, default=sell_params['sell_trail_profit_max_1'], space='sell', decimals=2, optimize=sell_trail_optimize, load=True)
     sell_trail_down_1 = DecimalParameter(0.040, 0.100, default=sell_params['sell_trail_down_1'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
@@ -243,7 +239,6 @@ class abbas(IStrategy):
                 return 'signal_profit_t_1'
             elif (current_profit > self.sell_trail_profit_min_2.value) & (current_profit < self.sell_trail_profit_max_2.value) & (max_profit > (current_profit + self.sell_trail_down_2.value)):
                 return 'signal_profit_t_2'
-
             elif (last_candle['close'] < last_candle['ema_200']) & (current_profit > self.sell_trail_profit_min_3.value) & (current_profit < self.sell_trail_profit_max_3.value) & (max_profit > (current_profit + self.sell_trail_down_3.value)):
                 return 'signal_profit_u_t_1'
 
