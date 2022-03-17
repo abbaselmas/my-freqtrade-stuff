@@ -25,42 +25,6 @@ buy_params = {
     "low_offset_2": 0.941,
     "rsi_buy": 84,
 }
-'''
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 6,
-    "high_offset": 1.088,
-    "high_offset_2": 1.326,
-    "high_offset_ema": 1.065,
-    "sell_custom_dec_profit_1": 0.055,
-    "sell_custom_dec_profit_2": 0.134,
-    "sell_custom_profit_0": 0.01,
-    "sell_custom_profit_1": 0.072,
-    "sell_custom_profit_2": 0.069,
-    "sell_custom_profit_3": 0.213,
-    "sell_custom_profit_4": 0.578,
-    "sell_custom_rsi_0": 39.98,
-    "sell_custom_rsi_1": 30.46,
-    "sell_custom_rsi_2": 37.97,
-    "sell_custom_rsi_3": 49.42,
-    "sell_custom_rsi_4": 51.72,
-    "sell_custom_under_profit_1": 0.104,
-    "sell_custom_under_profit_2": 0.082,
-    "sell_custom_under_profit_3": 0.08,
-    "sell_custom_under_rsi_1": 59.3,
-    "sell_custom_under_rsi_2": 49.0,
-    "sell_custom_under_rsi_3": 65.6,
-    "sell_trail_down_1": 0.067,
-    "sell_trail_down_2": 0.117,
-    "sell_trail_down_3": 0.047,
-    "sell_trail_profit_max_1": 0.08,
-    "sell_trail_profit_max_2": 0.12,
-    "sell_trail_profit_max_3": 0.15,
-    "sell_trail_profit_min_1": 0.116,
-    "sell_trail_profit_min_2": 0.038,
-    "sell_trail_profit_min_3": 0.071,
-}
-'''
 
 # Sell hyperspace params:
 sell_params = {
@@ -107,6 +71,70 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 class abbas(IStrategy):
     INTERFACE_VERSION = 2
 
+    cooldown_stop_duration_candles = IntParameter(0, 48, default=0, space="protection", optimize=False)
+
+    maxdrawdown_optimize = False
+    maxdrawdown_lookback_period_candles = IntParameter(0, 20, default=0, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(0, 50, default=20, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(0, 60, default=48, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_maxalloweddrawdown = DecimalParameter(-0.20, 0.05, default=-0.18, space="protection", decimals=2, optimize=maxdrawdown_optimize)
+
+    stoplossguard_optimize = False
+    stoplossguard_lookback_period_candles = IntParameter(0, 300, default=288, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(0, 20, default=2, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(0, 12, default=6, space="protection", optimize=stoplossguard_optimize)
+
+    lowprofit_optimize = False
+    lowprofit_lookback_period_candles = IntParameter(2, 60, default=20, space="protection", optimize=lowprofit_optimize)
+    lowprofit_trade_limit = IntParameter(0, 50, default=0, space="protection", optimize=lowprofit_optimize)
+    lowprofit_stop_duration_candles = IntParameter(0, 200, default=20, space="protection", optimize=lowprofit_optimize)
+    lowprofit_required_profit = DecimalParameter(0, 0.05, default=0.02, space="protection", decimals=3, optimize=lowprofit_optimize)
+
+    lowprofit2_optimize = False
+    lowprofit2_lookback_period_candles = IntParameter(0, 300, default=288, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_trade_limit = IntParameter(0, 50, default=4, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_stop_duration_candles = IntParameter(0, 25, default=2, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_required_profit = DecimalParameter(0, 0.02, default=0.01, space="protection", decimals=3, optimize=lowprofit2_optimize)
+
+    @property
+    def protections(self):
+        prot = []
+
+        prot.append({
+            "method": "CooldownPeriod",
+            "stop_duration_candles": self.cooldown_stop_duration_candles.value
+        })
+        prot.append({
+            "method": "MaxDrawdown",
+            "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
+            "trade_limit": self.maxdrawdown_trade_limit.value, 
+            "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
+            "max_allowed_drawdown": self.maxdrawdown_maxalloweddrawdown.value
+        })
+        prot.append({
+            "method": "StoplossGuard",
+            "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
+            "trade_limit": self.stoplossguard_trade_limit.value,
+            "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
+            "only_per_pair": False
+        })
+        prot.append({
+            "method": "LowProfitPairs",
+            "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
+            "trade_limit": self.lowprofit_trade_limit.value,
+            "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
+            "required_profit": self.lowprofit_required_profit.value
+        })
+        prot.append({
+            "method": "LowProfitPairs",
+            "lookback_period_candles": self.lowprofit2_lookback_period_candles.value,
+            "trade_limit": self.lowprofit2_trade_limit.value,
+            "stop_duration_candles": self.lowprofit2_stop_duration_candles.value,
+            "required_profit": self.lowprofit2_required_profit.value
+        })
+
+        return prot
+
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
@@ -130,15 +158,6 @@ class abbas(IStrategy):
                 SKDecimal(0.0130, 0.0173, decimals=4, name='trailing_stop_positive_offset_p1'),
                 Categorical([True], name='trailing_only_offset_is_reached'),
             ]
-    '''
-    # ROI table:
-    minimal_roi = {
-        "0": 0.092,
-        "39": 0.077,
-        "99": 0.04,
-        "215": 0
-    }
-    '''
 
     # ROI table:
     minimal_roi = {
@@ -236,9 +255,15 @@ class abbas(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'ma_buy': {'color': 'orange'},
-            'ma_sell': {'color': 'orange'},
+            'bb_upperband': {'color': 'green'},
+            'bb_midband': {'color': 'orange'},
+            'bb_lowerband': {'color': 'red'},
         },
+        'subplots': {
+            "RSI": {
+                'rsi': {'color': 'yellow'},
+            }
+        }
     }
 
     slippage_protection = {
