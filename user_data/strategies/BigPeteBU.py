@@ -63,7 +63,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     return emadif
 
 
-class BigPete(IStrategy):
+class BigPeteBU(IStrategy):
     INTERFACE_VERSION = 2
 
     minimal_roi = {
@@ -142,9 +142,9 @@ class BigPete(IStrategy):
       "buy_volume_pump_1": 0.1
     }
 #   Optimize custom Stop-Loss, trailing + profit threshold
-    opzimize_cSL=True 		#default True
-    optimize_trailing=True 	#default True
-    optimize_SLT=False		#default False
+    opzimize_cSL=True       #default True
+    optimize_trailing=True  #default True
+    optimize_SLT=False      #default False
     # V1 original
     # Sell hyperspace params:
     sell_params = {
