@@ -15,6 +15,26 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 0,
+    "lowprofit2_lookback_period_candles": 91,
+    "lowprofit2_required_profit": 0.019,
+    "lowprofit2_stop_duration_candles": 21,
+    "lowprofit2_trade_limit": 16,
+    "lowprofit_lookback_period_candles": 28,
+    "lowprofit_required_profit": 0.044,
+    "lowprofit_stop_duration_candles": 127,
+    "lowprofit_trade_limit": 30,
+    "maxdrawdown_lookback_period_candles": 21,
+    "maxdrawdown_max_allowed_drawdown": -0.18,
+    "maxdrawdown_stop_duration_candles": 27,
+    "maxdrawdown_trade_limit": 9,
+    "stoplossguard_lookback_period_candles": 82,
+    "stoplossguard_stop_duration_candles": 8,
+    "stoplossguard_trade_limit": 10,
+}
+
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 17,
@@ -74,27 +94,27 @@ class abbas(IStrategy):
     cooldown_stop_duration_candles = IntParameter(0, 48, default=0, space="protection", optimize=False)
 
     maxdrawdown_optimize = False
-    maxdrawdown_lookback_period_candles = IntParameter(0, 20, default=0, space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(0, 50, default=20, space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(0, 60, default=48, space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_maxalloweddrawdown = DecimalParameter(-0.20, 0.05, default=-0.18, space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_lookback_period_candles = IntParameter(5, 30, default=21, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(1, 20, default=9, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(10, 70, default=27, space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(-0.25, 0.05, default=-0.18, space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = False
-    stoplossguard_lookback_period_candles = IntParameter(0, 300, default=288, space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(0, 20, default=2, space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(0, 12, default=6, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_lookback_period_candles = IntParameter(1, 300, default=82, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(1, 20, default=10, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 20, default=8, space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = False
-    lowprofit_lookback_period_candles = IntParameter(2, 60, default=20, space="protection", optimize=lowprofit_optimize)
-    lowprofit_trade_limit = IntParameter(0, 50, default=0, space="protection", optimize=lowprofit_optimize)
-    lowprofit_stop_duration_candles = IntParameter(0, 200, default=20, space="protection", optimize=lowprofit_optimize)
-    lowprofit_required_profit = DecimalParameter(0, 0.05, default=0.02, space="protection", decimals=3, optimize=lowprofit_optimize)
+    lowprofit_lookback_period_candles = IntParameter(2, 60, default=28, space="protection", optimize=lowprofit_optimize)
+    lowprofit_trade_limit = IntParameter(1, 50, default=30, space="protection", optimize=lowprofit_optimize)
+    lowprofit_stop_duration_candles = IntParameter(1, 200, default=127, space="protection", optimize=lowprofit_optimize)
+    lowprofit_required_profit = DecimalParameter(0, 0.05, default=0.0044, space="protection", decimals=3, optimize=lowprofit_optimize)
 
     lowprofit2_optimize = False
-    lowprofit2_lookback_period_candles = IntParameter(0, 300, default=288, space="protection", optimize=lowprofit2_optimize)
-    lowprofit2_trade_limit = IntParameter(0, 50, default=4, space="protection", optimize=lowprofit2_optimize)
-    lowprofit2_stop_duration_candles = IntParameter(0, 25, default=2, space="protection", optimize=lowprofit2_optimize)
-    lowprofit2_required_profit = DecimalParameter(0, 0.02, default=0.01, space="protection", decimals=3, optimize=lowprofit2_optimize)
+    lowprofit2_lookback_period_candles = IntParameter(1, 300, default=91, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_trade_limit = IntParameter(1, 70, default=16, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_stop_duration_candles = IntParameter(1, 25, default=21, space="protection", optimize=lowprofit2_optimize)
+    lowprofit2_required_profit = DecimalParameter(0, 0.02, default=0.0019, space="protection", decimals=3, optimize=lowprofit2_optimize)
 
     @property
     def protections(self):
@@ -109,7 +129,7 @@ class abbas(IStrategy):
             "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
             "trade_limit": self.maxdrawdown_trade_limit.value, 
             "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-            "max_allowed_drawdown": self.maxdrawdown_maxalloweddrawdown.value
+            "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
         })
         prot.append({
             "method": "StoplossGuard",
@@ -161,14 +181,14 @@ class abbas(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "0": 0.099,
-        "36": 0.075,
-        "93": 0.036,
-        "200": 0
+        "0": 0.098,
+        "32": 0.058,
+        "92": 0.039,
+        "210": 0
     }
 
     # Stoploss:
-    stoploss = -0.071
+    stoploss = -0.072
 
     # Trailing stop:
     trailing_stop = True
