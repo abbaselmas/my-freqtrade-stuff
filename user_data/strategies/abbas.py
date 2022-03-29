@@ -17,7 +17,7 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 0,
+    "cooldown_stop_duration_candles": 3,
     "lowprofit2_lookback_period_candles": 91,
     "lowprofit2_required_profit": 0.019,
     "lowprofit2_stop_duration_candles": 21,
@@ -32,7 +32,7 @@ protection_params = {
     "maxdrawdown_trade_limit": 9,
     "stoplossguard_lookback_period_candles": 82,
     "stoplossguard_stop_duration_candles": 8,
-    "stoplossguard_trade_limit": 10,
+    "stoplossguard_trade_limit": 4,
 }
 
 # Buy hyperspace params:
@@ -91,7 +91,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
 class abbas(IStrategy):
     INTERFACE_VERSION = 2
 
-    cooldown_stop_duration_candles = IntParameter(0, 48, default=0, space="protection", optimize=False)
+    cooldown_stop_duration_candles = IntParameter(0, 48, default=3, space="protection", optimize=False)
 
     maxdrawdown_optimize = False
     maxdrawdown_lookback_period_candles = IntParameter(5, 30, default=21, space="protection", optimize=maxdrawdown_optimize)
@@ -101,7 +101,7 @@ class abbas(IStrategy):
 
     stoplossguard_optimize = False
     stoplossguard_lookback_period_candles = IntParameter(1, 300, default=82, space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(1, 20, default=10, space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(1, 20, default=4, space="protection", optimize=stoplossguard_optimize)
     stoplossguard_stop_duration_candles = IntParameter(1, 20, default=8, space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = False
@@ -174,8 +174,8 @@ class abbas(IStrategy):
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
-                SKDecimal(0.00010, 0.00011, decimals=5, name='trailing_stop_positive'),
-                SKDecimal(0.0130, 0.0173, decimals=4, name='trailing_stop_positive_offset_p1'),
+                SKDecimal(0.0001, 0.0002, decimals=4, name='trailing_stop_positive'),
+                SKDecimal(0.0050, 0.0200, decimals=4, name='trailing_stop_positive_offset_p1'),
                 Categorical([True], name='trailing_only_offset_is_reached'),
             ]
 
@@ -275,9 +275,9 @@ class abbas(IStrategy):
 
     plot_config = {
         'main_plot': {
-            'bb_upperband': {'color': 'green'},
-            'bb_midband': {'color': 'orange'},
-            'bb_lowerband': {'color': 'red'},
+            "bb_upperband28": {"color": "#bc281d","type": "line"},
+            'bb_midband28': {'color': "orange", "type": "line"},
+            "bb_lowerband28": {"color": "#792bbb","type": "line"}
         },
         'subplots': {
             "RSI": {
@@ -391,6 +391,7 @@ class abbas(IStrategy):
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
         dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
+       
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
@@ -424,6 +425,7 @@ class abbas(IStrategy):
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
         dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
+        
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
@@ -434,6 +436,22 @@ class abbas(IStrategy):
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+
+        # Bollinger bands
+        bollinger1 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
+        dataframe['bb_lowerband2'] = bollinger1['lower']
+        dataframe['bb_middleband2'] = bollinger1['mid']
+        dataframe['bb_upperband2'] = bollinger1['upper']
+
+        bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
+        dataframe['bb_lowerband28'] = bollinger2['lower']
+        dataframe['bb_middleband28'] = bollinger2['mid']
+        dataframe['bb_upperband28'] = bollinger2['upper']
+
+        bollinger3 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
+        dataframe['bb_lowerband3'] = bollinger3['lower']
+        dataframe['bb_middleband3'] = bollinger3['mid']
+        dataframe['bb_upperband3'] = bollinger3['upper']
 
         return dataframe
 
@@ -516,9 +534,349 @@ class abbas(IStrategy):
 
         return dataframe
 
+# Elliot Wave Oscillator
 def EWO(dataframe, sma1_length=5, sma2_length=35):
     df = dataframe.copy()
-    sma1 = ta.EMA(df, timeperiod=sma1_length)
-    sma2 = ta.EMA(df, timeperiod=sma2_length)
+    sma1 = ta.SMA(df, timeperiod=sma1_length)
+    sma2 = ta.SMA(df, timeperiod=sma2_length)
     smadif = (sma1 - sma2) / df['close'] * 100
     return smadif
+
+# PMAX
+def pmax(df, period, multiplier, length, MAtype, src):
+
+    period = int(period)
+    multiplier = int(multiplier)
+    length = int(length)
+    MAtype = int(MAtype)
+    src = int(src)
+
+    mavalue = f'MA_{MAtype}_{length}'
+    atr = f'ATR_{period}'
+    pm = f'pm_{period}_{multiplier}_{length}_{MAtype}'
+    pmx = f'pmX_{period}_{multiplier}_{length}_{MAtype}'
+
+    # MAtype==1 --> EMA
+    # MAtype==2 --> DEMA
+    # MAtype==3 --> T3
+    # MAtype==4 --> SMA
+    # MAtype==5 --> VIDYA
+    # MAtype==6 --> TEMA
+    # MAtype==7 --> WMA
+    # MAtype==8 --> VWMA
+    # MAtype==9 --> zema
+    if src == 1:
+        masrc = df["close"]
+    elif src == 2:
+        masrc = (df["high"] + df["low"]) / 2
+    elif src == 3:
+        masrc = (df["high"] + df["low"] + df["close"] + df["open"]) / 4
+
+    if MAtype == 1:
+        mavalue = ta.EMA(masrc, timeperiod=length)
+    elif MAtype == 2:
+        mavalue = ta.DEMA(masrc, timeperiod=length)
+    elif MAtype == 3:
+        mavalue = ta.T3(masrc, timeperiod=length)
+    elif MAtype == 4:
+        mavalue = ta.SMA(masrc, timeperiod=length)
+    elif MAtype == 5:
+        mavalue = VIDYA(df, length=length)
+    elif MAtype == 6:
+        mavalue = ta.TEMA(masrc, timeperiod=length)
+    elif MAtype == 7:
+        mavalue = ta.WMA(df, timeperiod=length)
+    elif MAtype == 8:
+        mavalue = vwma(df, length)
+    elif MAtype == 9:
+        mavalue = zema(df, period=length)
+
+    df[atr] = ta.ATR(df, timeperiod=period)
+    df['basic_ub'] = mavalue + ((multiplier/10) * df[atr])
+    df['basic_lb'] = mavalue - ((multiplier/10) * df[atr])
+
+
+    basic_ub = df['basic_ub'].values
+    final_ub = np.full(len(df), 0.00)
+    basic_lb = df['basic_lb'].values
+    final_lb = np.full(len(df), 0.00)
+
+    for i in range(period, len(df)):
+        final_ub[i] = basic_ub[i] if (
+            basic_ub[i] < final_ub[i - 1]
+            or mavalue[i - 1] > final_ub[i - 1]) else final_ub[i - 1]
+        final_lb[i] = basic_lb[i] if (
+            basic_lb[i] > final_lb[i - 1]
+            or mavalue[i - 1] < final_lb[i - 1]) else final_lb[i - 1]
+
+    df['final_ub'] = final_ub
+    df['final_lb'] = final_lb
+
+    pm_arr = np.full(len(df), 0.00)
+    for i in range(period, len(df)):
+        pm_arr[i] = (
+            final_ub[i] if (pm_arr[i - 1] == final_ub[i - 1]
+                                    and mavalue[i] <= final_ub[i])
+        else final_lb[i] if (
+            pm_arr[i - 1] == final_ub[i - 1]
+            and mavalue[i] > final_ub[i]) else final_lb[i]
+        if (pm_arr[i - 1] == final_lb[i - 1]
+            and mavalue[i] >= final_lb[i]) else final_ub[i]
+        if (pm_arr[i - 1] == final_lb[i - 1]
+            and mavalue[i] < final_lb[i]) else 0.00)
+
+    pm = Series(pm_arr)
+
+    # Mark the trend direction up/down
+    pmx = np.where((pm_arr > 0.00), np.where((mavalue < pm_arr), 'down',  'up'), np.NaN)
+
+    return pm, pmx
+
+# smoothed Heiken Ashi
+def HA(dataframe, smoothing=None):
+    df = dataframe.copy()
+
+    df['HA_Close']=(df['open'] + df['high'] + df['low'] + df['close'])/4
+
+    df.reset_index(inplace=True)
+
+    ha_open = [ (df['open'][0] + df['close'][0]) / 2 ]
+    [ ha_open.append((ha_open[i] + df['HA_Close'].values[i]) / 2) for i in range(0, len(df)-1) ]
+    df['HA_Open'] = ha_open
+
+    df.set_index('index', inplace=True)
+
+    df['HA_High']=df[['HA_Open','HA_Close','high']].max(axis=1)
+    df['HA_Low']=df[['HA_Open','HA_Close','low']].min(axis=1)
+
+    if smoothing is not None:
+        sml = abs(int(smoothing))
+        if sml > 0:
+            df['Smooth_HA_O']=ta.EMA(df['HA_Open'], sml)
+            df['Smooth_HA_C']=ta.EMA(df['HA_Close'], sml)
+            df['Smooth_HA_H']=ta.EMA(df['HA_High'], sml)
+            df['Smooth_HA_L']=ta.EMA(df['HA_Low'], sml)
+            
+    return df
+
+def pump_warning(dataframe, perc=15):
+    df = dataframe.copy()    
+    df["change"] = df["high"] - df["low"]
+    df["test1"] = (df["close"] > df["open"])
+    df["test2"] = ((df["change"]/df["low"]) > (perc/100))
+    df["result"] = (df["test1"] & df["test2"]).astype('int')
+    return df['result']
+
+def tv_wma(dataframe, length = 9, field="close") -> DataFrame:
+    """
+    Source: Tradingview "Moving Average Weighted"
+    Pinescript Author: Unknown
+    Args :
+        dataframe : Pandas Dataframe
+        length : WMA length
+        field : Field to use for the calculation
+    Returns :
+        dataframe : Pandas DataFrame with new columns 'tv_wma'
+    """
+
+    norm = 0
+    sum = 0
+
+    for i in range(1, length - 1):
+        weight = (length - i) * length
+        norm = norm + weight
+        sum = sum + dataframe[field].shift(i) * weight
+
+    dataframe["tv_wma"] = (sum / norm) if norm > 0 else 0
+    return dataframe["tv_wma"]
+
+def tv_hma(dataframe, length = 9, field="close") -> DataFrame:
+    """
+    Source: Tradingview "Hull Moving Average"
+    Pinescript Author: Unknown
+    Args :
+        dataframe : Pandas Dataframe
+        length : HMA length
+        field : Field to use for the calculation
+    Returns :
+        dataframe : Pandas DataFrame with new columns 'tv_hma'
+    """
+
+    dataframe["h"] = 2 * tv_wma(dataframe, math.floor(length / 2), field) - tv_wma(dataframe, length, field)
+
+    dataframe["tv_hma"] = tv_wma(dataframe, math.floor(math.sqrt(length)), "h")
+    # dataframe.drop("h", inplace=True, axis=1)
+
+    return dataframe["tv_hma"]
+
+"""
+TA Indicators
+"""
+
+def zema(dataframe, period, field='close'):
+    """
+    Source: https://github.com/freqtrade/technical/blob/master/technical/indicators/overlap_studies.py#L79
+    Modified slightly to use ta.EMA instead of technical ema
+    """
+    df = dataframe.copy()
+
+    df['ema1'] = ta.EMA(df[field], timeperiod=period)
+    df['ema2'] = ta.EMA(df['ema1'], timeperiod=period)
+    df['d'] = df['ema1'] - df['ema2']
+    df['zema'] = df['ema1'] + df['d']
+
+    return df['zema']
+
+def RMI(dataframe, *, length=20, mom=5):
+    """
+    Source: https://github.com/freqtrade/technical/blob/master/technical/indicators/indicators.py#L912
+    """
+    df = dataframe.copy()
+
+    df['maxup'] = (df['close'] - df['close'].shift(mom)).clip(lower=0)
+    df['maxdown'] = (df['close'].shift(mom) - df['close']).clip(lower=0)
+
+    df.fillna(0, inplace=True)
+
+    df["emaInc"] = ta.EMA(df, price='maxup', timeperiod=length)
+    df["emaDec"] = ta.EMA(df, price='maxdown', timeperiod=length)
+
+    df['RMI'] = np.where(df['emaDec'] == 0, 0, 100 - 100 / (1 + df["emaInc"] / df["emaDec"]))
+
+    return df["RMI"]
+
+def mastreak(dataframe: DataFrame, period: int = 4, field='close') -> Series:
+    """
+    MA Streak
+    Port of: https://www.tradingview.com/script/Yq1z7cIv-MA-Streak-Can-Show-When-a-Run-Is-Getting-Long-in-the-Tooth/
+    """    
+    df = dataframe.copy()
+
+    avgval = zema(df, period, field)
+
+    arr = np.diff(avgval)
+    pos = np.clip(arr, 0, 1).astype(bool).cumsum()
+    neg = np.clip(arr, -1, 0).astype(bool).cumsum()
+    streak = np.where(arr >= 0, pos - np.maximum.accumulate(np.where(arr <= 0, pos, 0)),
+                    -neg + np.maximum.accumulate(np.where(arr >= 0, neg, 0)))
+
+    res = same_length(df['close'], streak)
+
+    return res
+
+def pcc(dataframe: DataFrame, period: int = 20, mult: int = 2):
+    """
+    Percent Change Channel
+    PCC is like KC unless it uses percentage changes in price to set channel distance.
+    https://www.tradingview.com/script/6wwAWXA1-MA-Streak-Change-Channel/
+    """
+    df = dataframe.copy()
+
+    df['previous_close'] = df['close'].shift()
+
+    df['close_change'] = (df['close'] - df['previous_close']) / df['previous_close'] * 100
+    df['high_change'] = (df['high'] - df['close']) / df['close'] * 100
+    df['low_change'] = (df['low'] - df['close']) / df['close'] * 100
+
+    df['delta'] = df['high_change'] - df['low_change']
+
+    mid = zema(df, period, 'close_change')
+    rangema = zema(df, period, 'delta')
+
+    upper = mid + rangema * mult
+    lower = mid - rangema * mult
+
+    return upper, rangema, lower
+
+def SSLChannels(dataframe, length=10, mode='sma'):
+    """
+    Source: https://www.tradingview.com/script/xzIoaIJC-SSL-channel/
+    Source: https://github.com/freqtrade/technical/blob/master/technical/indicators/indicators.py#L1025
+    Usage:
+        dataframe['sslDown'], dataframe['sslUp'] = SSLChannels(dataframe, 10)
+    """
+    if mode not in ('sma'):
+        raise ValueError(f"Mode {mode} not supported yet")
+
+    df = dataframe.copy()
+
+    if mode == 'sma':
+        df['smaHigh'] = df['high'].rolling(length).mean()
+        df['smaLow'] = df['low'].rolling(length).mean()
+
+    df['hlv'] = np.where(df['close'] > df['smaHigh'], 1,
+                         np.where(df['close'] < df['smaLow'], -1, np.NAN))
+    df['hlv'] = df['hlv'].ffill()
+
+    df['sslDown'] = np.where(df['hlv'] < 0, df['smaHigh'], df['smaLow'])
+    df['sslUp'] = np.where(df['hlv'] < 0, df['smaLow'], df['smaHigh'])
+
+    return df['sslDown'], df['sslUp']
+
+def SSLChannels_ATR(dataframe, length=7):
+    """
+    SSL Channels with ATR: https://www.tradingview.com/script/SKHqWzql-SSL-ATR-channel/
+    Credit to @JimmyNixx for python
+    """
+    df = dataframe.copy()
+
+    df['ATR'] = ta.ATR(df, timeperiod=14)
+    df['smaHigh'] = df['high'].rolling(length).mean() + df['ATR']
+    df['smaLow'] = df['low'].rolling(length).mean() - df['ATR']
+    df['hlv'] = np.where(df['close'] > df['smaHigh'], 1, np.where(df['close'] < df['smaLow'], -1, np.NAN))
+    df['hlv'] = df['hlv'].ffill()
+    df['sslDown'] = np.where(df['hlv'] < 0, df['smaHigh'], df['smaLow'])
+    df['sslUp'] = np.where(df['hlv'] < 0, df['smaLow'], df['smaHigh'])
+
+    return df['sslDown'], df['sslUp']
+
+def WaveTrend(dataframe, chlen=10, avg=21, smalen=4):
+    """
+    WaveTrend Ocillator by LazyBear
+    https://www.tradingview.com/script/2KE8wTuF-Indicator-WaveTrend-Oscillator-WT/
+    """
+    df = dataframe.copy()
+
+    df['hlc3'] = (df['high'] + df['low'] + df['close']) / 3
+    df['esa'] = ta.EMA(df['hlc3'], timeperiod=chlen)
+    df['d'] = ta.EMA((df['hlc3'] - df['esa']).abs(), timeperiod=chlen)
+    df['ci'] = (df['hlc3'] - df['esa']) / (0.015 * df['d'])
+    df['tci'] = ta.EMA(df['ci'], timeperiod=avg)
+
+    df['wt1'] = df['tci']
+    df['wt2'] = ta.SMA(df['wt1'], timeperiod=smalen)
+    df['wt1-wt2'] = df['wt1'] - df['wt2']
+
+    return df['wt1'], df['wt2']
+
+def T3(dataframe, length=5):
+    """
+    T3 Average by HPotter on Tradingview
+    https://www.tradingview.com/script/qzoC9H1I-T3-Average/
+    """
+    df = dataframe.copy()
+
+    df['xe1'] = ta.EMA(df['close'], timeperiod=length)
+    df['xe2'] = ta.EMA(df['xe1'], timeperiod=length)
+    df['xe3'] = ta.EMA(df['xe2'], timeperiod=length)
+    df['xe4'] = ta.EMA(df['xe3'], timeperiod=length)
+    df['xe5'] = ta.EMA(df['xe4'], timeperiod=length)
+    df['xe6'] = ta.EMA(df['xe5'], timeperiod=length)
+    b = 0.7
+    c1 = -b*b*b
+    c2 = 3*b*b+3*b*b*b
+    c3 = -6*b*b-3*b-3*b*b*b
+    c4 = 1+3*b+b*b*b+3*b*b
+    df['T3Average'] = c1 * df['xe6'] + c2 * df['xe5'] + c3 * df['xe4'] + c4 * df['xe3']
+
+    return df['T3Average']
+
+
+def SROC(dataframe, roclen=21, emalen=13, smooth=21):
+    df = dataframe.copy()
+
+    roc = ta.ROC(df, timeperiod=roclen)
+    ema = ta.EMA(df, timeperiod=emalen)
+    sroc = ta.ROC(ema, timeperiod=smooth)
+
+    return sroc
