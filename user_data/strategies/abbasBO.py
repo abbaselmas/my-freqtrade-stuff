@@ -46,16 +46,7 @@ buy_params = {
     "rsi_buy": 68,
 }
 
-def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
-    ema1 = ta.EMA(df, timeperiod=ema_length)
-    ema2 = ta.EMA(df, timeperiod=ema2_length)
-    emadif = (ema1 - ema2) / df['low'] * 100
-    return emadif
-
 class abbasBO(IStrategy):
-    INTERFACE_VERSION = 2
-
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
 
     maxdrawdown_optimize = True
@@ -189,28 +180,12 @@ class abbasBO(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    plot_config = {
-        'main_plot': {
-            "bb_upperband28": {"color": "#bc281d","type": "line"},
-            'bb_midband28': {'color': "orange", "type": "line"},
-            "bb_lowerband28": {"color": "#792bbb","type": "line"}
-        },
-        'subplots': {
-            "RSI": {
-                'rsi': {'color': 'yellow'},
-            }
-        }
-    }
-
     slippage_protection = {
         'retries': 3,
         'max_slippage': -0.002
     }
 
     buy_signals = {}
-
-    def get_ticker_indicator(self):
-        return int(self.timeframe[:-1])
 
     def informative_pairs(self):
         # get access to all pairs available in whitelist.
@@ -235,7 +210,7 @@ class abbasBO(IStrategy):
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
         dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
-       
+
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
@@ -262,7 +237,7 @@ class abbasBO(IStrategy):
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
         dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
-        
+
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
@@ -302,7 +277,7 @@ class abbasBO(IStrategy):
                 (dataframe['rsi'] < self.rsi_buy.value) &
                 (dataframe['volume'] > 0)
             ),
-            ['entry_long', 'entry_tag']] = (1, 'ewo1')
+            ['enter_long', 'entry_tag']] = (1, 'ewo1')
 
         dataframe.loc[
             (
@@ -313,7 +288,7 @@ class abbasBO(IStrategy):
                 (dataframe['volume'] > 0) &
                 (dataframe['rsi'] < 25)
             ),
-            ['entry_long', 'entry_tag']] = (1, 'ewo2')
+            ['enter_long', 'entry_tag']] = (1, 'ewo2')
 
         dataframe.loc[
             (
@@ -322,32 +297,15 @@ class abbasBO(IStrategy):
                 (dataframe['EWO'] < self.ewo_low.value) &
                 (dataframe['volume'] > 0)
             ),
-            ['entry_long', 'entry_tag']] = (1, 'ewolow')
-
-        dont_buy_conditions = []
-
-        dont_buy_conditions.append(
-            (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * 1.03 )) # don't buy if there isn't 3% profit to be made
-            )
-        )
-
-        if dont_buy_conditions:
-            for condition in dont_buy_conditions:
-                dataframe.loc[condition, 'buy'] = 0
+            ['enter_long', 'entry_tag']] = (1, 'ewolow')
 
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe.loc[
-        (
-            (qtpylib.crossed_above(dataframe['rsi'], 70)) &  # Signal: RSI crosses above 70
-            (dataframe['tema'] > dataframe['bb_middleband']) &  # Guard
-            (dataframe['tema'] < dataframe['tema'].shift(1)) &  # Guard
-            (dataframe['volume'] > 0)  # Make sure Volume is not 0
-        ),
-        ['exit_long', 'exit_tag']] = (1, 'some_exit_tag')
         return dataframe
+
+    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, exit_reason: str, current_time: datetime, **kwargs) -> bool:
+        return True
 
 # Elliot Wave Oscillator
 def EWO(dataframe, sma1_length=5, sma2_length=35):
@@ -471,11 +429,11 @@ def HA(dataframe, smoothing=None):
             df['Smooth_HA_C']=ta.EMA(df['HA_Close'], sml)
             df['Smooth_HA_H']=ta.EMA(df['HA_High'], sml)
             df['Smooth_HA_L']=ta.EMA(df['HA_Low'], sml)
-            
+
     return df
 
 def pump_warning(dataframe, perc=15):
-    df = dataframe.copy()    
+    df = dataframe.copy()
     df["change"] = df["high"] - df["low"]
     df["test1"] = (df["close"] > df["open"])
     df["test2"] = ((df["change"]/df["low"]) > (perc/100))
