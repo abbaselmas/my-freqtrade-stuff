@@ -338,6 +338,17 @@ class abbasBO(IStrategy):
 
         return dataframe
 
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    dataframe.loc[
+        (
+            (qtpylib.crossed_above(dataframe['rsi'], 70)) &  # Signal: RSI crosses above 70
+            (dataframe['tema'] > dataframe['bb_middleband']) &  # Guard
+            (dataframe['tema'] < dataframe['tema'].shift(1)) &  # Guard
+            (dataframe['volume'] > 0)  # Make sure Volume is not 0
+        ),
+        ['exit_long', 'exit_tag']] = (1, 'some_exit_tag')
+    return dataframe
+
 # Elliot Wave Oscillator
 def EWO(dataframe, sma1_length=5, sma2_length=35):
     df = dataframe.copy()
