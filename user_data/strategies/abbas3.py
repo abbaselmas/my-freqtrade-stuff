@@ -88,7 +88,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas(IStrategy):
+class abbas3(IStrategy):
     INTERFACE_VERSION = 2
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
@@ -185,12 +185,12 @@ class abbas(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.078
+    stoploss = -0.054
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.00012
-    trailing_stop_positive_offset = 0.01102
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.01
     trailing_only_offset_is_reached = True
 
     # Sell signal

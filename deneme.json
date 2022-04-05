@@ -1,0 +1,103 @@
+{
+    "max_open_trades": 7,
+    "stake_currency": "USDT",
+    "stake_amount": "unlimited",
+    "tradable_balance_ratio": 0.99,
+    "fiat_display_currency": "TRY",
+    "timeframe": "5m",
+    "dry_run": true,
+    "dry_run_wallet": 1000,
+    "cancel_open_orders_on_exit": false,
+    "unfilledtimeout": {
+        "entry": 10,
+        "exit": 10,
+        "exit_timeout_count": 0,
+        "unit": "minutes"
+    },
+    "order_types": {
+        "entry": "limit",
+        "exit": "limit",
+        "emergencyexit": "market",
+        "forceexit": "market",
+        "forceentry": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60,
+        "stoploss_on_exchange_limit_ratio": 0.99
+    },
+    "entry_pricing": {
+        "price_side": "same",
+        "use_order_book": false,
+        "order_book_top": 1,
+        "price_last_balance": 0.0,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
+    },
+    "exit_pricing": {
+        "price_side": "same",
+        "use_order_book": true,
+        "order_book_top": 1,
+        "price_last_balance": 0.0
+    },
+    "edge": {
+        "enabled": false,
+        "process_throttle_secs": 3600,
+        "calculate_since_number_of_days": 7,
+        "allowed_risk": 0.01,
+        "stoploss_range_min": -0.01,
+        "stoploss_range_max": -0.1,
+        "stoploss_range_step": -0.01,
+        "minimum_winrate": 0.6,
+        "minimum_expectancy": 0.2,
+        "min_trade_number": 10,
+        "max_trade_duration_minute": 1440,
+        "remove_pumps": false
+    },
+    "telegram": {
+        "enabled": false,
+        "token": "",
+        "chat_id": ""
+    },
+    "api_server": {
+        "enabled": false,
+        "listen_ip_address": "0.0.0.0",
+        "listen_port": 8080,
+        "verbosity": "error",
+        "enable_openapi": false,
+        "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d9",
+        "CORS_origins": [],
+        "username": "freqtrader",
+        "password": "73"
+    },
+    "bot_name": "freqtrade",
+    "initial_state": "running",
+    "forcebuy_enable": false,
+    "internals": {
+        "process_throttle_secs": 2
+    },
+    "pairlists": [
+        {
+            "method": "StaticPairList"
+        }
+    ],
+    "exchange": {
+        "name": "binance",
+        "pair_whitelist": ["WAVES/USDT","MBOX/USDT","ADA/USDT","XRP/USDT","GALA/USDT","ETC/USDT","ALPHA/USDT","BNX/USDT","AAVE/USDT","DOT/USDT","CELR/USDT","IOST/USDT","DOGE/USDT","FIL/USDT","VET/USDT","LOKA/USDT","TRX/USDT","GTO/USDT","JASMY/USDT","MATIC/USDT","THETA/USDT","SKL/USDT","RSR/USDT","RAD/USDT","ATOM/USDT","LINK/USDT","PEOPLE/USDT","AXS/USDT","BETA/USDT","TLM/USDT","ALICE/USDT","CAKE/USDT","EOS/USDT","LTC/USDT","CHZ/USDT","JST/USDT","ONE/USDT","SNX/USDT","VOXEL/USDT","ICP/USDT","SUSHI/USDT","GRT/USDT","DYDX/USDT","DODO/USDT","IMX/USDT","MBL/USDT","ROSE/USDT","IOTX/USDT","HOT/USDT","ASTR/USDT","UNI/USDT","COS/USDT","KAVA/USDT","CELO/USDT","CRV/USDT","ENJ/USDT","OMG/USDT","ZEC/USDT","XVS/USDT","MASK/USDT","CTSI/USDT","TKO/USDT","OGN/USDT","AKRO/USDT","AR/USDT","XLM/USDT","ENS/USDT","FTT/USDT","WIN/USDT","COMP/USDT","SUPER/USDT","DUSK/USDT","YGG/USDT","MDX/USDT","AGLD/USDT","SRM/USDT","MITH/USDT","CHR/USDT","HIGH/USDT","CTK/USDT","LINA/USDT","REEF/USDT","CFX/USDT","DASH/USDT","HARD/USDT","ACA/USDT","PYR/USDT","ICX/USDT","XTZ/USDT","UNFI/USDT","REN/USDT","KLAY/USDT","OCEAN/USDT","LIT/USDT","XMR/USDT","GLMR/USDT","FLOW/USDT","HNT/USDT","GTC/USDT","BURGER/USDT","ANKR/USDT","SXP/USDT","HBAR/USDT","ANC/USDT","COTI/USDT","WAXP/USDT","CLV/USDT","AUDIO/USDT","ATA/USDT","FET/USDT","NEO/USDT","DENT/USDT","1INCH/USDT","VTHO/USDT","RVN/USDT","KSM/USDT","DGB/USDT","BEL/USDT","ZRX/USDT","TRB/USDT","TVK/USDT","C98/USDT","PORTO/USDT","SPELL/USDT","BAT/USDT","IOTA/USDT","RLC/USDT","MDT/USDT","ARPA/USDT","ALPINE/USDT","POLS/USDT","QTUM/USDT","LAZIO/USDT","SC/USDT","BICO/USDT","MOVR/USDT","QI/USDT"],
+        "ccxt_config": {
+            "enableRateLimit": true,
+            "rateLimit": 100,
+            "urls": {
+                "api": {
+                    "public": "http://127.0.0.1:8099/api/v3",
+                    "fapiPublic": "http://127.0.0.1:8098/fapi/v1"
+                }
+            }
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 100
+        }
+    }
+}

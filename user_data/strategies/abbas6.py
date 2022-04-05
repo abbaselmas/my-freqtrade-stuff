@@ -37,13 +37,13 @@ protection_params = {
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
+    "base_nb_candles_buy": 27,
+    "ewo_high": 2.084,
+    "ewo_high_2": -3.89,
+    "ewo_low": -10.05,
+    "low_offset": 1.006,
+    "low_offset_2": 0.948,
+    "rsi_buy": 71,
 }
 
 # Sell hyperspace params:
@@ -88,7 +88,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
 
-class abbas(IStrategy):
+class abbas6(IStrategy):
     INTERFACE_VERSION = 2
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
@@ -189,8 +189,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.00012
-    trailing_stop_positive_offset = 0.01102
+    trailing_stop_positive = 0.00016
+    trailing_stop_positive_offset = 0.00906
     trailing_only_offset_is_reached = True
 
     # Sell signal
