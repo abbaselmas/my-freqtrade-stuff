@@ -360,7 +360,7 @@ class abbas(IStrategy):
 
         state[pair] = 0
         current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > 0.018)):
+        if (sell_reason.startswith('sell signal (') and (current_profit > 0.01102)):
             # Reject sell signal when trailing stoplosses
             return False
         return True
@@ -434,21 +434,10 @@ class abbas(IStrategy):
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
-        # Bollinger bands
-        bollinger1 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
-        dataframe['bb_lowerband2'] = bollinger1['lower']
-        dataframe['bb_middleband2'] = bollinger1['mid']
-        dataframe['bb_upperband2'] = bollinger1['upper']
-
         bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
         dataframe['bb_lowerband28'] = bollinger2['lower']
         dataframe['bb_middleband28'] = bollinger2['mid']
         dataframe['bb_upperband28'] = bollinger2['upper']
-
-        bollinger3 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
-        dataframe['bb_lowerband3'] = bollinger3['lower']
-        dataframe['bb_middleband3'] = bollinger3['mid']
-        dataframe['bb_upperband3'] = bollinger3['upper']
 
         return dataframe
 

@@ -130,7 +130,7 @@ class abbasBO(IStrategy):
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
-                SKDecimal(0.0001, 0.0010, decimals=5, name='trailing_stop_positive'),
+                SKDecimal(0.00010, 0.00100, decimals=5, name='trailing_stop_positive'),
                 SKDecimal(0.0060, 0.0180, decimals=4, name='trailing_stop_positive_offset_p1'),
                 Categorical([True], name='trailing_only_offset_is_reached'),
             ]
@@ -180,12 +180,10 @@ class abbasBO(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    slippage_protection = {
-        'retries': 3,
-        'max_slippage': -0.002
-    }
-
     buy_signals = {}
+
+    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, exit_reason: str, current_time: datetime, **kwargs) -> bool:
+        return True
 
     def informative_pairs(self):
         # get access to all pairs available in whitelist.
@@ -250,20 +248,10 @@ class abbasBO(IStrategy):
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
         # Bollinger bands
-        bollinger1 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
-        dataframe['bb_lowerband2'] = bollinger1['lower']
-        dataframe['bb_middleband2'] = bollinger1['mid']
-        dataframe['bb_upperband2'] = bollinger1['upper']
-
         bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
         dataframe['bb_lowerband28'] = bollinger2['lower']
         dataframe['bb_middleband28'] = bollinger2['mid']
         dataframe['bb_upperband28'] = bollinger2['upper']
-
-        bollinger3 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
-        dataframe['bb_lowerband3'] = bollinger3['lower']
-        dataframe['bb_middleband3'] = bollinger3['mid']
-        dataframe['bb_upperband3'] = bollinger3['upper']
 
         return dataframe
 
@@ -303,9 +291,6 @@ class abbasBO(IStrategy):
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
-
-    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, exit_reason: str, current_time: datetime, **kwargs) -> bool:
-        return True
 
 # Elliot Wave Oscillator
 def EWO(dataframe, sma1_length=5, sma2_length=35):
