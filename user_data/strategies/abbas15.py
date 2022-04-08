@@ -58,7 +58,7 @@ buy_params = {
     "rsi_buy": 68,
 }
 '''
-class abbas7(IStrategy):
+class abbas15(IStrategy):
     INTERFACE_VERSION = 2
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
@@ -125,7 +125,7 @@ class abbas7(IStrategy):
 
         return prot
 
-    class HyperOpt:
+    class HyperOp15:
         # Define a custom stoploss space.
         def stoploss_space():
             return [SKDecimal(-0.090, -0.030, decimals=3, name='stoploss')]
