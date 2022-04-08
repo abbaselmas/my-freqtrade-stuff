@@ -121,8 +121,8 @@ class abbas7(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(60, 300, name='roi_t1'),
-                Integer(10, 60, name='roi_t2'),
+                Integer(120, 300, name='roi_t1'),
+                Integer(10, 120, name='roi_t2'),
                 Integer(0, 10, name='roi_t3'),
                 SKDecimal(0.000, 0.006, decimals=3, name='roi_p1'),
                 SKDecimal(0.006, 0.012, decimals=3, name='roi_p2'),
