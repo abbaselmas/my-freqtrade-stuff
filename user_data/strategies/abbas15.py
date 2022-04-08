@@ -46,18 +46,6 @@ buy_params = {
     "rsi_buy": 55,
 }
 
-'''
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-}
-'''
 class abbas15(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -133,13 +121,14 @@ class abbas15(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(0, 120, name='roi_t1'),
-                Integer(0, 60, name='roi_t2'),
+                Integer(60, 300, name='roi_t1'),
+                Integer(10, 60, name='roi_t2'),
                 Integer(0, 10, name='roi_t3'),
-                SKDecimal(0.00, 0.01, decimals=3, name='roi_p1'),
-                SKDecimal(0.01, 0.02, decimals=3, name='roi_p2'),
-                SKDecimal(0.02, 0.03, decimals=3, name='roi_p3'),
+                SKDecimal(0.000, 0.006, decimals=3, name='roi_p1'),
+                SKDecimal(0.006, 0.012, decimals=3, name='roi_p2'),
+                SKDecimal(0.010, 0.016, decimals=3, name='roi_p3'),
             ]
+
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
@@ -151,7 +140,9 @@ class abbas15(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "200": 0
+        "0": 0.018,
+        "119": 0.01,
+        "185": 0.001
     }
 
     # Stoploss:
