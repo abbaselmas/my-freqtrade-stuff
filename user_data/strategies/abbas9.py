@@ -118,17 +118,6 @@ class abbas9(IStrategy):
         def stoploss_space():
             return [SKDecimal(-0.090, -0.030, decimals=3, name='stoploss')]
 
-        # Define custom ROI space
-        def roi_space() -> List[Dimension]:
-            return [
-                Integer(120, 300, name='roi_t1'),
-                Integer(10, 120, name='roi_t2'),
-                Integer(0, 10, name='roi_t3'),
-                SKDecimal(0.000, 0.006, decimals=3, name='roi_p1'),
-                SKDecimal(0.006, 0.012, decimals=3, name='roi_p2'),
-                SKDecimal(0.010, 0.016, decimals=3, name='roi_p3'),
-            ]
-
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[

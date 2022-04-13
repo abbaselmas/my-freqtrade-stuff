@@ -158,25 +158,15 @@ class abbas(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.085, -0.040, decimals=3, name='stoploss')]
+            return [SKDecimal(-0.090, -0.030, decimals=3, name='stoploss')]
 
-        # Define custom ROI space
-        def roi_space() -> List[Dimension]:
-            return [
-                Integer(10, 120, name='roi_t1'),
-                Integer(10, 60, name='roi_t2'),
-                Integer(10, 40, name='roi_t3'),
-                SKDecimal(0.01, 0.04, decimals=3, name='roi_p1'),
-                SKDecimal(0.01, 0.07, decimals=3, name='roi_p2'),
-                SKDecimal(0.01, 0.20, decimals=3, name='roi_p3'),
-            ]
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name='trailing_stop'),
-                SKDecimal(0.0001, 0.0010, decimals=5, name='trailing_stop_positive'),
-                SKDecimal(0.0060, 0.0180, decimals=4, name='trailing_stop_positive_offset_p1'),
-                Categorical([True], name='trailing_only_offset_is_reached'),
+                SKDecimal(0.00010, 0.00040, decimals=5, name='trailing_stop_positive'),
+                SKDecimal(0.0080, 0.0180, decimals=4, name='trailing_stop_positive_offset_p1'),
+                Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
 
     # ROI table:
