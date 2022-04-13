@@ -139,7 +139,6 @@ class abbas10(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "120": 0.011,
         "200": 0
     }
 

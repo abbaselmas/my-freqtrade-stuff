@@ -140,7 +140,6 @@ class abbas7(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "120": 0.011,
         "200": 0
     }
 
@@ -341,7 +340,7 @@ class abbas7(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * 1.03 )) # don't buy if there isn't 3% profit to be made
+                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * 1.03 )) # don't buy if there isn't 3% profit within 24h
             )
         )
 
@@ -353,13 +352,6 @@ class abbas7(IStrategy):
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
-
-def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
-    ema1 = ta.EMA(df, timeperiod=ema_length)
-    ema2 = ta.EMA(df, timeperiod=ema2_length)
-    emadif = (ema1 - ema2) / df['low'] * 100
-    return emadif
 
 # Elliot Wave Oscillator
 def EWO(dataframe, sma1_length=5, sma2_length=35):
