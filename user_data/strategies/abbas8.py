@@ -37,6 +37,17 @@ protection_params = {
 
 # Buy hyperspace params:
 buy_params = {
+    "base_nb_candles_buy": 28,
+    "ewo_high": 1.547,
+    "ewo_high_2": -3.99,
+    "ewo_low": -11.97,
+    "low_offset": 1.022,
+    "low_offset_2": 0.967,
+    "rsi_buy": 76,
+}
+'''
+# Buy hyperspace params:
+buy_params = {
     "base_nb_candles_buy": 30,
     "ewo_high": 1.56,
     "ewo_high_2": -3.66,
@@ -45,7 +56,7 @@ buy_params = {
     "low_offset_2": 0.972,
     "rsi_buy": 55,
 }
-
+'''
 class abbas8(IStrategy):
     INTERFACE_VERSION = 2
 

@@ -34,7 +34,17 @@ protection_params = {
     "stoplossguard_stop_duration_candles": 7,
     "stoplossguard_trade_limit": 9,
 }
-
+# Buy hyperspace params:
+buy_params = {
+    "base_nb_candles_buy": 28,
+    "ewo_high": 1.476,
+    "ewo_high_2": -2.06,
+    "ewo_low": -11.99,
+    "low_offset": 1.034,
+    "low_offset_2": 0.974,
+    "rsi_buy": 71,
+}
+'''
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 30,
@@ -45,7 +55,7 @@ buy_params = {
     "low_offset_2": 0.972,
     "rsi_buy": 55,
 }
-
+'''
 class abbas10(IStrategy):
     INTERFACE_VERSION = 2
 

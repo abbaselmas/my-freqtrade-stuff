@@ -1,0 +1,48 @@
+{
+    "pairlists": [
+        {
+            "method": "VolumePairList",
+            "number_assets": 350,
+            "sort_key": "quoteVolume",
+            "min_value": 50,
+            "refresh_period": 1800
+        },
+        {
+            "method": "AgeFilter",
+            "min_days_listed": 14
+        },
+        {
+            "method": "RangeStabilityFilter",
+            "lookback_days": 3,
+            "min_rate_of_change": 0.03,
+            "refresh_period": 1800
+        },
+        {
+            "method": "VolatilityFilter",
+            "lookback_days": 3,
+            "min_volatility": 0.02,
+            "max_volatility": 0.75,
+            "refresh_period": 21600
+        }
+    ],
+    "exchange": {
+        "name": "binance",
+        "pair_whitelist": [
+            ".*/BTC"
+        ],
+        "pair_blacklist": [
+            // Exchange
+            "(BNB)/.*",
+            // Leverage
+            ".*(_PREMIUM|BEAR|BULL|DOWN|HALF|HEDGE|UP|[1235][SL])/.*",
+            // Fiat
+            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
+            // Stable
+            "(BUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDP|USDT|VAI|UST)/.*",
+            // FAN
+            "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
+            // Others
+            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|PEOPLE)/.*"
+        ]
+    }
+}
