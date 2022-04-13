@@ -140,9 +140,8 @@ class abbas14(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "0": 0.018,
-        "119": 0.01,
-        "185": 0.001
+        "120": 0.011,
+        "200": 0
     }
 
     # Stoploss:

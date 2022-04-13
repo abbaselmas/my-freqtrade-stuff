@@ -45,18 +45,7 @@ buy_params = {
     "low_offset_2": 0.974,
     "rsi_buy": 63,
 }
-'''
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 30,
-    "ewo_high": 1.56,
-    "ewo_high_2": -3.66,
-    "ewo_low": -8.11,
-    "low_offset": 1.069,
-    "low_offset_2": 0.972,
-    "rsi_buy": 55,
-}
-'''
+
 class abbas12(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -151,9 +140,8 @@ class abbas12(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "0": 0.018,
-        "119": 0.01,
-        "185": 0.001
+        "120": 0.011,
+        "200": 0
     }
 
     # Stoploss:

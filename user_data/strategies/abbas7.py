@@ -34,27 +34,7 @@ protection_params = {
     "stoplossguard_stop_duration_candles": 4,
     "stoplossguard_trade_limit": 16,
 }
-'''
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "lowprofit2_lookback_period_candles": 179,
-    "lowprofit2_required_profit": 0.018,
-    "lowprofit2_stop_duration_candles": 28,
-    "lowprofit2_trade_limit": 37,
-    "lowprofit_lookback_period_candles": 11,
-    "lowprofit_required_profit": 0.037,
-    "lowprofit_stop_duration_candles": 115,
-    "lowprofit_trade_limit": 49,
-    "maxdrawdown_lookback_period_candles": 25,
-    "maxdrawdown_max_allowed_drawdown": 0.21,
-    "maxdrawdown_stop_duration_candles": 47,
-    "maxdrawdown_trade_limit": 8,
-    "stoplossguard_lookback_period_candles": 270,
-    "stoplossguard_stop_duration_candles": 7,
-    "stoplossguard_trade_limit": 9,
-}
-'''
+
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 23,
@@ -65,18 +45,7 @@ buy_params = {
     "low_offset_2": 0.978,
     "rsi_buy": 56,
 }
-'''
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 25,
-    "ewo_high": 1.562,
-    "ewo_high_2": -3.82,
-    "ewo_low": -8.46,
-    "low_offset": 1.01,
-    "low_offset_2": 0.97,
-    "rsi_buy": 84,
-}
-'''
+
 class abbas7(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -171,9 +140,8 @@ class abbas7(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "0": 0.016,
-        "119": 0.011,
-        "285": 0.0
+        "120": 0.011,
+        "200": 0
     }
 
     # Stoploss:
