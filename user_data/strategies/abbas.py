@@ -44,6 +44,7 @@ buy_params = {
     "low_offset": 1.066,
     "low_offset_2": 0.961,
     "rsi_buy": 68,
+    "min_profit": 1.03
 }
 
 # Sell hyperspace params:
@@ -240,6 +241,8 @@ class abbas(IStrategy):
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params['ewo_high_2'], space='buy', decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params['rsi_buy'], space='buy', optimize=protection_optimize)
 
+    min_profit = DecimalParameter(-0.95, 1.05, default=buy_params['min_profit'], space='buy', decimals=2, optimize=protection_optimize)
+
     # Optional order time in force.
     order_time_in_force = {
         'entry': 'gtc',
@@ -371,7 +374,7 @@ class abbas(IStrategy):
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
         dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
-       
+
         # Elliot
         dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
@@ -463,7 +466,7 @@ class abbas(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * 1.03 )) # don't buy if there isn't 3% profit to be made
+                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * sell_params['min_profit'] )) # don't buy if there isn't 3% profit to be made
             )
         )
 
