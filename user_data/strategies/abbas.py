@@ -184,7 +184,7 @@ class abbas(IStrategy):
     ignore_roi_if_buy_signal = False
 
     # SMAOffset
-    smaoffset_optimize = False
+    smaoffset_optimize = True
     high_offset_ema = DecimalParameter(0.90, 1.1, default=sell_params['high_offset_ema'], load=True, space='sell', decimals=3, optimize=smaoffset_optimize)
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params['base_nb_candles_buy'], space='buy', optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params['base_nb_candles_sell'], space='sell', optimize=smaoffset_optimize)
@@ -235,7 +235,7 @@ class abbas(IStrategy):
     # Protection
     fast_ewo = 50
     slow_ewo = 200
-    protection_optimize = False
+    protection_optimize = True
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params['ewo_low'], space='buy', decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(1.0, 2.2, default=buy_params['ewo_high'], space='buy', decimals=3, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params['ewo_high_2'], space='buy', decimals=2, optimize=protection_optimize)
@@ -373,7 +373,7 @@ class abbas(IStrategy):
         informative_1h['sma_9'] = ta.SMA(informative_1h, timeperiod=9)
 
         # Elliot
-        informative_1h['EWO'] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
+        informative_1h['EWO'] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
 
         # RSI
         informative_1h['rsi'] = ta.RSI(informative_1h, timeperiod=14)
