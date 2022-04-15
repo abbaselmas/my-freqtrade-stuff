@@ -44,9 +44,7 @@ buy_params = {
     "low_offset": 1.066,
     "low_offset_2": 0.961,
     "rsi_buy": 68,
-    "min_profit": 1.03,
-    "fast_ewo": 50,
-    "slow_ewo": 200
+    "min_profit": 1.03
 }
 
 # Sell hyperspace params:
@@ -235,8 +233,8 @@ class abbas(IStrategy):
     sell_trail_down_3 = DecimalParameter(0.03, 0.05, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
 
     # Protection
-    fast_ewo = IntParameter(40, 60, default=50, space='buy', optimize=True, load=True)
-    slow_ewo = IntParameter(180, 220, default=200, space='buy', optimize=True, load=True)
+    fast_ewo = 50
+    slow_ewo = 200
     protection_optimize = False
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params['ewo_low'], space='buy', decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(1.0, 2.2, default=buy_params['ewo_high'], space='buy', decimals=3, optimize=protection_optimize)
@@ -371,7 +369,7 @@ class abbas(IStrategy):
         informative_1h['ema_200'] = ta.EMA(informative_1h, timeperiod=200)
 
         informative_1h['sma_200'] = ta.SMA(informative_1h, timeperiod=200)
-        informative_1h['sma_200_dec'] = informative_1h['sma_200'] < dataframe['sma_200'].shift(20)
+        informative_1h['sma_200_dec'] = informative_1h['sma_200'] < informative_1h['sma_200'].shift(20)
         informative_1h['sma_9'] = ta.SMA(informative_1h, timeperiod=9)
 
         # Elliot

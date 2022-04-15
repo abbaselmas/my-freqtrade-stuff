@@ -1,7 +1,7 @@
 from freqtrade.strategy.interface import IStrategy
 from typing import Dict, List
 from functools import reduce
-from pandas import DataFrame, Series
+from pandas import informative_1h, Series
 # --------------------------------
 import talib.abstract as ta
 import numpy as np
@@ -274,8 +274,8 @@ class abbas2(IStrategy):
     buy_signals = {}
 
     def custom_sell(self, pair: str, trade: 'Trade', current_time: 'datetime', current_rate: float, current_profit: float, **kwargs):
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        last_candle = dataframe.iloc[-1].squeeze()
+        informative_1h, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        last_candle = informative_1h.iloc[-1].squeeze()
 
         max_profit = ((trade.max_rate - trade.open_rate) / trade.open_rate)
 
@@ -315,8 +315,8 @@ class abbas2(IStrategy):
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        last_candle = dataframe.iloc[-1]
+        informative_1h, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        last_candle = informative_1h.iloc[-1]
 
         if (last_candle is not None):
             if (sell_reason in ['sell_signal']):
@@ -329,7 +329,7 @@ class abbas2(IStrategy):
         except KeyError:
             state = self.slippage_protection['__pair_retries'] = {}
 
-        candle = dataframe.iloc[-1].squeeze()
+        candle = informative_1h.iloc[-1].squeeze()
 
         slippage = (rate / candle['close']) - 1
         if slippage < self.slippage_protection['max_slippage']:
@@ -352,108 +352,108 @@ class abbas2(IStrategy):
         informative_pairs = [(pair, '1h') for pair in pairs]
         return informative_pairs
 
-    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def informative_1h_indicators(self, informative_1h: informative_1h, metadata: dict) -> informative_1h:
         assert self.dp, "DataProvider is required for multiple timeframes."
         # Get the informative pair
         informative_1h = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe=self.inf_1h)
 
-        dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
-        dataframe['ema_100'] = ta.EMA(dataframe, timeperiod=100)
-        dataframe['ema_12'] = ta.EMA(dataframe, timeperiod=12)
-        dataframe['ema_20'] = ta.EMA(dataframe, timeperiod=20)
-        dataframe['ema_26'] = ta.EMA(dataframe, timeperiod=26)
-        dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
-        dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
+        informative_1h['hma_50'] = qtpylib.hull_moving_average(informative_1h['close'], window=50)
+        informative_1h['ema_100'] = ta.EMA(informative_1h, timeperiod=100)
+        informative_1h['ema_12'] = ta.EMA(informative_1h, timeperiod=12)
+        informative_1h['ema_20'] = ta.EMA(informative_1h, timeperiod=20)
+        informative_1h['ema_26'] = ta.EMA(informative_1h, timeperiod=26)
+        informative_1h['ema_50'] = ta.EMA(informative_1h, timeperiod=50)
+        informative_1h['ema_200'] = ta.EMA(informative_1h, timeperiod=200)
 
-        dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
-        dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
-        dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
+        informative_1h['sma_200'] = ta.SMA(informative_1h, timeperiod=200)
+        informative_1h['sma_200_dec'] = informative_1h['sma_200'] < informative_1h['sma_200'].shift(20)
+        informative_1h['sma_9'] = ta.SMA(informative_1h, timeperiod=9)
        
         # Elliot
-        dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+        informative_1h['EWO'] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
 
         # RSI
-        dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
-        dataframe['rsi_fast'] = ta.RSI(dataframe, timeperiod=4)
-        dataframe['rsi_slow'] = ta.RSI(dataframe, timeperiod=20)
+        informative_1h['rsi'] = ta.RSI(informative_1h, timeperiod=14)
+        informative_1h['rsi_fast'] = ta.RSI(informative_1h, timeperiod=4)
+        informative_1h['rsi_slow'] = ta.RSI(informative_1h, timeperiod=20)
 
         return informative_1h
 
-    def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_indicators(self, informative_1h: informative_1h, metadata: dict) -> informative_1h:
 
         # Calculate all ma_buy values
         for val in self.base_nb_candles_buy.range:
-            dataframe[f'ma_buy_{val}'] = ta.EMA(dataframe, timeperiod=val)
+            informative_1h[f'ma_buy_{val}'] = ta.EMA(informative_1h, timeperiod=val)
 
         # Calculate all ma_sell values
         for val in self.base_nb_candles_sell.range:
-            dataframe[f'ma_sell_{val}'] = ta.EMA(dataframe, timeperiod=val)
+            informative_1h[f'ma_sell_{val}'] = ta.EMA(informative_1h, timeperiod=val)
 
-        dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
+        informative_1h['hma_50'] = qtpylib.hull_moving_average(informative_1h['close'], window=50)
 
-        dataframe['ema_100'] = ta.EMA(dataframe, timeperiod=100)
+        informative_1h['ema_100'] = ta.EMA(informative_1h, timeperiod=100)
 
-        dataframe['ema_12'] = ta.EMA(dataframe, timeperiod=12)
-        dataframe['ema_20'] = ta.EMA(dataframe, timeperiod=20)
-        dataframe['ema_26'] = ta.EMA(dataframe, timeperiod=26)
-        dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
-        dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
+        informative_1h['ema_12'] = ta.EMA(informative_1h, timeperiod=12)
+        informative_1h['ema_20'] = ta.EMA(informative_1h, timeperiod=20)
+        informative_1h['ema_26'] = ta.EMA(informative_1h, timeperiod=26)
+        informative_1h['ema_50'] = ta.EMA(informative_1h, timeperiod=50)
+        informative_1h['ema_200'] = ta.EMA(informative_1h, timeperiod=200)
 
-        dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
-        dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
-        dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
+        informative_1h['sma_200'] = ta.SMA(informative_1h, timeperiod=200)
+        informative_1h['sma_200_dec'] = informative_1h['sma_200'] < informative_1h['sma_200'].shift(20)
+        informative_1h['sma_9'] = ta.SMA(informative_1h, timeperiod=9)
         
         # Elliot
-        dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+        informative_1h['EWO'] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
 
         # RSI
-        dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
-        dataframe['rsi_fast'] = ta.RSI(dataframe, timeperiod=4)
-        dataframe['rsi_slow'] = ta.RSI(dataframe, timeperiod=20)
+        informative_1h['rsi'] = ta.RSI(informative_1h, timeperiod=14)
+        informative_1h['rsi_fast'] = ta.RSI(informative_1h, timeperiod=4)
+        informative_1h['rsi_slow'] = ta.RSI(informative_1h, timeperiod=20)
 
-        informative_1h = self.informative_1h_indicators(dataframe, metadata)
-        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+        informative_1h = self.informative_1h_indicators(informative_1h, metadata)
+        informative_1h = merge_informative_pair(informative_1h, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
         # Bollinger bands
-        bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
-        dataframe['bb_lowerband28'] = bollinger2['lower']
-        dataframe['bb_middleband28'] = bollinger2['mid']
-        dataframe['bb_upperband28'] = bollinger2['upper']
+        bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.8)
+        informative_1h['bb_lowerband28'] = bollinger2['lower']
+        informative_1h['bb_middleband28'] = bollinger2['mid']
+        informative_1h['bb_upperband28'] = bollinger2['upper']
 
-        return dataframe
+        return informative_1h
 
-    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_buy_trend(self, informative_1h: informative_1h, metadata: dict) -> informative_1h:
 
-        dataframe.loc[
+        informative_1h.loc[
             (
-                (dataframe['rsi_fast'] < 35) &
-                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
-                (dataframe['EWO'] > self.ewo_high.value) &
-                (dataframe['rsi'] < self.rsi_buy.value) &
-                (dataframe['volume'] > 0) &
-                (dataframe['close'] < (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
+                (informative_1h['rsi_fast'] < 35) &
+                (informative_1h['close'] < (informative_1h[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
+                (informative_1h['EWO'] > self.ewo_high.value) &
+                (informative_1h['rsi'] < self.rsi_buy.value) &
+                (informative_1h['volume'] > 0) &
+                (informative_1h['close'] < (informative_1h[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
             ),
             ['buy', 'buy_tag']] = (1, 'ewo1')
 
-        dataframe.loc[
+        informative_1h.loc[
             (
-                (dataframe['rsi_fast'] < 35) &
-                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset_2.value)) &
-                (dataframe['EWO'] > self.ewo_high_2.value) &
-                (dataframe['rsi'] < self.rsi_buy.value) &
-                (dataframe['volume'] > 0) &
-                (dataframe['close'] < (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
-                (dataframe['rsi'] < 25)
+                (informative_1h['rsi_fast'] < 35) &
+                (informative_1h['close'] < (informative_1h[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset_2.value)) &
+                (informative_1h['EWO'] > self.ewo_high_2.value) &
+                (informative_1h['rsi'] < self.rsi_buy.value) &
+                (informative_1h['volume'] > 0) &
+                (informative_1h['close'] < (informative_1h[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
+                (informative_1h['rsi'] < 25)
             ),
             ['buy', 'buy_tag']] = (1, 'ewo2')
 
-        dataframe.loc[
+        informative_1h.loc[
             (
-                (dataframe['rsi_fast'] < 35) &
-                (dataframe['close'] < (dataframe[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
-                (dataframe['EWO'] < self.ewo_low.value) &
-                (dataframe['volume'] > 0) &
-                (dataframe['close'] < (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
+                (informative_1h['rsi_fast'] < 35) &
+                (informative_1h['close'] < (informative_1h[f'ma_buy_{self.base_nb_candles_buy.value}'] * self.low_offset.value)) &
+                (informative_1h['EWO'] < self.ewo_low.value) &
+                (informative_1h['volume'] > 0) &
+                (informative_1h['close'] < (informative_1h[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value))
             ),
             ['buy', 'buy_tag']] = (1, 'ewolow')
 
@@ -461,48 +461,48 @@ class abbas2(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * 1.03 )) # don't buy if there isn't 3% profit to be made
+                (informative_1h['close_1h'].rolling(24).max() < (informative_1h['close'] * 1.03 )) # don't buy if there isn't 3% profit to be made
             )
         )
 
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
-                dataframe.loc[condition, 'buy'] = 0
+                informative_1h.loc[condition, 'buy'] = 0
 
-        return dataframe
+        return informative_1h
 
-    def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_sell_trend(self, informative_1h: informative_1h, metadata: dict) -> informative_1h:
         conditions = []
 
         conditions.append(
-            ((dataframe['close'] > dataframe['sma_9']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset_2.value)) &
-                (dataframe['rsi'] > 50) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
+            ((informative_1h['close'] > informative_1h['sma_9']) &
+                (informative_1h['close'] > (informative_1h[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset_2.value)) &
+                (informative_1h['rsi'] > 50) &
+                (informative_1h['volume'] > 0) &
+                (informative_1h['rsi_fast'] > informative_1h['rsi_slow'])
              )
             |
             (
-                (dataframe['close'] < dataframe['hma_50']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
+                (informative_1h['close'] < informative_1h['hma_50']) &
+                (informative_1h['close'] > (informative_1h[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
+                (informative_1h['volume'] > 0) &
+                (informative_1h['rsi_fast'] > informative_1h['rsi_slow'])
             )
 
         )
 
-        dataframe['ema_offset_sell'] = ta.EMA(dataframe, int(self.base_nb_candles_sell.value)) *self.high_offset_ema.value
+        informative_1h['ema_offset_sell'] = ta.EMA(informative_1h, int(self.base_nb_candles_sell.value)) *self.high_offset_ema.value
 
         if conditions:
-            dataframe.loc[
+            informative_1h.loc[
                 reduce(lambda x, y: x | y, conditions),
                 'sell'
             ]=1
 
-        return dataframe
+        return informative_1h
 
-def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
+def EWO(informative_1h, ema_length=5, ema2_length=35):
+    df = informative_1h.copy()
     ema1 = ta.EMA(df, timeperiod=ema_length)
     ema2 = ta.EMA(df, timeperiod=ema2_length)
     emadif = (ema1 - ema2) / df['low'] * 100
