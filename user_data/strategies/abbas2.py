@@ -414,6 +414,7 @@ class abbas2(IStrategy):
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
+        # Bollinger bands
         bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
         dataframe['bb_lowerband28'] = bollinger2['lower']
         dataframe['bb_middleband28'] = bollinger2['mid']

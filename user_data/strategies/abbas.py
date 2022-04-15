@@ -44,7 +44,9 @@ buy_params = {
     "low_offset": 1.066,
     "low_offset_2": 0.961,
     "rsi_buy": 68,
-    "min_profit": 0.95
+    "min_profit": 1.03,
+    "fast_ewo": 50,
+    "slow_ewo": 200
 }
 
 # Sell hyperspace params:
@@ -234,14 +236,14 @@ class abbas(IStrategy):
 
     # Protection
     protection_optimize = False
-    fast_ewo = 50
-    slow_ewo = 200
+    fast_ewo = IntParameter(40, 60, default=buy_params['fast_ewo'], space='buy', optimize=True)
+    slow_ewo = IntParameter(180, 220, default=buy_params['slow_ewo'], space='buy', optimize=True)
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params['ewo_low'], space='buy', decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(1.0, 2.2, default=buy_params['ewo_high'], space='buy', decimals=3, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params['ewo_high_2'], space='buy', decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params['rsi_buy'], space='buy', optimize=protection_optimize)
 
-    min_profit = DecimalParameter(0.70, 1.20, default=buy_params['min_profit'], space='buy', decimals=2, optimize=True)
+    min_profit = DecimalParameter(0.70, 1.20, default=buy_params['min_profit'], space='buy', decimals=2, optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -417,6 +419,7 @@ class abbas(IStrategy):
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
+        # Bollinger bands
         bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
         dataframe['bb_lowerband28'] = bollinger2['lower']
         dataframe['bb_middleband28'] = bollinger2['mid']
