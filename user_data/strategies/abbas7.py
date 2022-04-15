@@ -348,11 +348,3 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema2 = ta.EMA(df, timeperiod=ema2_length)
     emadif = (ema1 - ema2) / df['low'] * 100
     return emadif
-
-# Elliot Wave Oscillator
-def EWO(dataframe, sma1_length=5, sma2_length=35):
-    df = dataframe.copy()
-    sma1 = ta.SMA(df, timeperiod=sma1_length)
-    sma2 = ta.SMA(df, timeperiod=sma2_length)
-    smadif = (sma1 - sma2) / df['close'] * 100
-    return smadif
