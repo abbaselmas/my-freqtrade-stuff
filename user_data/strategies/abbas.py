@@ -81,13 +81,6 @@ sell_params = {
     "sell_trail_profit_min_3": 0.093,
 }
 
-def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
-    ema1 = ta.EMA(df, timeperiod=ema_length)
-    ema2 = ta.EMA(df, timeperiod=ema2_length)
-    emadif = (ema1 - ema2) / df['low'] * 100
-    return emadif
-
 class abbas(IStrategy):
     INTERFACE_VERSION = 2
 
@@ -517,3 +510,10 @@ def EWO(dataframe, sma1_length=5, sma2_length=35):
     sma2 = ta.SMA(df, timeperiod=sma2_length)
     smadif = (sma1 - sma2) / df['close'] * 100
     return smadif
+
+def EWO(dataframe, ema_length=5, ema2_length=35):
+    df = dataframe.copy()
+    ema1 = ta.EMA(df, timeperiod=ema_length)
+    ema2 = ta.EMA(df, timeperiod=ema2_length)
+    emadif = (ema1 - ema2) / df['low'] * 100
+    return emadif

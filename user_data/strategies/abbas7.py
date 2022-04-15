@@ -46,39 +46,6 @@ buy_params = {
     "rsi_buy": 83,
 }
 
-'''
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "lowprofit2_lookback_period_candles": 179,
-    "lowprofit2_required_profit": 0.018,
-    "lowprofit2_stop_duration_candles": 28,
-    "lowprofit2_trade_limit": 37,
-    "lowprofit_lookback_period_candles": 11,
-    "lowprofit_required_profit": 0.037,
-    "lowprofit_stop_duration_candles": 115,
-    "lowprofit_trade_limit": 49,
-    "maxdrawdown_lookback_period_candles": 25,
-    "maxdrawdown_max_allowed_drawdown": 0.21,
-    "maxdrawdown_stop_duration_candles": 47,
-    "maxdrawdown_trade_limit": 8,
-    "stoplossguard_lookback_period_candles": 270,
-    "stoplossguard_stop_duration_candles": 7,
-    "stoplossguard_trade_limit": 9,
-}
-
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 28,
-    "ewo_high": 1.476,
-    "ewo_high_2": -2.06,
-    "ewo_low": -11.99,
-    "low_offset": 1.034,
-    "low_offset_2": 0.974,
-    "rsi_buy": 71,
-}
-'''
-
 class abbas7(IStrategy):
     INTERFACE_VERSION = 2
 

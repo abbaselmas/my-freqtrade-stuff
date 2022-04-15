@@ -15,7 +15,6 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 0,
@@ -46,7 +45,6 @@ buy_params = {
     "low_offset_2": 0.943,
     "rsi_buy": 63,
 }
-
 
 # Sell hyperspace params:
 sell_params = {
@@ -82,13 +80,6 @@ sell_params = {
     "sell_trail_profit_min_2": 0.065,
     "sell_trail_profit_min_3": 0.093,
 }
-
-def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
-    ema1 = ta.EMA(df, timeperiod=ema_length)
-    ema2 = ta.EMA(df, timeperiod=ema2_length)
-    emadif = (ema1 - ema2) / df['low'] * 100
-    return emadif
 
 class abbas2(IStrategy):
     INTERFACE_VERSION = 2
@@ -519,3 +510,10 @@ def EWO(dataframe, sma1_length=5, sma2_length=35):
     sma2 = ta.SMA(df, timeperiod=sma2_length)
     smadif = (sma1 - sma2) / df['close'] * 100
     return smadif
+
+def EWO(dataframe, ema_length=5, ema2_length=35):
+    df = dataframe.copy()
+    ema1 = ta.EMA(df, timeperiod=ema_length)
+    ema2 = ta.EMA(df, timeperiod=ema2_length)
+    emadif = (ema1 - ema2) / df['low'] * 100
+    return emadif
