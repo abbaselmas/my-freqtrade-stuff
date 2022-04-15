@@ -362,25 +362,25 @@ class abbas(IStrategy):
         # Get the informative pair
         informative_1h = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe=self.inf_1h)
 
-        dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
-        dataframe['ema_100'] = ta.EMA(dataframe, timeperiod=100)
-        dataframe['ema_12'] = ta.EMA(dataframe, timeperiod=12)
-        dataframe['ema_20'] = ta.EMA(dataframe, timeperiod=20)
-        dataframe['ema_26'] = ta.EMA(dataframe, timeperiod=26)
-        dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
-        dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
+        informative_1h['hma_50'] = qtpylib.hull_moving_average(informative_1h['close'], window=50)
+        informative_1h['ema_100'] = ta.EMA(informative_1h, timeperiod=100)
+        informative_1h['ema_12'] = ta.EMA(informative_1h, timeperiod=12)
+        informative_1h['ema_20'] = ta.EMA(informative_1h, timeperiod=20)
+        informative_1h['ema_26'] = ta.EMA(informative_1h, timeperiod=26)
+        informative_1h['ema_50'] = ta.EMA(informative_1h, timeperiod=50)
+        informative_1h['ema_200'] = ta.EMA(informative_1h, timeperiod=200)
 
-        dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
-        dataframe['sma_200_dec'] = dataframe['sma_200'] < dataframe['sma_200'].shift(20)
-        dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
+        informative_1h['sma_200'] = ta.SMA(informative_1h, timeperiod=200)
+        informative_1h['sma_200_dec'] = informative_1h['sma_200'] < dataframe['sma_200'].shift(20)
+        informative_1h['sma_9'] = ta.SMA(informative_1h, timeperiod=9)
 
         # Elliot
-        dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+        informative_1h['EWO'] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
 
         # RSI
-        dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
-        dataframe['rsi_fast'] = ta.RSI(dataframe, timeperiod=4)
-        dataframe['rsi_slow'] = ta.RSI(dataframe, timeperiod=20)
+        informative_1h['rsi'] = ta.RSI(informative_1h, timeperiod=14)
+        informative_1h['rsi_fast'] = ta.RSI(informative_1h, timeperiod=4)
+        informative_1h['rsi_slow'] = ta.RSI(informative_1h, timeperiod=20)
 
         return informative_1h
 
