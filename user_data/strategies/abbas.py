@@ -15,77 +15,77 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "lowprofit2_lookback_period_candles": 179,
-    "lowprofit2_required_profit": 0.018,
-    "lowprofit2_stop_duration_candles": 28,
-    "lowprofit2_trade_limit": 37,
-    "lowprofit_lookback_period_candles": 11,
-    "lowprofit_required_profit": 0.037,
-    "lowprofit_stop_duration_candles": 115,
-    "lowprofit_trade_limit": 49,
-    "maxdrawdown_lookback_period_candles": 25,
-    "maxdrawdown_max_allowed_drawdown": 0.21,
-    "maxdrawdown_stop_duration_candles": 47,
-    "maxdrawdown_trade_limit": 8,
-    "stoplossguard_lookback_period_candles": 270,
-    "stoplossguard_stop_duration_candles": 7,
-    "stoplossguard_trade_limit": 9,
-}
-
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-    "min_profit": 1.03,
-    "fast_ewo": 50,
-    "slow_ewo": 200
-}
-
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 9,
-    "high_offset": 1.01,
-    "high_offset_2": 1.233,
-    "high_offset_ema": 0.931,
-    "sell_custom_dec_profit_1": 0.084,
-    "sell_custom_dec_profit_2": 0.124,
-    "sell_custom_profit_0": 0.048,
-    "sell_custom_profit_1": 0.083,
-    "sell_custom_profit_2": 0.082,
-    "sell_custom_profit_3": 0.107,
-    "sell_custom_profit_4": 0.016,
-    "sell_custom_rsi_0": 39.351,
-    "sell_custom_rsi_1": 37.42,
-    "sell_custom_rsi_2": 41.15,
-    "sell_custom_rsi_3": 47.89,
-    "sell_custom_rsi_4": 50.37,
-    "sell_custom_under_profit_1": 0.103,
-    "sell_custom_under_profit_2": 0.109,
-    "sell_custom_under_profit_3": 0.077,
-    "sell_custom_under_rsi_1": 49.8,
-    "sell_custom_under_rsi_2": 64.5,
-    "sell_custom_under_rsi_3": 56.8,
-    "sell_trail_down_1": 0.079,
-    "sell_trail_down_2": 0.113,
-    "sell_trail_down_3": 0.044,
-    "sell_trail_profit_max_1": 0.47,
-    "sell_trail_profit_max_2": 0.13,
-    "sell_trail_profit_max_3": 0.15,
-    "sell_trail_profit_min_1": 0.137,
-    "sell_trail_profit_min_2": 0.065,
-    "sell_trail_profit_min_3": 0.093,
-}
-
 class abbas(IStrategy):
     INTERFACE_VERSION = 2
+
+    # Protection hyperspace params:
+    protection_params = {
+        "cooldown_stop_duration_candles": 0,
+        "lowprofit2_lookback_period_candles": 179,
+        "lowprofit2_required_profit": 0.018,
+        "lowprofit2_stop_duration_candles": 28,
+        "lowprofit2_trade_limit": 37,
+        "lowprofit_lookback_period_candles": 11,
+        "lowprofit_required_profit": 0.037,
+        "lowprofit_stop_duration_candles": 115,
+        "lowprofit_trade_limit": 49,
+        "maxdrawdown_lookback_period_candles": 25,
+        "maxdrawdown_max_allowed_drawdown": 0.21,
+        "maxdrawdown_stop_duration_candles": 47,
+        "maxdrawdown_trade_limit": 8,
+        "stoplossguard_lookback_period_candles": 270,
+        "stoplossguard_stop_duration_candles": 7,
+        "stoplossguard_trade_limit": 9,
+    }
+
+    # Buy hyperspace params:
+    buy_params = {
+        "base_nb_candles_buy": 17,
+        "ewo_high": 2.182,
+        "ewo_high_2": -3.44,
+        "ewo_low": -10.26,
+        "low_offset": 1.066,
+        "low_offset_2": 0.961,
+        "rsi_buy": 68,
+        "min_profit": 1.03,
+        "fast_ewo": 50,
+        "slow_ewo": 200
+    }
+
+    # Sell hyperspace params:
+    sell_params = {
+        "base_nb_candles_sell": 9,
+        "high_offset": 1.01,
+        "high_offset_2": 1.233,
+        "high_offset_ema": 0.931,
+        "sell_custom_dec_profit_1": 0.084,
+        "sell_custom_dec_profit_2": 0.124,
+        "sell_custom_profit_0": 0.048,
+        "sell_custom_profit_1": 0.083,
+        "sell_custom_profit_2": 0.082,
+        "sell_custom_profit_3": 0.107,
+        "sell_custom_profit_4": 0.016,
+        "sell_custom_rsi_0": 39.351,
+        "sell_custom_rsi_1": 37.42,
+        "sell_custom_rsi_2": 41.15,
+        "sell_custom_rsi_3": 47.89,
+        "sell_custom_rsi_4": 50.37,
+        "sell_custom_under_profit_1": 0.103,
+        "sell_custom_under_profit_2": 0.109,
+        "sell_custom_under_profit_3": 0.077,
+        "sell_custom_under_rsi_1": 49.8,
+        "sell_custom_under_rsi_2": 64.5,
+        "sell_custom_under_rsi_3": 56.8,
+        "sell_trail_down_1": 0.079,
+        "sell_trail_down_2": 0.113,
+        "sell_trail_down_3": 0.044,
+        "sell_trail_profit_max_1": 0.47,
+        "sell_trail_profit_max_2": 0.13,
+        "sell_trail_profit_max_3": 0.15,
+        "sell_trail_profit_min_1": 0.137,
+        "sell_trail_profit_min_2": 0.065,
+        "sell_trail_profit_min_3": 0.093,
+    }
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
 
