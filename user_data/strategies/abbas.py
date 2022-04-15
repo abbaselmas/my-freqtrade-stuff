@@ -407,7 +407,7 @@ class abbas(IStrategy):
         dataframe['sma_9'] = ta.SMA(dataframe, timeperiod=9)
         
         # Elliot
-        dataframe['EWO'] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+        dataframe['EWO'] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
 
         # RSI
         dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
