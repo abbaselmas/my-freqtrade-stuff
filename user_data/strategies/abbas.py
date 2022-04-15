@@ -44,7 +44,7 @@ buy_params = {
     "low_offset": 1.066,
     "low_offset_2": 0.961,
     "rsi_buy": 68,
-    "min_profit": 0.90
+    "min_profit": 0.95
 }
 
 # Sell hyperspace params:
@@ -276,9 +276,6 @@ class abbas(IStrategy):
 
     buy_signals = {}
 
-    def get_ticker_indicator(self):
-        return int(self.timeframe[:-1])
-
     def custom_sell(self, pair: str, trade: 'Trade', current_time: 'datetime', current_rate: float, current_profit: float, **kwargs):
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         last_candle = dataframe.iloc[-1].squeeze()
@@ -346,7 +343,7 @@ class abbas(IStrategy):
 
         state[pair] = 0
         current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > 0.01102)):
+        if (sell_reason.startswith('sell signal (') and (current_profit > trailing_stop_positive_offset)):
             # Reject sell signal when trailing stoplosses
             return False
         return True
@@ -466,7 +463,7 @@ class abbas(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * buy_params['min_profit'] )) # don't buy if there isn't 3% profit to be made
+                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * self.min_profit.value ))
             )
         )
 

@@ -195,9 +195,6 @@ class abbas7(IStrategy):
 
     buy_signals = {}
 
-    def get_ticker_indicator(self):
-        return int(self.timeframe[:-1])
-
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)

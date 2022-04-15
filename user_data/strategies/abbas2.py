@@ -273,9 +273,6 @@ class abbas2(IStrategy):
 
     buy_signals = {}
 
-    def get_ticker_indicator(self):
-        return int(self.timeframe[:-1])
-
     def custom_sell(self, pair: str, trade: 'Trade', current_time: 'datetime', current_rate: float, current_profit: float, **kwargs):
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         last_candle = dataframe.iloc[-1].squeeze()
@@ -343,7 +340,7 @@ class abbas2(IStrategy):
 
         state[pair] = 0
         current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > 0.01102)):
+        if (sell_reason.startswith('sell signal (') and (current_profit > trailing_stop_positive_offset)):
             # Reject sell signal when trailing stoplosses
             return False
         return True
