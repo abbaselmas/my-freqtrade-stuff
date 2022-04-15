@@ -44,7 +44,7 @@ buy_params = {
     "low_offset": 1.066,
     "low_offset_2": 0.961,
     "rsi_buy": 68,
-    "min_profit": 1.03
+    "min_profit": 0.90
 }
 
 # Sell hyperspace params:
@@ -184,7 +184,7 @@ class abbas(IStrategy):
     ignore_roi_if_buy_signal = False
 
     # SMAOffset
-    smaoffset_optimize = True
+    smaoffset_optimize = False
     high_offset_ema = DecimalParameter(0.90, 1.1, default=sell_params['high_offset_ema'], load=True, space='sell', decimals=3, optimize=smaoffset_optimize)
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params['base_nb_candles_buy'], space='buy', optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params['base_nb_candles_sell'], space='sell', optimize=smaoffset_optimize)
@@ -233,7 +233,7 @@ class abbas(IStrategy):
     sell_trail_down_3 = DecimalParameter(0.03, 0.05, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
 
     # Protection
-    protection_optimize = True
+    protection_optimize = False
     fast_ewo = 50
     slow_ewo = 200
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params['ewo_low'], space='buy', decimals=2, optimize=protection_optimize)
@@ -241,7 +241,7 @@ class abbas(IStrategy):
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params['ewo_high_2'], space='buy', decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params['rsi_buy'], space='buy', optimize=protection_optimize)
 
-    min_profit = DecimalParameter(-0.95, 1.05, default=buy_params['min_profit'], space='buy', decimals=2, optimize=protection_optimize)
+    min_profit = DecimalParameter(0.70, 1.20, default=buy_params['min_profit'], space='buy', decimals=2, optimize=True)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -466,7 +466,7 @@ class abbas(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * sell_params['min_profit'] )) # don't buy if there isn't 3% profit to be made
+                (dataframe['close_1h'].rolling(24).max() < (dataframe['close'] * buy_params['min_profit'] )) # don't buy if there isn't 3% profit to be made
             )
         )
 
