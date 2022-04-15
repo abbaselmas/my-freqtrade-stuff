@@ -235,9 +235,19 @@ class abbas(IStrategy):
     sell_trail_down_3 = DecimalParameter(0.03, 0.05, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
 
     # Protection
-    protection_optimize = False
+
+
     fast_ewo = IntParameter(40, 60, default=buy_params['fast_ewo'], space='buy', optimize=True)
+    @property
+    def fast_ewo(self):
+        return int(self.fast_ewo.value)
+
     slow_ewo = IntParameter(180, 220, default=buy_params['slow_ewo'], space='buy', optimize=True)
+    @property
+    def slow_ewo(self):
+        return int(self.slow_ewo.value)
+
+    protection_optimize = False
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params['ewo_low'], space='buy', decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(1.0, 2.2, default=buy_params['ewo_high'], space='buy', decimals=3, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params['ewo_high_2'], space='buy', decimals=2, optimize=protection_optimize)
