@@ -18,6 +18,38 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 0,
+    "lowprofit2_lookback_period_candles": 158,
+    "lowprofit2_required_profit": 0.011,
+    "lowprofit2_stop_duration_candles": 28,
+    "lowprofit2_trade_limit": 61,
+    "lowprofit_lookback_period_candles": 31,
+    "lowprofit_required_profit": 0.026,
+    "lowprofit_stop_duration_candles": 93,
+    "lowprofit_trade_limit": 34,
+    "maxdrawdown_lookback_period_candles": 30,
+    "maxdrawdown_max_allowed_drawdown": 0.16,
+    "maxdrawdown_stop_duration_candles": 29,
+    "maxdrawdown_trade_limit": 19,
+    "stoplossguard_lookback_period_candles": 143,
+    "stoplossguard_stop_duration_candles": 1,
+    "stoplossguard_trade_limit": 12,
+}
+
+# Buy hyperspace params:
+buy_params = {
+    "base_nb_candles_buy": 24,
+    "ewo_high": 1.047,
+    "ewo_high_2": -3.84,
+    "ewo_low": -8.57,
+    "low_offset": 1.044,
+    "low_offset_2": 0.948,
+    "rsi_buy": 83,
+}
+
+'''
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 0,
     "lowprofit2_lookback_period_candles": 179,
     "lowprofit2_required_profit": 0.018,
     "lowprofit2_stop_duration_candles": 28,
@@ -45,6 +77,7 @@ buy_params = {
     "low_offset_2": 0.974,
     "rsi_buy": 71,
 }
+'''
 
 class abbas7(IStrategy):
     INTERFACE_VERSION = 2
@@ -133,12 +166,12 @@ class abbas7(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.078  # value loaded from strategy
+    stoploss = -0.078
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0082
+    trailing_stop_positive = 0.00013
+    trailing_stop_positive_offset = 0.01193
     trailing_only_offset_is_reached = True
 
     # Sell signal
