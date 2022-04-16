@@ -18,6 +18,68 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 0,
+    "lowprofit2_lookback_period_candles": 300,
+    "lowprofit2_required_profit": 0.004,
+    "lowprofit2_stop_duration_candles": 38,
+    "lowprofit2_trade_limit": 34,
+    "lowprofit_lookback_period_candles": 28,
+    "lowprofit_required_profit": 0.044,
+    "lowprofit_stop_duration_candles": 17,
+    "lowprofit_trade_limit": 38,
+    "maxdrawdown_lookback_period_candles": 13,
+    "maxdrawdown_max_allowed_drawdown": 0.13,
+    "maxdrawdown_stop_duration_candles": 22,
+    "maxdrawdown_trade_limit": 20,
+    "stoplossguard_lookback_period_candles": 53,
+    "stoplossguard_stop_duration_candles": 1,
+    "stoplossguard_trade_limit": 2,
+}
+
+'''
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 0,
+    "lowprofit2_lookback_period_candles": 71,
+    "lowprofit2_required_profit": 0.001,
+    "lowprofit2_stop_duration_candles": 20,
+    "lowprofit2_trade_limit": 32,
+    "lowprofit_lookback_period_candles": 55,
+    "lowprofit_required_profit": 0.034,
+    "lowprofit_stop_duration_candles": 28,
+    "lowprofit_trade_limit": 19,
+    "maxdrawdown_lookback_period_candles": 33,
+    "maxdrawdown_max_allowed_drawdown": 0.05,
+    "maxdrawdown_stop_duration_candles": 47,
+    "maxdrawdown_trade_limit": 1,
+    "stoplossguard_lookback_period_candles": 276,
+    "stoplossguard_stop_duration_candles": 6,
+    "stoplossguard_trade_limit": 1,
+}
+
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 0,
+    "lowprofit2_lookback_period_candles": 234,
+    "lowprofit2_required_profit": 0.0,
+    "lowprofit2_stop_duration_candles": 20,
+    "lowprofit2_trade_limit": 30,
+    "lowprofit_lookback_period_candles": 54,
+    "lowprofit_required_profit": 0.049,
+    "lowprofit_stop_duration_candles": 185,
+    "lowprofit_trade_limit": 18,
+    "maxdrawdown_lookback_period_candles": 7,
+    "maxdrawdown_max_allowed_drawdown": 0.06,
+    "maxdrawdown_stop_duration_candles": 37,
+    "maxdrawdown_trade_limit": 19,
+    "stoplossguard_lookback_period_candles": 205,
+    "stoplossguard_stop_duration_candles": 1,
+    "stoplossguard_trade_limit": 1,
+}
+
+
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 0,
     "lowprofit2_lookback_period_candles": 158,
     "lowprofit2_required_profit": 0.011,
     "lowprofit2_stop_duration_candles": 28,
@@ -34,6 +96,7 @@ protection_params = {
     "stoplossguard_stop_duration_candles": 1,
     "stoplossguard_trade_limit": 12,
 }
+'''
 
 # Buy hyperspace params:
 buy_params = {
@@ -137,8 +200,8 @@ class abbas7(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.00013
-    trailing_stop_positive_offset = 0.01193
+    trailing_stop_positive = 0.00012
+    trailing_stop_positive_offset = 0.01122
     trailing_only_offset_is_reached = True
 
     # Sell signal
