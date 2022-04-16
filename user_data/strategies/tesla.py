@@ -63,7 +63,7 @@ def williams_r(dataframe: DataFrame, period: int = 14) -> Series:
 
     return WR * -100
 
-class true_lambo(IStrategy):
+class tesla(IStrategy):
 
     '''
     @ jilv220
