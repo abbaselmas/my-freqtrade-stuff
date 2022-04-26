@@ -82,7 +82,7 @@ sell_params = {
     "sell_trail_profit_min_3": 0.093,
 }
 
-class abbas(IStrategy):
+class abbasSL3(IStrategy):
     INTERFACE_VERSION = 2
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
@@ -169,7 +169,7 @@ class abbas(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.078
+    stoploss = -0.034
 
     # Trailing stop:
     trailing_stop = True
