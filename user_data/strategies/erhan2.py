@@ -55,34 +55,7 @@ sell_params = {
     "high_offset_ema": 0.91,
     "iribs": False,
     "sell_profit_only_enabled": False,
-    "use_sell_signal_enabled": True,
-    "sell_custom_dec_profit_1": 0.084,  # value loaded from strategy
-    "sell_custom_dec_profit_2": 0.124,  # value loaded from strategy
-    "sell_custom_profit_0": 0.048,  # value loaded from strategy
-    "sell_custom_profit_1": 0.083,  # value loaded from strategy
-    "sell_custom_profit_2": 0.082,  # value loaded from strategy
-    "sell_custom_profit_3": 0.107,  # value loaded from strategy
-    "sell_custom_profit_4": 0.016,  # value loaded from strategy
-    "sell_custom_rsi_0": 39.351,  # value loaded from strategy
-    "sell_custom_rsi_1": 37.42,  # value loaded from strategy
-    "sell_custom_rsi_2": 41.15,  # value loaded from strategy
-    "sell_custom_rsi_3": 47.89,  # value loaded from strategy
-    "sell_custom_rsi_4": 0.1,  # value loaded from strategy
-    "sell_custom_under_profit_1": 0.103,  # value loaded from strategy
-    "sell_custom_under_profit_2": 0.109,  # value loaded from strategy
-    "sell_custom_under_profit_3": 0.077,  # value loaded from strategy
-    "sell_custom_under_rsi_1": 49.8,  # value loaded from strategy
-    "sell_custom_under_rsi_2": 64.5,  # value loaded from strategy
-    "sell_custom_under_rsi_3": 56.8,  # value loaded from strategy
-    "sell_trail_down_1": 0.079,  # value loaded from strategy
-    "sell_trail_down_2": 0.113,  # value loaded from strategy
-    "sell_trail_down_3": 0.044,  # value loaded from strategy
-    "sell_trail_profit_max_1": 0.47,  # value loaded from strategy
-    "sell_trail_profit_max_2": 0.13,  # value loaded from strategy
-    "sell_trail_profit_max_3": 0.15,  # value loaded from strategy
-    "sell_trail_profit_min_1": 0.137,  # value loaded from strategy
-    "sell_trail_profit_min_2": 0.065,  # value loaded from strategy
-    "sell_trail_profit_min_3": 0.093,  # value loaded from strategy
+    "use_sell_signal_enabled": True
 }
 
 class erhan(IStrategy):
@@ -199,45 +172,6 @@ class erhan(IStrategy):
     high_offset = DecimalParameter(1.0, 1.1, default=sell_params['high_offset'], space='sell', decimals=3, optimize=smaoffset_optimize)
     high_offset_2 = DecimalParameter(1.2, 1.5, default=sell_params['high_offset_2'], space='sell', decimals=3, optimize=smaoffset_optimize)
 
-    sell_custom_profit_optimize = False
-    sell_custom_profit_0 = DecimalParameter(0.010, 0.100, default=sell_params['sell_custom_profit_0'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
-    sell_custom_profit_1 = DecimalParameter(0.013, 0.100, default=sell_params['sell_custom_profit_1'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
-    sell_custom_profit_2 = DecimalParameter(0.015, 0.100, default=sell_params['sell_custom_profit_2'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
-    sell_custom_profit_3 = DecimalParameter(0.009, 0.300, default=sell_params['sell_custom_profit_3'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
-    sell_custom_profit_4 = DecimalParameter(0.010, 0.600, default=sell_params['sell_custom_profit_4'], space='sell', decimals=3, optimize=sell_custom_profit_optimize, load=True)
-
-    sell_custom_rsi_optimize = False
-    sell_custom_rsi_0 = DecimalParameter(30.0, 40.0, default=sell_params['sell_custom_rsi_0'], space='sell', decimals=3, optimize=sell_custom_rsi_optimize, load=True)
-    sell_custom_rsi_1 = DecimalParameter(30.0, 50.0, default=sell_params['sell_custom_rsi_1'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
-    sell_custom_rsi_2 = DecimalParameter(34.0, 50.0, default=sell_params['sell_custom_rsi_2'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
-    sell_custom_rsi_3 = DecimalParameter(38.0, 55.0, default=sell_params['sell_custom_rsi_3'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
-    sell_custom_rsi_4 = DecimalParameter(40.0, 58.0, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=2, optimize=sell_custom_rsi_optimize, load=True)
-
-    sell_custom_under_profit_optimize = False
-    sell_custom_under_profit_1 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_1'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
-    sell_custom_under_profit_2 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_2'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
-    sell_custom_under_profit_3 = DecimalParameter(0.070, 0.120, default=sell_params['sell_custom_under_profit_3'], space='sell', decimals=3, optimize=sell_custom_under_profit_optimize, load=True)
-
-    sell_custom_under_rsi_optimize = False
-    sell_custom_under_rsi_1 = DecimalParameter(36.0, 60.0, default=sell_params['sell_custom_under_rsi_1'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
-    sell_custom_under_rsi_2 = DecimalParameter(46.0, 66.0, default=sell_params['sell_custom_under_rsi_2'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
-    sell_custom_under_rsi_3 = DecimalParameter(48.0, 68.0, default=sell_params['sell_custom_under_rsi_3'], space='sell', decimals=1, optimize=sell_custom_under_rsi_optimize, load=True)
-
-    sell_custom_dec_profit_optimize = False
-    sell_custom_dec_profit_1 = DecimalParameter(0.001, 0.100, default=sell_params['sell_custom_dec_profit_1'], space='sell', decimals=3, optimize=sell_custom_dec_profit_optimize, load=True)
-    sell_custom_dec_profit_2 = DecimalParameter(0.100, 0.200, default=sell_params['sell_custom_dec_profit_2'], space='sell', decimals=3, optimize=sell_custom_dec_profit_optimize, load=True)
-
-    sell_trail_optimize = False
-    sell_trail_profit_min_1 = DecimalParameter(0.001, 0.25, default=sell_params['sell_trail_profit_min_1'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-    sell_trail_profit_max_1 = DecimalParameter(0.03, 0.5, default=sell_params['sell_trail_profit_max_1'], space='sell', decimals=2, optimize=sell_trail_optimize, load=True)
-    sell_trail_down_1 = DecimalParameter(0.040, 0.100, default=sell_params['sell_trail_down_1'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-    sell_trail_profit_min_2 = DecimalParameter(0.004, 0.100, default=sell_params['sell_trail_profit_min_2'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-    sell_trail_profit_max_2 = DecimalParameter(0.08, 0.25, default=sell_params['sell_trail_profit_max_2'], space='sell', decimals=2, optimize=sell_trail_optimize, load=True)
-    sell_trail_down_2 = DecimalParameter(0.040, 0.120, default=sell_params['sell_trail_down_2'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-    sell_trail_profit_min_3 = DecimalParameter(0.006, 0.100, default=sell_params['sell_trail_profit_min_3'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-    sell_trail_profit_max_3 = DecimalParameter(0.08, 0.16, default=sell_params['sell_trail_profit_max_3'], space='sell', decimals=2, optimize=sell_trail_optimize, load=True)
-    sell_trail_down_3 = DecimalParameter(0.03, 0.05, default=sell_params['sell_trail_down_3'], space='sell', decimals=3, optimize=sell_trail_optimize, load=True)
-
     # Protection
     fast_ewo = 50
     slow_ewo = 200
@@ -281,46 +215,6 @@ class erhan(IStrategy):
     }
 
     buy_signals = {}
-
-    def custom_sell(self, pair: str, trade: 'Trade', current_time: 'datetime', current_rate: float, current_profit: float, **kwargs):
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        last_candle = dataframe.iloc[-1].squeeze()
-
-        max_profit = ((trade.max_rate - trade.open_rate) / trade.open_rate)
-
-        if (last_candle is not None):
-            if (current_profit > self.sell_custom_profit_4.value) & (last_candle['rsi'] < self.sell_custom_rsi_4.value):
-                return 'signal_profit_4'
-            elif (current_profit > self.sell_custom_profit_3.value) & (last_candle['rsi'] < self.sell_custom_rsi_3.value):
-                return 'signal_profit_3'
-            elif (current_profit > self.sell_custom_profit_2.value) & (last_candle['rsi'] < self.sell_custom_rsi_2.value):
-                return 'signal_profit_2'
-            elif (current_profit > self.sell_custom_profit_1.value) & (last_candle['rsi'] < self.sell_custom_rsi_1.value):
-                return 'signal_profit_1'
-            elif (current_profit > self.sell_custom_profit_0.value) & (last_candle['rsi'] < self.sell_custom_rsi_0.value):
-                return 'signal_profit_0'
-
-            elif (current_profit > self.sell_custom_under_profit_1.value) & (last_candle['rsi'] < self.sell_custom_under_rsi_1.value) & (last_candle['close'] < last_candle['ema_200']):
-                return 'signal_profit_u_1'
-            elif (current_profit > self.sell_custom_under_profit_2.value) & (last_candle['rsi'] < self.sell_custom_under_rsi_2.value) & (last_candle['close'] < last_candle['ema_200']):
-                return 'signal_profit_u_2'
-            elif (current_profit > self.sell_custom_under_profit_3.value) & (last_candle['rsi'] < self.sell_custom_under_rsi_3.value) & (last_candle['close'] < last_candle['ema_200']):
-                return 'signal_profit_u_3'
-
-            elif (current_profit > self.sell_custom_dec_profit_1.value) & (last_candle['sma_200_dec']):
-                return 'signal_profit_d_1'
-            elif (current_profit > self.sell_custom_dec_profit_2.value) & (last_candle['close'] < last_candle['ema_100']):
-                return 'signal_profit_d_2'
-
-            elif (current_profit > self.sell_trail_profit_min_1.value) & (current_profit < self.sell_trail_profit_max_1.value) & (max_profit > (current_profit + self.sell_trail_down_1.value)):
-                return 'signal_profit_t_1'
-            elif (current_profit > self.sell_trail_profit_min_2.value) & (current_profit < self.sell_trail_profit_max_2.value) & (max_profit > (current_profit + self.sell_trail_down_2.value)):
-                return 'signal_profit_t_2'
-
-            elif (last_candle['close'] < last_candle['ema_200']) & (current_profit > self.sell_trail_profit_min_3.value) & (current_profit < self.sell_trail_profit_max_3.value) & (max_profit > (current_profit + self.sell_trail_down_3.value)):
-                return 'signal_profit_u_t_1'
-
-        return None
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
