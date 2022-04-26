@@ -279,6 +279,10 @@ class abbas(IStrategy):
         for val in self.base_nb_candles_buy.range:
             dataframe[f'ma_buy_{val}'] = ta.EMA(dataframe, timeperiod=val)
 
+        # Calculate all ma_sell values
+        for val in self.base_nb_candles_sell.range:
+            dataframe[f'ma_sell_{val}'] = ta.EMA(dataframe, timeperiod=val)
+
         dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
 
         dataframe['ema_100'] = ta.EMA(dataframe, timeperiod=100)
