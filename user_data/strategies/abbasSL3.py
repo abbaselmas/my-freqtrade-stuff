@@ -53,7 +53,7 @@ sell_params = {
     "high_offset": 1.01,
     "high_offset_2": 1.233,
     "high_offset_ema": 0.931,
-    "iribs": False, 
+    "iribs": False,
     "sell_profit_only_enabled": False,
     "use_sell_signal_enabled": True
 }
@@ -133,10 +133,10 @@ class abbasSL3(IStrategy):
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
-                Categorical([True], name='trailing_stop'),
-                SKDecimal(0.00010, 0.00040, decimals=5, name='trailing_stop_positive'),
+                Categorical([True, False], name='trailing_stop'),
+                SKDecimal(0.00010, 0.00100, decimals=5, name='trailing_stop_positive'),
                 SKDecimal(0.0080, 0.0180, decimals=4, name='trailing_stop_positive_offset_p1'),
-                Categorical([True], name='trailing_only_offset_is_reached'),
+                Categorical([True, False], name='trailing_only_offset_is_reached'),
             ]
 
     # ROI table:
@@ -219,12 +219,6 @@ class abbasSL3(IStrategy):
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        last_candle = dataframe.iloc[-1]
-
-        if (last_candle is not None):
-            if (sell_reason in ['sell_signal']):
-                if (last_candle['hma_50']*1.149 > last_candle['ema_100']) and (last_candle['close'] < last_candle['ema_100']*0.951):  # *1.2
-                    return False
 
         # slippage
         try:
@@ -242,10 +236,7 @@ class abbasSL3(IStrategy):
                 return False
 
         state[pair] = 0
-        current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > trailing_stop_positive_offset)):
-            # Reject sell signal when trailing stoplosses
-            return False
+        
         return True
 
     def informative_pairs(self):
@@ -375,33 +366,6 @@ class abbasSL3(IStrategy):
         return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        conditions = []
-
-        conditions.append(
-            ((dataframe['close'] > dataframe['sma_9']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset_2.value)) &
-                (dataframe['rsi'] > 50) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
-             )
-            |
-            (
-                (dataframe['close'] < dataframe['hma_50']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
-            )
-
-        )
-
-        dataframe['ema_offset_sell'] = ta.EMA(dataframe, int(self.base_nb_candles_sell.value)) *self.high_offset_ema.value
-
-        if conditions:
-            dataframe.loc[
-                reduce(lambda x, y: x | y, conditions),
-                'sell'
-            ]=1
-
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):

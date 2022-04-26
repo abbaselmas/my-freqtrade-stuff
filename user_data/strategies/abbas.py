@@ -59,6 +59,7 @@ sell_params = {
 }
 
 class abbas(IStrategy):
+
     INTERFACE_VERSION = 2
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params['cooldown_stop_duration_candles'], space="protection", optimize=True)
@@ -219,7 +220,7 @@ class abbas(IStrategy):
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        
+
         # slippage
         try:
             state = self.slippage_protection['__pair_retries']

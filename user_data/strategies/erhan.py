@@ -217,15 +217,8 @@ class erhan2(IStrategy):
     buy_signals = {}
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
-
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         last_candle = dataframe.iloc[-1]
-
-        if (last_candle is not None):
-            if (sell_reason in ['sell_signal']):
-                if (last_candle['hma_50']*1.149 > last_candle['ema_100']) and (last_candle['close'] < last_candle['ema_100']*0.951):  # *1.2
-                    return False
-
         # slippage
         try:
             state = self.slippage_protection['__pair_retries']
@@ -242,10 +235,7 @@ class erhan2(IStrategy):
                 return False
 
         state[pair] = 0
-        current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > trailing_stop_positive_offset)):
-            # Reject sell signal when trailing stoplosses
-            return False
+        
         return True
 
     def informative_pairs(self):

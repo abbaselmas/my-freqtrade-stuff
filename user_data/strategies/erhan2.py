@@ -219,13 +219,6 @@ class erhan(IStrategy):
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
 
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        last_candle = dataframe.iloc[-1]
-
-        if (last_candle is not None):
-            if (sell_reason in ['sell_signal']):
-                if (last_candle['hma_50']*1.149 > last_candle['ema_100']) and (last_candle['close'] < last_candle['ema_100']*0.951):  # *1.2
-                    return False
-
         # slippage
         try:
             state = self.slippage_protection['__pair_retries']
@@ -242,10 +235,7 @@ class erhan(IStrategy):
                 return False
 
         state[pair] = 0
-        current_profit = trade.calc_profit_ratio(rate)
-        if (sell_reason.startswith('sell signal (') and (current_profit > trailing_stop_positive_offset)):
-            # Reject sell signal when trailing stoplosses
-            return False
+        
         return True
 
     def informative_pairs(self):
@@ -375,33 +365,6 @@ class erhan(IStrategy):
         return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        conditions = []
-
-        conditions.append(
-            ((dataframe['close'] > dataframe['sma_9']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset_2.value)) &
-                (dataframe['rsi'] > 50) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
-             )
-            |
-            (
-                (dataframe['close'] < dataframe['hma_50']) &
-                (dataframe['close'] > (dataframe[f'ma_sell_{self.base_nb_candles_sell.value}'] * self.high_offset.value)) &
-                (dataframe['volume'] > 0) &
-                (dataframe['rsi_fast'] > dataframe['rsi_slow'])
-            )
-
-        )
-
-        dataframe['ema_offset_sell'] = ta.EMA(dataframe, int(self.base_nb_candles_sell.value)) *self.high_offset_ema.value
-
-        if conditions:
-            dataframe.loc[
-                reduce(lambda x, y: x | y, conditions),
-                'sell'
-            ]=1
-
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
