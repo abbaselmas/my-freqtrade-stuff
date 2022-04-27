@@ -52,10 +52,7 @@ sell_params = {
     "base_nb_candles_sell": 9,
     "high_offset": 1.01,
     "high_offset_2": 1.233,
-    "high_offset_ema": 0.931,
-    "iribs": False,
-    "sell_profit_only_enabled": False,
-    "use_sell_signal_enabled": False
+    "high_offset_ema": 0.931
 }
 
 class abbas(IStrategy):
@@ -254,7 +251,6 @@ class abbas(IStrategy):
         informative_1h["ema_26"] = ta.EMA(informative_1h, timeperiod=26)
         informative_1h["ema_50"] = ta.EMA(informative_1h, timeperiod=50)
         informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
-
         informative_1h["sma_200"] = ta.SMA(informative_1h, timeperiod=200)
         informative_1h["sma_200_dec"] = informative_1h["sma_200"] < informative_1h["sma_200"].shift(20)
         informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
@@ -299,14 +295,14 @@ class abbas(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        informative_1h = self.informative_1h_indicators(dataframe, metadata)
-        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
-
         # Bollinger bands
         bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
         dataframe["bb_lowerband28"] = bollinger2["lower"]
         dataframe["bb_middleband28"] = bollinger2["mid"]
         dataframe["bb_upperband28"] = bollinger2["upper"]
+
+        informative_1h = self.informative_1h_indicators(dataframe, metadata)
+        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
         return dataframe
 
