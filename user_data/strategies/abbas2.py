@@ -152,7 +152,7 @@ class abbas2(IStrategy):
     trailing_only_offset_is_reached = True
 
     # Sell signal
-    use_sell_signal = False    
+    use_sell_signal = False
     ignore_roi_if_buy_signal = False
 
     # SMAOffset
