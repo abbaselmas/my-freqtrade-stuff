@@ -4,12 +4,19 @@
             "method": "VolumePairList",
             "number_assets": 350,
             "sort_key": "quoteVolume",
-            "min_value": 50,
+            "min_value": 20,
             "refresh_period": 1800
         },
         {
             "method": "AgeFilter",
             "min_days_listed": 14
+        },
+        {
+            "method": "PriceFilter",
+            "min_price": 0.00001,
+            "low_price_ratio": 0.01,
+            "max_price": 0.5,
+            "max_value": 1
         },
         {
             "method": "RangeStabilityFilter",
@@ -40,9 +47,11 @@
             // Stable
             "(BUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDP|USDT|VAI|UST)/.*",
             // FAN
-            "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
+            "(ACM|AFA|ALA|ALL|ALPINE|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
             // Others
-            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|PEOPLE)/.*"
+            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|PEOPLE)/.*",
+            //ABBAS
+            //"(CTXC|PNT|TVK|AGLD|KMD|GMT|DCR|ZEC|ELF|VIDT|APE|SNX|WAN)/.*"
         ]
     }
 }

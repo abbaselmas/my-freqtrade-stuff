@@ -1,16 +1,16 @@
 {
-    "max_open_trades": 7,
-    "stake_currency": "USDT",
-    "stake_amount": 45,
+    "max_open_trades": 6,
+    "stake_currency": "BTC",
+    "stake_amount": 0.00202,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "dry_run": false,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 0.03,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
-        "entry": 10,
-        "exit": 10,
+        "entry": 6,
+        "exit": 6,
         "exit_timeout_count": 0,
         "unit": "minutes"
     },
@@ -20,26 +20,20 @@
         "emergencyexit": "market",
         "forceexit": "market",
         "forceentry": "market",
-        "stoploss": "market",
+        "stoploss": "limit",
         "stoploss_on_exchange": false,
         "stoploss_on_exchange_interval": 60,
         "stoploss_on_exchange_limit_ratio": 0.99
     },
     "entry_pricing": {
-        "price_side": "same",
+        "price_side": "other",
         "use_order_book": false,
-        "order_book_top": 1,
-        "price_last_balance": 0.0,
-        "check_depth_of_market": {
-            "enabled": false,
-            "bids_to_ask_delta": 1
-        }
+        "order_book_top": 1
     },
     "exit_pricing": {
-        "price_side": "same",
-        "use_order_book": true,
-        "order_book_top": 1,
-        "price_last_balance": 0.0
+        "price_side": "other",
+        "use_order_book": false,
+        "order_book_top": 1
     },
     "exchange": {
         "name": "binance"
@@ -62,7 +56,6 @@
         "enabled": true,
         "token": "",
         "chat_id": "",
-        "balance_dust_level": 0.001,
         "keyboard": [
             [
                 "/start",
@@ -75,7 +68,7 @@
                 "/trades"
             ],
             [
-                "/balance",
+                "/daily",
                 "/stats",
                 "/logs"
             ],
@@ -87,14 +80,14 @@
         ],
         "notification_settings": {
             "status": "silent",
-            "warning": "on",
+            "warning": "silent",
             "startup": "silent",
             "buy": "silent",
             "sell": {
                 "roi": "silent",
                 "emergency_sell": "silent",
                 "force_sell": "silent",
-                "sell_signal": "off",
+                "sell_signal": "silent",
                 "trailing_stop_loss": "silent",
                 "stop_loss": "silent",
                 "stoploss_on_exchange": "silent",
@@ -102,8 +95,8 @@
             },
             "buy_cancel": "silent",
             "sell_cancel": "silent",
-            "buy_fill": "on",
-            "sell_fill": "on",
+            "buy_fill": "silent",
+            "sell_fill": "silent",
             "protection_trigger": "silent",
             "protection_trigger_global": "silent"
         }
@@ -111,18 +104,18 @@
     "api_server": {
         "enabled": true,
         "listen_ip_address": "0.0.0.0",
-        "listen_port": 8081,
+        "listen_port": 8082,
         "verbosity": "error",
         "enable_openapi": false,
         "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d9",
         "CORS_origins": ["http://server.abbaselmas.com:8080"],
-        "username": "firat",
-        "password": "kumru"
+        "username": "erhan",
+        "password": "turan"
     },
-    "bot_name": "firat",
-    "initial_state": "stopped",
-    "forcebuy_enable": false,
-    "db_url": "sqlite:///firat.sqlite",
+    "bot_name": "erhan",
+    "initial_state": "running",
+    "forcebuy_enable": true,
+    "db_url": "sqlite:///erhan.sqlite",
     "internals": {
         "process_throttle_secs": 2,
         "heartbeat_interval": 60

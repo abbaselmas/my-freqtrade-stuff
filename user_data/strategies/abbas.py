@@ -14,90 +14,8 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
-'''
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "lowprofit2_lookback_period_candles": 95,
-    "lowprofit2_required_profit": 0.022,
-    "lowprofit2_stop_duration_candles": 7,
-    "lowprofit2_trade_limit": 29,
-    "lowprofit_lookback_period_candles": 56,
-    "lowprofit_required_profit": 0.009,
-    "lowprofit_stop_duration_candles": 117,
-    "lowprofit_trade_limit": 13,
-    "maxdrawdown_lookback_period_candles": 15,
-    "maxdrawdown_max_allowed_drawdown": 0.19,
-    "maxdrawdown_stop_duration_candles": 31,
-    "maxdrawdown_trade_limit": 16,
-    "stoplossguard_lookback_period_candles": 103,
-    "stoplossguard_stop_duration_candles": 9,
-    "stoplossguard_trade_limit": 19,
-}
 
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 25,
-    "ewo_high": 1.243,
-    "ewo_high_2": -3.51,
-    "ewo_low": -10.87,
-    "low_offset": 1.034,
-    "low_offset_2": 0.965,
-    "min_profit": 1.02,
-    "rsi_buy": 77,
-}
 
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 8,
-    "high_offset": 1.022,
-    "high_offset_2": 1.452,
-    "high_offset_ema": 0.958,
-}
-
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "lowprofit2_lookback_period_candles": 179,
-    "lowprofit2_required_profit": 0.018,
-    "lowprofit2_stop_duration_candles": 28,
-    "lowprofit2_trade_limit": 37,
-    "lowprofit_lookback_period_candles": 11,
-    "lowprofit_required_profit": 0.037,
-    "lowprofit_stop_duration_candles": 115,
-    "lowprofit_trade_limit": 49,
-    "maxdrawdown_lookback_period_candles": 25,
-    "maxdrawdown_max_allowed_drawdown": 0.21,
-    "maxdrawdown_stop_duration_candles": 47,
-    "maxdrawdown_trade_limit": 8,
-    "stoplossguard_lookback_period_candles": 270,
-    "stoplossguard_stop_duration_candles": 7,
-    "stoplossguard_trade_limit": 9,
-}
-
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-    "min_profit": 1.03
-}
-
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 9,
-    "high_offset": 1.01,
-    "high_offset_2": 1.233,
-    "high_offset_ema": 0.931,
-    "iribs": False,
-    "sell_profit_only_enabled": False,
-    "use_sell_signal_enabled": True
-}
-'''
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 1,
@@ -137,6 +55,7 @@ sell_params = {
     "high_offset_2": 1.233,
     "high_offset_ema": 0.931
 }
+
 class abbas(IStrategy):
 
     INTERFACE_VERSION = 2
@@ -225,12 +144,12 @@ class abbas(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.04 #-0.03 #-0.078
+    stoploss = -0.04
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.00013 #0.00013 #0.0001
-    trailing_stop_positive_offset = 0.0100 #0.00963 #0.0116
+    trailing_stop_positive = 0.00013
+    trailing_stop_positive_offset = 0.00963
     trailing_only_offset_is_reached = True
 
     # Sell signal

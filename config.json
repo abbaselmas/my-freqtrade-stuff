@@ -1,16 +1,16 @@
 {
     "max_open_trades": 7,
     "stake_currency": "USDT",
-    "stake_amount": 50,
+    "stake_amount": 51,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "dry_run": false,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 5000,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
-        "entry": 10,
-        "exit": 10,
+        "entry": 6,
+        "exit": 6,
         "exit_timeout_count": 0,
         "unit": "minutes"
     },
@@ -26,20 +26,14 @@
         "stoploss_on_exchange_limit_ratio": 0.99
     },
     "entry_pricing": {
-        "price_side": "same",
+        "price_side": "other",
         "use_order_book": false,
-        "order_book_top": 1,
-        "price_last_balance": 0.0,
-        "check_depth_of_market": {
-            "enabled": false,
-            "bids_to_ask_delta": 1
-        }
+        "order_book_top": 1
     },
     "exit_pricing": {
-        "price_side": "same",
-        "use_order_book": true,
-        "order_book_top": 1,
-        "price_last_balance": 0.0
+        "price_side": "other",
+        "use_order_book": false,
+        "order_book_top": 1
     },
     "exchange": {
         "name": "binance"
@@ -62,20 +56,20 @@
         "enabled": true,
         "token": "",
         "chat_id": "",
-        "balance_dust_level": 0.01,
+        "balance_dust_level": 0.001,
         "keyboard": [
             [
                 "/start",
                 "/stop",
-                "/stopbuy"
-            ],
-            [
-                "/trades",
-                "/profit",
                 "/status table"
             ],
             [
-                "/balance",
+                "/stopbuy",
+                "/profit",
+                "/trades"
+            ],
+            [
+                "/daily",
                 "/stats",
                 "/logs"
             ],
@@ -87,25 +81,25 @@
         ],
         "notification_settings": {
             "status": "silent",
-            "warning": "on",
+            "warning": "silent",
             "startup": "silent",
-            "buy": "off",
+            "buy": "silent",
             "sell": {
                 "roi": "silent",
                 "emergency_sell": "silent",
-                "force_sell": "off",
-                "sell_signal": "off",
-                "trailing_stop_loss": "off",
-                "stop_loss": "off",
+                "force_sell": "silent",
+                "sell_signal": "silent",
+                "trailing_stop_loss": "silent",
+                "stop_loss": "silent",
                 "stoploss_on_exchange": "silent",
                 "custom_sell": "silent"
             },
             "buy_cancel": "silent",
-            "sell_cancel": "on",
-            "buy_fill": "on",
-            "sell_fill": "on",
+            "sell_cancel": "silent",
+            "buy_fill": "silent",
+            "sell_fill": "silent",
             "protection_trigger": "silent",
-            "protection_trigger_global": "on"
+            "protection_trigger_global": "silent"
         }
     },
     "api_server": {
@@ -120,8 +114,8 @@
         "password": "73"
     },
     "bot_name": "freqtrade",
-    "initial_state": "stopped",
-    "forcebuy_enable": false,
+    "initial_state": "running",
+    "forcebuy_enable": true,
     "db_url": "sqlite:///abbas.sqlite",
     "internals": {
         "process_throttle_secs": 2,

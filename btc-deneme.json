@@ -1,17 +1,17 @@
 {
-    "max_open_trades": 100,
-    "stake_currency": "USDT",
-    "stake_amount": 50,
+    "max_open_trades": 7,
+    "stake_currency": "BTC",
+    "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
     "dry_run": true,
-    "dry_run_wallet": 5000,
+    "dry_run_wallet": 0.03,
     "cancel_open_orders_on_exit": false,
     "DRAWDOWN_MULT": 0.090,
     "unfilledtimeout": {
-        "entry": 6,
-        "exit": 6,
+        "entry": 10,
+        "exit": 10,
         "exit_timeout_count": 0,
         "unit": "minutes"
     },
@@ -29,12 +29,18 @@
     "entry_pricing": {
         "price_side": "other",
         "use_order_book": false,
-        "order_book_top": 1
+        "order_book_top": 1,
+        "price_last_balance": 0.0,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
     },
     "exit_pricing": {
         "price_side": "other",
         "use_order_book": true,
-        "order_book_top": 1
+        "order_book_top": 1,
+        "price_last_balance": 0.0
     },
     "edge": {
         "enabled": false,
@@ -79,7 +85,7 @@
     ],
     "exchange": {
         "name": "binance",
-        "pair_whitelist": ["XRP/USDT","MTL/USDT","AVAX/USDT","WAVES/USDT","ADA/USDT","MATIC/USDT","ZIL/USDT","DOT/USDT","GALA/USDT","ETC/USDT","JASMY/USDT","EPS/USDT","TRX/USDT","ATOM/USDT","FIL/USDT","SLP/USDT","RUNE/USDT","VET/USDT","AXS/USDT","XMR/USDT","CHZ/USDT","ACH/USDT","MBL/USDT","ROSE/USDT","LINK/USDT","KNC/USDT","LTC/USDT","MINA/USDT","PUNDIX/USDT","ASTR/USDT","C98/USDT","ALPINE/USDT","IOST/USDT","ALPACA/USDT","ICP/USDT","AAVE/USDT","ANKR/USDT","GLMR/USDT","EOS/USDT","RAMP/USDT","THETA/USDT","CELO/USDT","ALGO/USDT","ONE/USDT","LRC/USDT","IMX/USDT","HOT/USDT","DEGO/USDT","DUSK/USDT","PYR/USDT","SRM/USDT","WIN/USDT","IOTA/USDT","CRV/USDT","COMP/USDT","ALICE/USDT","OGN/USDT","SKL/USDT","ENJ/USDT","ZEC/USDT","ANC/USDT","CAKE/USDT","AR/USDT","LOKA/USDT","GRT/USDT","BCH/USDT","DYDX/USDT","CHR/USDT","REEF/USDT","MBOX/USDT","FLOW/USDT","TLM/USDT","WOO/USDT","STRAX/USDT","BNX/USDT","BAKE/USDT","SNX/USDT","SUSHI/USDT","MC/USDT","KAVA/USDT","COTI/USDT","UNI/USDT","KDA/USDT","POLY/USDT","AUDIO/USDT"],
+        "pair_whitelist": ["GMT/BTC","LUNA/BTC","APE/BTC","SOL/BTC","XMR/BTC","ZIL/BTC","DOT/BTC","XRP/BTC","NEAR/BTC","EOS/BTC","ZRX/BTC","UST/BTC","AVAX/BTC","AAVE/BTC","MATIC/BTC","FTM/BTC","WAVES/BTC","SAND/BTC","LRC/BTC","RUNE/BTC","MANA/BTC","PROM/BTC","CAKE/BTC","MDT/BTC","MTL/BTC","EGLD/BTC","ALICE/BTC","GALA/BTC","THETA/BTC","SNX/BTC","FIL/BTC","ALPINE/BTC","XTZ/BTC","PYR/BTC","FIO/BTC","SUSHI/BTC","AXS/BTC","API3/BTC","GLMR/BTC","XLM/BTC","ONE/BTC","KAVA/BTC","VET/BTC","ZEC/BTC","ENJ/BTC","ETC/BTC","BCH/BTC","KNC/BTC","FXS/BTC","BAKE/BTC","AGLD/BTC","CRV/BTC","TFUEL/BTC","LOKA/BTC","STORJ/BTC","ROSE/BTC","PAXG/BTC","AUCTION/BTC","OGN/BTC","DYDX/BTC","PERP/BTC","KSM/BTC","AGIX/BTC","QNT/BTC","DASH/BTC","MULTI/BTC","DAR/BTC","ALGO/BTC","TWT/BTC","POLS/BTC","DATA/BTC","SXP/BTC","IMX/BTC","NEO/BTC","DODO/BTC","GRT/BTC","ORN/BTC","IOTX/BTC","OM/BTC","BICO/BTC","COTI/BTC"],
         "ccxt_config": {
             "enableRateLimit": true,
             "rateLimit": 100,
