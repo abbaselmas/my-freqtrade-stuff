@@ -127,16 +127,12 @@ class abbas(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.04
+    stoploss = -0.15
 
     # Trailing stop:
     trailing_stop = True
     trailing_stop_positive = 0.001
     trailing_stop_positive_offset = 0.01
-    '''
-    trailing_stop_positive = 0.00013
-    trailing_stop_positive_offset = 0.00963
-    '''
     trailing_only_offset_is_reached = True
 
     # Sell signal
