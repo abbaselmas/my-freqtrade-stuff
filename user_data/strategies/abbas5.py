@@ -52,7 +52,7 @@ sell_params = {
     "high_offset_ema": 0.931
 }
 
-class abbas(IStrategy):
+class abbas5(IStrategy):
 
     INTERFACE_VERSION = 2
 
@@ -131,8 +131,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.001
-    trailing_stop_positive_offset = 0.01
+    trailing_stop_positive = 0.0005
+    trailing_stop_positive_offset = 0.007
     trailing_only_offset_is_reached = True
 
     # Sell signal

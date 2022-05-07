@@ -131,8 +131,8 @@ class abbas(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.001
-    trailing_stop_positive_offset = 0.01
+    trailing_stop_positive = 0.0005
+    trailing_stop_positive_offset = 0.007
     '''
     trailing_stop_positive = 0.00013
     trailing_stop_positive_offset = 0.00963
