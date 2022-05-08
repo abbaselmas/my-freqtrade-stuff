@@ -60,14 +60,14 @@ class abbas6(IStrategy):
 
     maxdrawdown_optimize = True
     maxdrawdown_lookback_period_candles = IntParameter(5, 40, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(1, 20, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(1, 40, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
     maxdrawdown_stop_duration_candles = IntParameter(10, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.05, 0.40, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.10, 0.40, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = True
     stoplossguard_lookback_period_candles = IntParameter(1, 300, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_trade_limit = IntParameter(1, 20, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 10, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 20, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
     lowprofit_lookback_period_candles = IntParameter(10, 60, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
@@ -115,10 +115,10 @@ class abbas6(IStrategy):
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
-                Categorical([True, False], name="trailing_stop"),
+                Categorical([True], name="trailing_stop"),
                 SKDecimal(0.0001, 0.0010, decimals=4, name="trailing_stop_positive"),
                 SKDecimal(0.0080, 0.0180, decimals=4, name="trailing_stop_positive_offset_p1"),
-                Categorical([True, False], name="trailing_only_offset_is_reached"),
+                Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
     # ROI table:

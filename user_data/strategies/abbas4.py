@@ -15,43 +15,6 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-'''
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 34,
-    "lowprofit_required_profit": 0.027,
-    "lowprofit_stop_duration_candles": 126,
-    "lowprofit_trade_limit": 36,
-    "maxdrawdown_lookback_period_candles": 36,
-    "maxdrawdown_max_allowed_drawdown": 0.34,
-    "maxdrawdown_stop_duration_candles": 54,
-    "maxdrawdown_trade_limit": 17,
-    "stoplossguard_lookback_period_candles": 3,
-    "stoplossguard_stop_duration_candles": 8,
-    "stoplossguard_trade_limit": 11,
-}
-
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-    "min_profit": 1.03
-}
-
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 9,
-    "high_offset": 1.01,
-    "high_offset_2": 1.233,
-    "high_offset_ema": 0.931
-}
-'''
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 30,
@@ -96,14 +59,14 @@ class abbas4(IStrategy):
 
     maxdrawdown_optimize = True
     maxdrawdown_lookback_period_candles = IntParameter(5, 40, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(1, 20, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(1, 40, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
     maxdrawdown_stop_duration_candles = IntParameter(10, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.05, 0.40, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.10, 0.40, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = True
     stoplossguard_lookback_period_candles = IntParameter(1, 300, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_trade_limit = IntParameter(1, 20, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 10, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 20, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
     lowprofit_lookback_period_candles = IntParameter(10, 60, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
@@ -151,10 +114,10 @@ class abbas4(IStrategy):
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
-                Categorical([True, False], name="trailing_stop"),
+                Categorical([True], name="trailing_stop"),
                 SKDecimal(0.0001, 0.0010, decimals=4, name="trailing_stop_positive"),
                 SKDecimal(0.0080, 0.0180, decimals=4, name="trailing_stop_positive_offset_p1"),
-                Categorical([True, False], name="trailing_only_offset_is_reached"),
+                Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
     # ROI table:
