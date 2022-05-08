@@ -15,6 +15,7 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
+'''
 
 # Protection hyperspace params:
 protection_params = {
@@ -50,6 +51,43 @@ sell_params = {
     "high_offset": 1.01,
     "high_offset_2": 1.233,
     "high_offset_ema": 0.931
+}
+'''
+
+# Buy hyperspace params:
+buy_params = {
+    "base_nb_candles_buy": 20,
+    "ewo_high": 2.041,
+    "ewo_high_2": -3.91,
+    "ewo_low": -11.3,
+    "low_offset": 1.046,
+    "low_offset_2": 0.95,
+    "min_profit": 1.04,
+    "rsi_buy": 59,
+}
+
+# Sell hyperspace params:
+sell_params = {
+    "base_nb_candles_sell": 5,
+    "high_offset": 1.096,
+    "high_offset_2": 1.483,
+    "high_offset_ema": 1.06,
+}
+
+# Protection hyperspace params:
+protection_params = {
+    "cooldown_stop_duration_candles": 1,
+    "lowprofit_lookback_period_candles": 31,
+    "lowprofit_required_profit": 0.039,
+    "lowprofit_stop_duration_candles": 14,
+    "lowprofit_trade_limit": 5,
+    "maxdrawdown_lookback_period_candles": 23,
+    "maxdrawdown_max_allowed_drawdown": 0.33,
+    "maxdrawdown_stop_duration_candles": 13,
+    "maxdrawdown_trade_limit": 5,
+    "stoplossguard_lookback_period_candles": 241,
+    "stoplossguard_stop_duration_candles": 8,
+    "stoplossguard_trade_limit": 19,
 }
 
 class abbas2(IStrategy):
@@ -131,8 +169,8 @@ class abbas2(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0005
-    trailing_stop_positive_offset = 0.007
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.009
     trailing_only_offset_is_reached = True
 
     # Sell signal
