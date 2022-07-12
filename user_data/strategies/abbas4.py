@@ -17,38 +17,38 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 30,
-    "ewo_high": 1.424,
-    "ewo_high_2": -3.38,
-    "ewo_low": -11.61,
-    "low_offset": 1.041,
+    "base_nb_candles_buy": 29,
+    "ewo_high": 1.044,
+    "ewo_high_2": -2.02,
+    "ewo_low": -8.52,
+    "low_offset": 1.057,
     "low_offset_2": 0.953,
-    "min_profit": 1.04,
-    "rsi_buy": 85,
+    "min_profit": 1.03,
+    "rsi_buy": 70,
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 22,
-    "high_offset": 1.095,
-    "high_offset_2": 1.221,
-    "high_offset_ema": 0.956,
+    "base_nb_candles_sell": 12,
+    "high_offset": 1.091,
+    "high_offset_2": 1.34,
+    "high_offset_ema": 1.055,
 }
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 34,
-    "lowprofit_required_profit": 0.005,
-    "lowprofit_stop_duration_candles": 46,
-    "lowprofit_trade_limit": 14,
-    "maxdrawdown_lookback_period_candles": 5,
-    "maxdrawdown_max_allowed_drawdown": 0.12,
-    "maxdrawdown_stop_duration_candles": 59,
-    "maxdrawdown_trade_limit": 8,
-    "stoplossguard_lookback_period_candles": 173,
-    "stoplossguard_stop_duration_candles": 9,
-    "stoplossguard_trade_limit": 7,
+    "cooldown_stop_duration_candles": 2,
+    "lowprofit_lookback_period_candles": 56,
+    "lowprofit_required_profit": 0.05,
+    "lowprofit_stop_duration_candles": 118,
+    "lowprofit_trade_limit": 45,
+    "maxdrawdown_lookback_period_candles": 35,
+    "maxdrawdown_max_allowed_drawdown": 0.28,
+    "maxdrawdown_stop_duration_candles": 40,
+    "maxdrawdown_trade_limit": 40,
+    "stoplossguard_lookback_period_candles": 241,
+    "stoplossguard_stop_duration_candles": 12,
+    "stoplossguard_trade_limit": 9,
 }
 
 class abbas4(IStrategy):
@@ -131,7 +131,7 @@ class abbas4(IStrategy):
     # Trailing stop:
     trailing_stop = True
     trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0092
+    trailing_stop_positive_offset = 0.0107
     trailing_only_offset_is_reached = True
 
     # Sell signal

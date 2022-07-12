@@ -1,7 +1,7 @@
 {
     "max_open_trades": 7,
     "stake_currency": "USDT",
-    "stake_amount": 51,
+    "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
@@ -114,7 +114,7 @@
         "password": "73"
     },
     "bot_name": "freqtrade",
-    "initial_state": "running",
+    "initial_state": "stopped",
     "forcebuy_enable": true,
     "db_url": "sqlite:///abbas.sqlite",
     "internals": {
