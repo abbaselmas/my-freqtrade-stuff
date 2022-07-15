@@ -12,7 +12,8 @@
       "low_offset": 1.079,
       "low_offset_2": 0.95,
       "min_profit": 1.05,
-      "rsi_buy": 55
+      "rsi_buy": 55,
+      "rsi_fast_35": 35
     },
     "sell": {
       "base_nb_candles_sell": 17,

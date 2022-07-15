@@ -2,14 +2,14 @@
     "pairlists": [
         {
             "method": "VolumePairList",
-            "number_assets": 350,
+            "number_assets": 360,
             "sort_key": "quoteVolume",
-            "min_value": 8000000,
+            "min_value": 5000000,
             "refresh_period": 1800
         },
         {
             "method": "AgeFilter",
-            "min_days_listed": 30
+            "min_days_listed": 14
         },
         {
             "method": "PriceFilter",
@@ -33,7 +33,7 @@
         },
         {
             "method": "OffsetFilter",
-            "offset": 3
+            "offset": 2
         }
     ],
     "exchange": {
@@ -45,17 +45,17 @@
             // Exchange
             "(BNB)/.*",
             // Leverage
-            //".*(_PREMIUM|BEAR|BULL|DOWN|HALF|HEDGE|UP|[1235][SL])/.*",
+            ".*(_PREMIUM|BEAR|BULL|DOWN|HALF|HEDGE|UP|[1235][SL])/.*",
             // Fiat
-            //"(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
+            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
             // Stable
-            //"(BUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDP|USDT|VAI|UST)/.*",
+            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC)/.*",
             // FAN
-            //"(ACM|AFA|ALA|ALL|ALPINE|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
+            "(ACM|AFA|ALA|ALL|ALPINE|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
             // Others
-            //"(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|PEOPLE)/.*",
+            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS)/.*"
             //ABBAS
-            //"(CTXC|PNT|TVK|AGLD|APE|VOXEL)/.*"
+            "(CTXC|PNT|TVK|AGLD|APE|VOXEL|AION|REI|KEY|VIDT|IRIS|QUICK|KMD|DREP|POLS|ATM|FIO|ALCX|ANC|BETA|NKN|AVA|WRX|CKB|BEAM|FLM|PERL|DEGO)/.*"
         ]
     }
 }

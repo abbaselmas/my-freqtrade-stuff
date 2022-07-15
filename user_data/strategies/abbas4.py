@@ -17,38 +17,41 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 29,
-    "ewo_high": 1.044,
-    "ewo_high_2": -2.02,
-    "ewo_low": -8.52,
-    "low_offset": 1.057,
-    "low_offset_2": 0.953,
-    "min_profit": 1.03,
-    "rsi_buy": 70,
+    "base_nb_candles_buy": 18,
+    "ewo_high": 2.102,
+    "ewo_high_2": -2.92,
+    "ewo_low": -8.27,
+    "low_offset": 1.079,
+    "low_offset_2": 0.95,
+    "min_profit": 1.05,
+    "rsi_buy": 55,
+    "rsi_fast_buy": 35,
+    "profit_threshold": 1.0408,
+    "lookback_candles": 22,
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 12,
-    "high_offset": 1.091,
-    "high_offset_2": 1.34,
-    "high_offset_ema": 1.055,
+    "base_nb_candles_sell": 17,
+    "high_offset": 1.07,
+    "high_offset_2": 1.37,
+    "high_offset_ema": 1.016,
 }
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 2,
-    "lowprofit_lookback_period_candles": 56,
-    "lowprofit_required_profit": 0.05,
-    "lowprofit_stop_duration_candles": 118,
-    "lowprofit_trade_limit": 45,
-    "maxdrawdown_lookback_period_candles": 35,
-    "maxdrawdown_max_allowed_drawdown": 0.28,
-    "maxdrawdown_stop_duration_candles": 40,
-    "maxdrawdown_trade_limit": 40,
-    "stoplossguard_lookback_period_candles": 241,
-    "stoplossguard_stop_duration_candles": 12,
-    "stoplossguard_trade_limit": 9,
+    "cooldown_stop_duration_candles": 0,
+    "lowprofit_lookback_period_candles": 53,
+    "lowprofit_required_profit": 0.027,
+    "lowprofit_stop_duration_candles": 105,
+    "lowprofit_trade_limit": 33,
+    "maxdrawdown_lookback_period_candles": 20,
+    "maxdrawdown_max_allowed_drawdown": 0.39,
+    "maxdrawdown_stop_duration_candles": 41,
+    "maxdrawdown_trade_limit": 8,
+    "stoplossguard_lookback_period_candles": 19,
+    "stoplossguard_stop_duration_candles": 13,
+    "stoplossguard_trade_limit": 20,
 }
 
 class abbas4(IStrategy):
@@ -126,12 +129,12 @@ class abbas4(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.07
+    stoploss = -0.061
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0107
+    trailing_stop_positive = 0.0002
+    trailing_stop_positive_offset = 0.0136
     trailing_only_offset_is_reached = True
 
     # Sell signal
@@ -158,6 +161,9 @@ class abbas4(IStrategy):
     rsi_buy = IntParameter(55, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
     min_profit = DecimalParameter(0.70, 1.20, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
+    rsi_fast_buy = IntParameter(25, 45, default=buy_params["rsi_fast_buy"], space="buy", optimize=protection_optimize)
+    profit_threshold = DecimalParameter(0.99, 1.05, default=buy_params['profit_threshold'], space='buy', optimize=protection_optimize)
+    lookback_candles = IntParameter(1, 36, default=buy_params['lookback_candles'], space='buy', optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -167,6 +173,7 @@ class abbas4(IStrategy):
 
     # Optimal timeframe for the strategy
     timeframe = "5m"
+    inf_15m = '15m'
     inf_1h = "1h"
 
     process_only_new_candles = True
@@ -175,13 +182,17 @@ class abbas4(IStrategy):
     plot_config = {
         "main_plot": {
             "bb_upperband28": {"color": "#bc281d","type": "line"},
-            "bb_midband28": {"color": "orange", "type": "line"},
             "bb_lowerband28": {"color": "#792bbb","type": "line"}
         },
-        "subplots": {
-            "RSI": {
-                "rsi": {"color": "yellow"},
-            }
+        'subplots': {
+            'rsi': {
+                'rsi': {'color': 'orange'},
+                'rsi_fast': {'color': 'red'},
+                'rsi_slow': {'color': 'green'},
+            },
+            'ewo': {
+                'EWO': {'color': 'orange'}
+            },
         }
     }
 
@@ -218,24 +229,20 @@ class abbas4(IStrategy):
         # get access to all pairs available in whitelist.
         pairs = self.dp.current_whitelist()
         # Assign tf to each pair so they can be downloaded and cached for strategy.
+        informative_pairs = [(pair, "15m") for pair in pairs]
         informative_pairs = [(pair, "1h") for pair in pairs]
         return informative_pairs
+
+    def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        # Get the informative pair
+        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_15m)
+        return informative_15m
 
     def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
         # Get the informative pair
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
-
-        informative_1h["hma_50"] = qtpylib.hull_moving_average(informative_1h["close"], window=50)
-        informative_1h["ema_100"] = ta.EMA(informative_1h, timeperiod=100)
-        informative_1h["ema_12"] = ta.EMA(informative_1h, timeperiod=12)
-        informative_1h["ema_20"] = ta.EMA(informative_1h, timeperiod=20)
-        informative_1h["ema_26"] = ta.EMA(informative_1h, timeperiod=26)
-        informative_1h["ema_50"] = ta.EMA(informative_1h, timeperiod=50)
-        informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
-        informative_1h["sma_200"] = ta.SMA(informative_1h, timeperiod=200)
-        informative_1h["sma_200_dec"] = informative_1h["sma_200"] < informative_1h["sma_200"].shift(20)
-        informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
 
         # Elliot
         informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
@@ -244,6 +251,12 @@ class abbas4(IStrategy):
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
         informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
         informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
+
+        # Bollinger bands
+        bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
+        dataframe["bb_lowerband28"] = bollinger2["lower"]
+        dataframe["bb_middleband28"] = bollinger2["mid"]
+        dataframe["bb_upperband28"] = bollinger2["upper"]
 
         return informative_1h
 
@@ -256,18 +269,6 @@ class abbas4(IStrategy):
         # Calculate all ma_sell values
         for val in self.base_nb_candles_sell.range:
             dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
-
-        dataframe["hma_50"] = qtpylib.hull_moving_average(dataframe["close"], window=50)
-
-        dataframe["ema_100"] = ta.EMA(dataframe, timeperiod=100)
-        dataframe["ema_12"] = ta.EMA(dataframe, timeperiod=12)
-        dataframe["ema_20"] = ta.EMA(dataframe, timeperiod=20)
-        dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
-        dataframe["ema_50"] = ta.EMA(dataframe, timeperiod=50)
-        dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
-        dataframe["sma_200"] = ta.SMA(dataframe, timeperiod=200)
-        dataframe["sma_200_dec"] = dataframe["sma_200"] < dataframe["sma_200"].shift(20)
-        dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
         # Elliot
         dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
@@ -284,7 +285,9 @@ class abbas4(IStrategy):
         dataframe["bb_upperband28"] = bollinger2["upper"]
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
+        informative_15m = self.informative_15m_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+        dataframe = merge_informative_pair(dataframe, informative_15m, self.timeframe, self.inf_15m, ffill=True)
 
         return dataframe
 
@@ -292,7 +295,7 @@ class abbas4(IStrategy):
 
         dataframe.loc[
             (
-                (dataframe["rsi_fast"] < 35) &
+                (dataframe["rsi_fast"] < self.rsi_fast_buy.value) & #35
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
                 (dataframe["EWO"] > self.ewo_high.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
@@ -303,7 +306,7 @@ class abbas4(IStrategy):
 
         dataframe.loc[
             (
-                (dataframe["rsi_fast"] < 35) &
+                (dataframe["rsi_fast"] < self.rsi_fast_buy.value) & #35
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
                 (dataframe["EWO"] > self.ewo_high_2.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
@@ -315,7 +318,7 @@ class abbas4(IStrategy):
 
         dataframe.loc[
             (
-                (dataframe["rsi_fast"] < 35) &
+                (dataframe["rsi_fast"] < self.rsi_fast_buy.value) & #35
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
                 (dataframe["EWO"] < self.ewo_low.value) &
                 (dataframe["volume"] > 0) &
@@ -328,6 +331,12 @@ class abbas4(IStrategy):
         dont_buy_conditions.append(
             (
                 (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
+            )
+        )
+
+        dont_buy_conditions.append(
+            (
+                (dataframe['close_15m'].rolling(self.lookback_candles.value).max() < (dataframe['close'] * self.profit_threshold.value))
             )
         )
 

@@ -5,6 +5,7 @@
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
+    "timeframe_detail": "1m",    
     "dry_run": false,
     "dry_run_wallet": 100,
     "cancel_open_orders_on_exit": false,
