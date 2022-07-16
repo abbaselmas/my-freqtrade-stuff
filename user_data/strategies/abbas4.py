@@ -138,8 +138,8 @@ class abbas4(IStrategy):
     trailing_only_offset_is_reached = True
 
     # Sell signal
-    use_sell_signal = False
-    ignore_roi_if_buy_signal = False
+    use_exit_signal = False
+    ignore_roi_if_entry_signal = False
 
     # SMAOffset
     smaoffset_optimize = True
@@ -162,8 +162,8 @@ class abbas4(IStrategy):
 
     min_profit = DecimalParameter(0.70, 1.20, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_fast_buy = IntParameter(25, 45, default=buy_params["rsi_fast_buy"], space="buy", optimize=protection_optimize)
-    profit_threshold = DecimalParameter(0.99, 1.05, default=buy_params['profit_threshold'], space='buy', optimize=protection_optimize)
-    lookback_candles = IntParameter(1, 36, default=buy_params['lookback_candles'], space='buy', optimize=protection_optimize)
+    profit_threshold = DecimalParameter(0.99, 1.05, default=buy_params["profit_threshold"], space="buy", optimize=protection_optimize)
+    lookback_candles = IntParameter(1, 36, default=buy_params["lookback_candles"], space="buy", optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -173,7 +173,7 @@ class abbas4(IStrategy):
 
     # Optimal timeframe for the strategy
     timeframe = "5m"
-    inf_15m = '15m'
+    inf_15m = "15m"
     inf_1h = "1h"
 
     process_only_new_candles = True
@@ -184,14 +184,14 @@ class abbas4(IStrategy):
             "bb_upperband28": {"color": "#bc281d","type": "line"},
             "bb_lowerband28": {"color": "#792bbb","type": "line"}
         },
-        'subplots': {
-            'rsi': {
-                'rsi': {'color': 'orange'},
-                'rsi_fast': {'color': 'red'},
-                'rsi_slow': {'color': 'green'},
+        "subplots": {
+            "rsi": {
+                "rsi": {"color": "orange"},
+                "rsi_fast": {"color": "red"},
+                "rsi_slow": {"color": "green"},
             },
-            'ewo': {
-                'EWO': {'color': 'orange'}
+            "ewo": {
+                "EWO": {"color": "orange"}
             },
         }
     }
@@ -336,7 +336,7 @@ class abbas4(IStrategy):
 
         dont_buy_conditions.append(
             (
-                (dataframe['close_15m'].rolling(self.lookback_candles.value).max() < (dataframe['close'] * self.profit_threshold.value))
+                (dataframe["close_15m"].rolling(self.lookback_candles.value).max() < (dataframe["close"] * self.profit_threshold.value))
             )
         )
 
