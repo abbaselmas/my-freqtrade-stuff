@@ -174,7 +174,6 @@ class abbas4(IStrategy):
     # Optimal timeframe for the strategy
     timeframe = "5m"
     inf_15m = "15m"
-    inf_1h = "1h"
 
     process_only_new_candles = True
     startup_candle_count = 200
@@ -230,7 +229,6 @@ class abbas4(IStrategy):
         pairs = self.dp.current_whitelist()
         # Assign tf to each pair so they can be downloaded and cached for strategy.
         informative_pairs = [(pair, "15m") for pair in pairs]
-        informative_pairs = [(pair, "1h") for pair in pairs]
         return informative_pairs
 
     def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -238,27 +236,6 @@ class abbas4(IStrategy):
         # Get the informative pair
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_15m)
         return informative_15m
-
-    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        assert self.dp, "DataProvider is required for multiple timeframes."
-        # Get the informative pair
-        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
-
-        # Elliot
-        informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
-
-        # RSI
-        informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
-        informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
-        informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
-
-        # Bollinger bands
-        bollinger2 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.8)
-        dataframe["bb_lowerband28"] = bollinger2["lower"]
-        dataframe["bb_middleband28"] = bollinger2["mid"]
-        dataframe["bb_upperband28"] = bollinger2["upper"]
-
-        return informative_1h
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
 
@@ -284,9 +261,7 @@ class abbas4(IStrategy):
         dataframe["bb_middleband28"] = bollinger2["mid"]
         dataframe["bb_upperband28"] = bollinger2["upper"]
 
-        informative_1h = self.informative_1h_indicators(dataframe, metadata)
         informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         dataframe = merge_informative_pair(dataframe, informative_15m, self.timeframe, self.inf_15m, ffill=True)
 
         return dataframe
@@ -327,12 +302,6 @@ class abbas4(IStrategy):
             ["buy", "buy_tag"]] = (1, "ewolow")
 
         dont_buy_conditions = []
-
-        dont_buy_conditions.append(
-            (
-                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
-            )
-        )
 
         dont_buy_conditions.append(
             (
