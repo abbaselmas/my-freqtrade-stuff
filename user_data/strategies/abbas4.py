@@ -23,7 +23,6 @@ buy_params = {
     "ewo_low": -8.27,
     "low_offset": 1.079,
     "low_offset_2": 0.95,
-    "min_profit": 1.05,
     "rsi_buy": 55,
     "rsi_fast_buy": 35,
     "profit_threshold": 1.0408,
@@ -34,8 +33,6 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 17,
     "high_offset": 1.07,
-    "high_offset_2": 1.37,
-    "high_offset_ema": 1.016,
 }
 
 # Protection hyperspace params:
@@ -112,14 +109,14 @@ class abbas4(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.100, -0.030, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.150, -0.030, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
                 SKDecimal(0.0001, 0.0010, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.0080, 0.0180, decimals=4, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.0080, 0.0200, decimals=4, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
@@ -143,13 +140,11 @@ class abbas4(IStrategy):
 
     # SMAOffset
     smaoffset_optimize = True
-    high_offset_ema = DecimalParameter(0.90, 1.1, default=sell_params["high_offset_ema"], load=True, space="sell", decimals=3, optimize=smaoffset_optimize)
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(1.0, 1.1, default=buy_params["low_offset"], space="buy", decimals=3, optimize=smaoffset_optimize)
     low_offset_2 = DecimalParameter(0.94, 0.98, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=smaoffset_optimize)
     high_offset = DecimalParameter(1.0, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=smaoffset_optimize)
-    high_offset_2 = DecimalParameter(1.2, 1.5, default=sell_params["high_offset_2"], space="sell", decimals=3, optimize=smaoffset_optimize)
 
     # Protection
     fast_ewo = 50
@@ -160,7 +155,6 @@ class abbas4(IStrategy):
     ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    min_profit = DecimalParameter(0.70, 1.20, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_fast_buy = IntParameter(25, 45, default=buy_params["rsi_fast_buy"], space="buy", optimize=protection_optimize)
     profit_threshold = DecimalParameter(0.99, 1.05, default=buy_params["profit_threshold"], space="buy", optimize=protection_optimize)
     lookback_candles = IntParameter(1, 36, default=buy_params["lookback_candles"], space="buy", optimize=protection_optimize)
