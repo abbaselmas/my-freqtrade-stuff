@@ -40,7 +40,7 @@ protection_params = {
     "cooldown_stop_duration_candles": 0,
 }
 
-class abbas4(IStrategy):
+class ammar(IStrategy):
 
     INTERFACE_VERSION = 2
 
