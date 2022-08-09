@@ -1,8 +1,8 @@
 {
     "exchange": {
         "name": "binance",
-        "key": "FGecpSquGJFuS3bIoK73z8BoNBlz5H5X5gUAOOQ44eI8evO7kAnKYqEDpWlATZDl",
-        "secret": "AHQWtdbAKSgEUGwHM6F6w6fFlhkMASKyMldFbryi8XUmCWnsr2ugsU05qQ83xs4U",
+        "key": "ipswReAYFXOsp60jmKA3jrJT7eTv95IycBAj89wPBZJ9ZbJioiE5icycuw9D9BPT",
+        "secret": "MIEmnUTXDFnQIgzBIDrLN04zqKkweF2XCmJ9flKKDJyFWcLpK1tEgL9aeQrVtsjs",
     },
     "telegram": {
         "token": "2107423659:AAG3OsgMUzG0XwpyXLTHmk_Dd0iBSdTyOj8",
