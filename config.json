@@ -1,13 +1,13 @@
 {
     "max_open_trades": 7,
     "stake_currency": "USDT",
-    "stake_amount": "unlimited",
+    "stake_amount": 50,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "timeframe_detail": "1m",    
     "dry_run": false,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
         "entry": 6,
@@ -110,7 +110,7 @@
         "verbosity": "error",
         "enable_openapi": false,
         "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d9",
-        "CORS_origins": ["http://193.255.198.12:8080"],
+        "CORS_origins": ["http://193.255.198.190:8080"],
         "username": "freqtrader",
         "password": "73"
     },
