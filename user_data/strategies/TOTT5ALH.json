@@ -1,0 +1,63 @@
+{
+  "strategy_name": "TOTT5ALH",
+  "params": {
+    "roi": {
+      "0": 0.99
+    },
+    "stoploss": {
+      "stoploss": -0.066
+    },
+    "trailing": {
+      "trailing_stop": false,
+      "trailing_stop_positive": null,
+      "trailing_stop_positive_offset": 0.0,
+      "trailing_only_offset_is_reached": false
+    },
+    "buy": {
+      "first_ott_length": 0.4,
+      "first_ott_smoothing": 4,
+      "first_perc_length": 0.4,
+      "first_stsd_length": 2,
+      "first_stsk_length": 4,
+      "first_vidya_length": 2,
+      "hhv1_length": 5,
+      "hhv2_length": 2,
+      "hott1_length": 0.5,
+      "llv1_length": 5,
+      "llv2_length": 5,
+      "llv3_length": 3,
+      "second_ott_length": 0.4,
+      "second_ott_smoothing": 4,
+      "second_perc_length": 0.4,
+      "second_stsd_length": 3,
+      "second_stsk_length": 6,
+      "second_vidya_length": 4,
+      "minor_trend_mult_length": 1.7,
+      "trend_atr_length": 5,
+      "trend_mult_length": 15
+    },
+    "sell": {
+      "fifth_ott_length": 0.4,
+      "fifth_ott_smoothing": 2,
+      "fifth_perc_length": 0.4,
+      "fifth_stsd_length": 3,
+      "fifth_stsk_length": 6,
+      "fifth_vidya_length": 4,
+      "fourth_ott_length": 0.3,
+      "fourth_ott_smoothing": 4,
+      "fourth_perc_length": 0.4,
+      "fourth_stsd_length": 2,
+      "fourth_stsk_length": 3,
+      "fourth_vidya_length": 2,
+      "third_ott_length": 0.3,
+      "third_ott_smoothing": 4,
+      "third_perc_length": 0.2,
+      "third_stsd_length": 2,
+      "third_stsk_length": 3,
+      "third_vidya_length": 2
+    },
+    "protection": {}
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2022-08-05 04:44:45.680524+00:00"
+}
