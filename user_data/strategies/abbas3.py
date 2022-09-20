@@ -17,38 +17,38 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 21,
-    "ewo_high": 2.044,
-    "ewo_high_2": -2.98,
-    "ewo_low": -8.06,
-    "low_offset": 1.093,
-    "low_offset_2": 0.945,
+    "base_nb_candles_buy": 20,
+    "ewo_high": 2.123,
+    "ewo_high_2": -3.63,
+    "ewo_low": -8.69,
+    "low_offset": 1.08,
+    "low_offset_2": 0.949,
     "min_profit": 1.04,
-    "rsi_buy": 55,
+    "rsi_buy": 69,
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 7,
-    "high_offset": 1.018,
-    "high_offset_2": 1.425,
-    "high_offset_ema": 1.054,
+    "base_nb_candles_sell": 29,
+    "high_offset": 1.099,
+    "high_offset_2": 1.488,
+    "high_offset_ema": 0.949,
 }
 
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 55,
-    "lowprofit_required_profit": 0.044,
-    "lowprofit_stop_duration_candles": 109,
-    "lowprofit_trade_limit": 36,
-    "maxdrawdown_lookback_period_candles": 12,
-    "maxdrawdown_max_allowed_drawdown": 0.4,
-    "maxdrawdown_stop_duration_candles": 38,
-    "maxdrawdown_trade_limit": 5,
-    "stoplossguard_lookback_period_candles": 27,
-    "stoplossguard_stop_duration_candles": 4,
-    "stoplossguard_trade_limit": 1,
+    "lowprofit_lookback_period_candles": 32,
+    "lowprofit_required_profit": 0.015,
+    "lowprofit_stop_duration_candles": 149,
+    "lowprofit_trade_limit": 46,
+    "maxdrawdown_lookback_period_candles": 33,
+    "maxdrawdown_max_allowed_drawdown": 0.15,
+    "maxdrawdown_stop_duration_candles": 39,
+    "maxdrawdown_trade_limit": 39,
+    "stoplossguard_lookback_period_candles": 20,
+    "stoplossguard_stop_duration_candles": 14,
+    "stoplossguard_trade_limit": 12,
 }
 
 class abbas3(IStrategy):
@@ -175,7 +175,7 @@ class abbas3(IStrategy):
     plot_config = {
         "main_plot": {
             "bb_upperband28": {"color": "#bc281d","type": "line"},
-            "bb_midband28": {"color": "orange", "type": "line"},
+            "bb_midband28": {"color": "#bc281d", "type": "line"},
             "bb_lowerband28": {"color": "#792bbb","type": "line"}
         },
         "subplots": {
