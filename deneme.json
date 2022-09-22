@@ -1,13 +1,13 @@
 {
     "max_open_trades": 7,
     "stake_currency": "USDT",
-    "stake_amount": "unlimited",
+    "stake_amount": 50,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "TRY",
     "timeframe": "5m",
     "timeframe_detail": "1m",
     "dry_run": true,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": false,
     "DRAWDOWN_MULT": 0.090,
     "unfilledtimeout": {
@@ -80,20 +80,7 @@
     ],
     "exchange": {
         "name": "binance",
-        "pair_whitelist": ["XRP/USDT","MTL/USDT","AVAX/USDT","WAVES/USDT","ADA/USDT","MATIC/USDT","ZIL/USDT","DOT/USDT","GALA/USDT","ETC/USDT","JASMY/USDT","EPS/USDT","TRX/USDT","ATOM/USDT","FIL/USDT","SLP/USDT","RUNE/USDT","VET/USDT","AXS/USDT","XMR/USDT","CHZ/USDT","ACH/USDT","MBL/USDT","ROSE/USDT","LINK/USDT","KNC/USDT","LTC/USDT","MINA/USDT","PUNDIX/USDT","ASTR/USDT","C98/USDT","ALPINE/USDT","IOST/USDT","ALPACA/USDT","ICP/USDT","AAVE/USDT","ANKR/USDT","GLMR/USDT","EOS/USDT","RAMP/USDT","THETA/USDT","CELO/USDT","ALGO/USDT","ONE/USDT","LRC/USDT","IMX/USDT","HOT/USDT","DEGO/USDT","DUSK/USDT","PYR/USDT","SRM/USDT","WIN/USDT","IOTA/USDT","CRV/USDT","COMP/USDT","ALICE/USDT","OGN/USDT","SKL/USDT","ENJ/USDT","ZEC/USDT","ANC/USDT","CAKE/USDT","AR/USDT","LOKA/USDT","GRT/USDT","BCH/USDT","DYDX/USDT","CHR/USDT","REEF/USDT","MBOX/USDT","FLOW/USDT","TLM/USDT","WOO/USDT","STRAX/USDT","BNX/USDT","BAKE/USDT","SNX/USDT","SUSHI/USDT","MC/USDT","KAVA/USDT","COTI/USDT","UNI/USDT","KDA/USDT","POLY/USDT","AUDIO/USDT"],
-        "ccxt_config": {
-            "enableRateLimit": true,
-            "rateLimit": 100,
-            "urls": {
-                "api": {
-                    "public": "http://127.0.0.1:8099/api/v3",
-                    "fapiPublic": "http://127.0.0.1:8098/fapi/v1"
-                }
-            }
-        },
-        "ccxt_async_config": {
-            "enableRateLimit": true,
-            "rateLimit": 100
-        }
+        "pair_whitelist": ["LUNA/USDT", "ETC/USDT", "CHZ/USDT", "SOL/USDT", "RVN/USDT", "LINK/USDT", "ADA/USDT", "DOT/USDT", "MATIC/USDT", "NEAR/USDT", "AVAX/USDT", "DOGE/USDT", "OP/USDT", "LTC/USDT", "LDO/USDT", "ENS/USDT", "EOS/USDT", "C98/USDT", "VGX/USDT", "FIL/USDT", "FTM/USDT", "COTI/USDT", "SAND/USDT", "BNX/USDT", "WAVES/USDT", "JASMY/USDT", "BCH/USDT", "RUNE/USDT", "XMR/USDT", "GMT/USDT", "CRV/USDT", "GALA/USDT", "STG/USDT", "MANA/USDT", "ROSE/USDT", "AAVE/USDT", "VET/USDT", "ANKR/USDT", "COMP/USDT", "UNI/USDT", "AXS/USDT", "ALGO/USDT", "ENJ/USDT", "HNT/USDT", "TRB/USDT", "KNC/USDT", "FLOW/USDT", "RLC/USDT", "EGLD/USDT", "KAVA/USDT", "UNFI/USDT", "ICP/USDT", "SUSHI/USDT", "GTO/USDT", "FTT/USDT", "PEOPLE/USDT", "QNT/USDT", "INJ/USDT", "WING/USDT", "SNX/USDT"],
     }
 }
+
