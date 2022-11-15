@@ -4,12 +4,12 @@
             "method": "VolumePairList",
             "number_assets": 360,
             "sort_key": "quoteVolume",
-            "min_value": 5000000,
-            "refresh_period": 1800
+            "min_value": 10000000,
+            "refresh_period": 21600
         },
         {
             "method": "AgeFilter",
-            "min_days_listed": 14
+            "min_days_listed": 15
         },
         {
             "method": "PriceFilter",
@@ -22,7 +22,7 @@
             "method": "RangeStabilityFilter",
             "lookback_days": 3,
             "min_rate_of_change": 0.03,
-            "refresh_period": 1800
+            "refresh_period": 21600
         },
         {
             "method": "VolatilityFilter",
@@ -32,8 +32,7 @@
             "refresh_period": 21600
         },
         {
-            "method": "OffsetFilter",
-            "offset": 2
+            "method": "PrecisionFilter"
         }
     ],
     "exchange": {
@@ -52,10 +51,10 @@
             "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC)/.*",
             // FAN
             "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
-            // Others
-            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS)/.*",
             //ABBAS
-            "(CTXC|PNT|TVK|AGLD|APE|VOXEL|AION|REI|KEY|VIDT|IRIS|QUICK|KMD|DREP|POLS|ATM|FIO|ALCX|ANC|BETA|NKN|AVA|WRX|CKB|BEAM|FLM|PERL|DEGO|BTCST|MIR|REEF|PYR|MFT)/.*"
+            "(AION|BTG|ALCX|MDT|IDEX|DNT|MULTI|HIVE|FARM|WING|DATA|TCT|ERN|TORN|BIFI|OM|RIF|MITH|PHA|DEGO|AMP)/.*",
+            "(MFT|ZIL|HIGH|NBS|DF|OXT|REEF|BOND|ANC|CTXC|PNT|LAZIO|SYS|ACA|JST|POND|VOXEL|ACH|KEY|QI)/.*",
+            "(SRM|MASK|FTT|LUNC)/.*"
         ]
     }
 }
