@@ -2,32 +2,64 @@
     "pairlists": [
         {
             "method": "StaticPairList"
-        },
-        {
-            "method": "AgeFilter",
-            "min_days_listed": 14
         }
     ],
     "exchange": {
         "name": "binance",
         "pair_whitelist": [
-            ".*/USDT"
-        ],
-        "pair_blacklist": [
-            // Exchange
-            "(BNB)/.*",
-            // Leverage
-            ".*(_PREMIUM|BEAR|BULL|HALF|HEDGE|UP|DOWN|[1235][SL])/.*",
-            // Fiat
-            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
-            // Stable
-            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC)/.*",
-            // FAN
-            "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LAZIO|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PORTO|PSG|ROUSH|SANTOS|STV|TH|TRA|UCH|UFC|YBO)/.*",
-            // Others
-            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS)/.*",
-            //ABBAS
-            "(CTXC|PNT|TVK|AGLD|APE|VOXEL|AION|REI|KEY|VIDT|IRIS|QUICK|KMD|DREP|POLS|ATM|FIO|ALCX|ANC|BETA|NKN|AVA|WRX|CKB|BEAM|FLM|PERL|DEGO|MIR|REEF|PYR|MFT)/.*"
+            "AAVE/USDT",
+            "ACH/USDT",
+            "ADA/USDT",
+            "AGIX/USDT",
+            "APE/USDT",
+            "APT/USDT",
+            "ARB/USDT",
+            "ARPA/USDT",
+            "ATOM/USDT",
+            "AVAX/USDT",
+            "AXS/USDT",
+            "BNB/USDT",
+            "BTC/USDT",
+            "CFX/USDT",
+            "CHZ/USDT",
+            "CRV/USDT",
+            "CTSI/USDT",
+            "DOGE/USDT",
+            "DOT/USDT",
+            "DYDX/USDT",
+            "ETH/USDT",
+            "FIL/USDT",
+            "FTM/USDT",
+            "GALA/USDT",
+            "GMT/USDT",
+            "ID/USDT",
+            "IDEX/USDT",
+            "INJ/USDT",
+            "JASMY/USDT",
+            "KAVA/USDT",
+            "LDO/USDT",
+            "LINK/USDT",
+            "LTC/USDT",
+            "MASK/USDT",
+            "MATIC/USDT",
+            "MINA/USDT",
+            "NEAR/USDT",
+            "OMG/USDT",
+            "ONT/USDT",
+            "OP/USDT",
+            "PHB/USDT",
+            "RAY/USDT",
+            "RLC/USDT",
+            "RNDR/USDT",
+            "SAND/USDT",
+            "SOL/USDT",
+            "STX/USDT",
+            "STMX/USDT",
+            "SUI/USDT",
+            "TRX/USDT",
+            "VET/USDT",
+            "XMR/USDT",
+            "XRP/USDT"
         ]
     }
 }

@@ -1,13 +1,13 @@
 {
     "max_open_trades": 7,
     "stake_currency": "USDT",
-    "stake_amount": 50,
+    "stake_amount": 100,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "timeframe_detail": "1m",
     "dry_run": true,
-    "dry_run_wallet": 100,
+    "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": false,
     "unfilledtimeout": {
         "entry": 6,
@@ -54,7 +54,7 @@
         "remove_pumps": false
     },
     "telegram": {
-        "enabled": true,
+        "enabled": false,
         "token": "",
         "chat_id": "",
         "balance_dust_level": 0.001,
