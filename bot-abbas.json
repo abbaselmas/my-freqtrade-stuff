@@ -1,5 +1,5 @@
 {
-    "max_open_trades": 7,
+    "max_open_trades": 10,
     "stake_currency": "USDT",
     "stake_amount": 100,
     "tradable_balance_ratio": 0.99,
@@ -18,9 +18,9 @@
     "order_types": {
         "entry": "limit",
         "exit": "limit",
-        "emergencyexit": "market",
-        "forceexit": "market",
-        "forceentry": "market",
+        "emergency_exit": "market",
+        "force_exit": "market",
+        "force_entry": "market",
         "stoploss": "market",
         "stoploss_on_exchange": false,
         "stoploss_on_exchange_interval": 60,
@@ -110,9 +110,9 @@
         "verbosity": "error",
         "enable_openapi": false,
         "jwt_secret_key": "178a720967367337d87b9e92ada299df2ad245576326e122735d214c78a960d9",
-        "CORS_origins": ["http://193.255.198.12:8080"],
-        "username": "bot-abbas",
-        "password": "bot-abbas"
+        "CORS_origins": ["http://server.abbaselmas.com:8080"],
+        "username": "freqtrader",
+        "password": "73"
     },
     "bot_name": "bot-abbas",
     "initial_state": "running",
