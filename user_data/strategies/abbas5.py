@@ -34,22 +34,22 @@ protection_params = {
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-    "min_profit": 1.03
+    "base_nb_candles_buy": 29,
+    "ewo_high": 1.887,
+    "ewo_high_2": -3.76,
+    "ewo_low": -11.2,
+    "low_offset": 1.02,
+    "low_offset_2": 0.943,
+    "min_profit": 1.04,
+    "rsi_buy": 78
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 9,
-    "high_offset": 1.01,
-    "high_offset_2": 1.233,
-    "high_offset_ema": 0.931
+    "base_nb_candles_sell": 18,
+    "high_offset": 1.039,
+    "high_offset_2": 1.497,
+    "high_offset_ema": 0.934
 }
 
 class abbas5(IStrategy):
