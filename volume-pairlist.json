@@ -5,7 +5,7 @@
             "number_assets": 360,
             "sort_key": "quoteVolume",
             "min_value": 10000000,
-            "refresh_period": 21600
+            "refresh_period": 5400
         },
         {
             "method": "AgeFilter",
@@ -15,22 +15,22 @@
             "method": "PriceFilter",
             "min_price": 0.0001,
             "low_price_ratio": 0.01,
-            "max_price": 1000,
+            "max_price": 200,
             "max_value": 1
         },
         {
             "method": "RangeStabilityFilter",
             "lookback_days": 3,
             "min_rate_of_change": 0.03,
-            "refresh_period": 21600
+            "refresh_period": 86400
         },
-        {
-            "method": "VolatilityFilter",
-            "lookback_days": 3,
-            "min_volatility": 0.015,
-            "max_volatility": 0.75,
-            "refresh_period": 21600
-        },
+        //{
+        //    "method": "VolatilityFilter",
+        //    "lookback_days": 3,
+        //    "min_volatility": 0.015,
+        //    "max_volatility": 0.75,
+        //    "refresh_period": 21600
+        //},
     ],
     "exchange": {
         "name": "binance",
@@ -39,21 +39,21 @@
         ],
         "pair_blacklist": [
             // Exchange
-            "(BNB)/.*",
+            //"(BNB)/.*",
             // Leverage
-            ".*(_PREMIUM|BEAR|BULL|HALF|HEDGE|UP|DOWN|[1235][SL])/.*",
+            //".*(_PREMIUM|BEAR|BULL|HALF|HEDGE|UP|DOWN|[1235][SL])/.*",
             // Fiat
-            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
+            //"(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
             // Stable
-            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC)/.*",
+            //"(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
             // FAN
-            "(ACM|AFA|ALA|ALL|ALPINE|APL|ASR|ATM|BAR|CAI|CHZ|CITY|FOR|GAL|GOZ|IBFK|JUV|LEG|LOCK-1|NAVI|NMR|NOV|PFL|PSG|ROUSH|STV|TH|TRA|UCH|UFC|YBO)/.*",
+            //"(ACM|AFA|ALA|ALL|ALPINE|APL|ASR|ATM|BAR|CAI|CHZ|CITY|FOR|GAL|GOZ|IBFK|JUV|LEG|LOCK-1|NAVI|NMR|NOV|PFL|PSG|ROUSH|STV|TH|TRA|UCH|UFC|YBO)/.*",
             //ABBAS
             //"(AION|BTG|ALCX|MDT|IDEX|DNT|MULTI|HIVE|FARM|WING|DATA|TCT|ERN|TORN|BIFI|OM|RIF|MITH|PHA|DEGO|AMP)/.*",
             //"(MFT|ZIL|HIGH|NBS|DF|OXT|REEF|BOND|ANC|CTXC|PNT|LAZIO|SYS|ACA|JST|POND|VOXEL|ACH|KEY|QI)/.*",
             //"(SRM|MASK|FTT|LUNC)/.*"
             // Others
-            "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS|TORN|LUNA|BTS|QKC|COS|ACA|FTT|SRM|YFII|SNM|BNX|ANC|AION|MIR|BNX|STG|HNT|WABI|QLC|NEBL|AUTO|VGX)/.*"
+            //"(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS|TORN|LUNA|BTS|QKC|COS|ACA|FTT|SRM|YFII|SNM|BNX|ANC|AION|MIR|BNX|STG|HNT|WABI|QLC|NEBL|AUTO|VGX|PEPE|VITE|DREP|JASMY|PNT|PERL|AMB|OAX|LOOM|BTS|RAD)/.*"
         ]
     }
 }
