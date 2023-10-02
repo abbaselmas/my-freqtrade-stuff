@@ -1,0 +1,19 @@
+{
+    "exchange": {
+        "name": "binance",
+        "ccxt_config": {
+            "enableRateLimit": true,
+            "rateLimit": 200,
+            "urls": {
+                "api": {
+                    //"public": "http://127.0.0.1:8090/api/v3",
+                    //"fapiPublic": "http://127.0.0.1:8098/fapi/v1"
+                }
+            }
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 200
+        }
+    }
+}
