@@ -46,8 +46,7 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 8,
-    "high_offset": 1.002,
-    "high_offset_ema": 1.063
+    "high_offset": 1.002
 }
 
 class abbas7(IStrategy):
@@ -123,11 +122,10 @@ class abbas7(IStrategy):
     ignore_roi_if_buy_signal = False
 
     sell_optimize = True
-    high_offset_ema = DecimalParameter(0.90, 1.1, default=sell_params["high_offset_ema"], load=True, space="sell", decimals=3, optimize=sell_optimize)
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=sell_optimize)
-    high_offset = DecimalParameter(1.0, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=sell_optimize)
+    high_offset = DecimalParameter(1.0, 1.05, default=sell_params["high_offset"], space="sell", decimals=3, optimize=sell_optimize)
 
-    buy_optimize= False
+    buy_optimize= True
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=buy_optimize)
     ewo_high = DecimalParameter(1.2, 2.4, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=buy_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -1.6, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=buy_optimize)
