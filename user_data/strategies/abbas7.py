@@ -146,13 +146,6 @@ class abbas7(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    def EWO(self, dataframe, ema_length=5, ema2_length=35):
-        df = dataframe.copy()
-        ema1 = ta.EMA(df, timeperiod=ema_length)
-        ema2 = ta.EMA(df, timeperiod=ema2_length)
-        emadif = (ema1 - ema2) / df["low"] * 100
-        return emadif
-
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         # slippage
@@ -188,7 +181,11 @@ class abbas7(IStrategy):
         informative_1h["sma_200"] = ta.SMA(informative_1h, timeperiod=200)
         informative_1h["sma_200_dec"] = informative_1h["sma_200"] < informative_1h["sma_200"].shift(20)
         informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
-        informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
+
+        ema1 = ta.EMA(informative_1h, timeperiod=self.fast_ewo.value)
+        ema2 = ta.EMA(informative_1h, timeperiod=self.slow_ewo.value)
+        informative_1h["EWO"] = (ema1 - ema2) / informative_1h["low"] * 100
+
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
         informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
         informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
@@ -212,12 +209,17 @@ class abbas7(IStrategy):
         dataframe["sma_200"] = ta.SMA(dataframe, timeperiod=200)
         dataframe["sma_200_dec"] = dataframe["sma_200"] < dataframe["sma_200"].shift(20)
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
-        dataframe["EWO"] = self.EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+
+        ema1 = ta.EMA(dataframe, timeperiod=self.fast_ewo.value)
+        ema2 = ta.EMA(dataframe, timeperiod=self.slow_ewo.value)
+        dataframe["EWO"] = (ema1 - ema2) / dataframe["low"] * 100
+        
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+
         return dataframe
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
