@@ -127,7 +127,7 @@ class abbas7(IStrategy):
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=sell_optimize)
     high_offset = DecimalParameter(1.0, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=sell_optimize)
 
-    buy_optimize= True
+    buy_optimize= False
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=buy_optimize)
     ewo_high = DecimalParameter(1.2, 2.4, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=buy_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -1.6, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=buy_optimize)
@@ -136,15 +136,20 @@ class abbas7(IStrategy):
     low_offset_2 = DecimalParameter(0.94, 0.98, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=buy_optimize)
     min_profit = DecimalParameter(0.60, 1.00, default=buy_params["min_profit"], space="buy", decimals=2, optimize=buy_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params["rsi_buy"], space="buy", optimize=buy_optimize)
-    
+
     ewo_optimize = True
-    fast_ewo = IntParameter(5,60, default=sell_params["fast_ewo"], space="ewo", optimize=ewo_optimize)
-    slow_ewo = IntParameter(80,300, default=sell_params["slow_ewo"], space="ewo", optimize=ewo_optimize)
-    
+    fast_ewo = IntParameter(5,60, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
+    slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+
     inf_1h = "1h"
 
     process_only_new_candles = True
     startup_candle_count = 200
+
+    slippage_protection = {
+        "retries": 3,
+        "max_slippage": -0.002
+    }
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
@@ -182,8 +187,8 @@ class abbas7(IStrategy):
         informative_1h["sma_200_dec"] = informative_1h["sma_200"] < informative_1h["sma_200"].shift(20)
         informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
 
-        ema1 = ta.EMA(informative_1h, timeperiod=self.fast_ewo.value)
-        ema2 = ta.EMA(informative_1h, timeperiod=self.slow_ewo.value)
+        ema1 = ta.EMA(informative_1h, timeperiod=int(self.fast_ewo.value))
+        ema2 = ta.EMA(informative_1h, timeperiod=int(self.slow_ewo.value))
         informative_1h["EWO"] = (ema1 - ema2) / informative_1h["low"] * 100
 
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
@@ -210,10 +215,10 @@ class abbas7(IStrategy):
         dataframe["sma_200_dec"] = dataframe["sma_200"] < dataframe["sma_200"].shift(20)
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
-        ema1 = ta.EMA(dataframe, timeperiod=self.fast_ewo.value)
-        ema2 = ta.EMA(dataframe, timeperiod=self.slow_ewo.value)
+        ema1 = ta.EMA(dataframe, timeperiod=int(self.fast_ewo.value))
+        ema2 = ta.EMA(dataframe, timeperiod=int(self.slow_ewo.value))
         dataframe["EWO"] = (ema1 - ema2) / dataframe["low"] * 100
-        
+
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
