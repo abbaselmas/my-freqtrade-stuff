@@ -1,0 +1,52 @@
+{
+  "strategy_name": "abbas7",
+  "params": {
+    "roi": {
+      "200": 0
+    },
+    "max_open_trades": {
+      "max_open_trades": 10
+    },
+    "buy": {
+      "base_nb_candles_buy": 30,
+      "ewo_high": 2.188,
+      "ewo_high_2": -2.24,
+      "ewo_low": -11.56,
+      "low_offset": 1.083,
+      "low_offset_2": 0.942,
+      "min_profit": 0.74,
+      "rsi_buy": 60
+    },
+    "sell": {
+      "base_nb_candles_sell": 8,
+      "high_offset": 1.002,
+      "high_offset_2": 1.262,
+      "high_offset_ema": 1.063
+    },
+    "protection": {
+      "cooldown_stop_duration_candles": 4,
+      "lowprofit_lookback_period_candles": 10,
+      "lowprofit_required_profit": 0.001,
+      "lowprofit_stop_duration_candles": 160,
+      "lowprofit_trade_limit": 13,
+      "maxdrawdown_lookback_period_candles": 18,
+      "maxdrawdown_max_allowed_drawdown": 0.12,
+      "maxdrawdown_stop_duration_candles": 26,
+      "maxdrawdown_trade_limit": 26,
+      "stoplossguard_lookback_period_candles": 120,
+      "stoplossguard_stop_duration_candles": 9,
+      "stoplossguard_trade_limit": 18
+    },
+    "stoploss": {
+      "stoploss": -0.094
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0001,
+      "trailing_stop_positive_offset": 0.014499999999999999,
+      "trailing_only_offset_is_reached": true
+    }
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2023-10-03 16:26:23.478817+00:00"
+}
