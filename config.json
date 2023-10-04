@@ -26,6 +26,10 @@
         "stoploss_on_exchange_interval": 60,
         "stoploss_on_exchange_limit_ratio": 0.99
     },
+    "order_time_in_force": {
+        "entry": "GTC",
+        "exit": "IOC"
+    },
     "entry_pricing": {
         "price_side": "other",
         "use_order_book": false,
@@ -115,7 +119,7 @@
         "password": "73"
     },
     "bot_name": "freqtrade",
-    "initial_state": "running",
+    "initial_state": "stopped",
     "force_entry_enable": true,
     "db_url": "sqlite:///abbas.sqlite",
     "internals": {
