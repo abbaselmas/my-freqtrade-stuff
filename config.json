@@ -9,6 +9,7 @@
     "dry_run": true,
     "dry_run_wallet": 1010,
     "cancel_open_orders_on_exit": false,
+    "DRAWDOWN_MULT": 0.08,
     "unfilledtimeout": {
         "entry": 6,
         "exit": 6,
@@ -69,7 +70,7 @@
                 "/status table"
             ],
             [
-                "/stopbuy",
+                "/stopentry",
                 "/profit",
                 "/trades"
             ],
@@ -88,21 +89,21 @@
             "status": "silent",
             "warning": "silent",
             "startup": "silent",
-            "buy": "silent",
-            "sell": {
+            "entry": "silent",
+            "exit": {
                 "roi": "silent",
-                "emergency_sell": "silent",
-                "force_sell": "silent",
-                "sell_signal": "silent",
+                "emergency_exit": "silent",
+                "force_exit": "silent",
+                "exit_signal": "silent",
                 "trailing_stop_loss": "silent",
                 "stop_loss": "silent",
                 "stoploss_on_exchange": "silent",
-                "custom_sell": "silent"
+                "custom_exit": "silent"
             },
-            "buy_cancel": "silent",
-            "sell_cancel": "silent",
-            "buy_fill": "silent",
-            "sell_fill": "silent",
+            "entry_cancel": "silent",
+            "exit_cancel": "silent",
+            "entry_fill": "silent",
+            "exit_fill": "silent",
             "protection_trigger": "silent",
             "protection_trigger_global": "silent"
         }
