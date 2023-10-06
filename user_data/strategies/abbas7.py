@@ -106,7 +106,7 @@ class abbas7(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.150, -0.020, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.200, -0.050, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
@@ -118,8 +118,8 @@ class abbas7(IStrategy):
             ]
 
     # Sell signal
-    use_sell_signal = False
-    ignore_roi_if_buy_signal = False
+    use_exit_signal = False
+    ignore_roi_if_entry_signal = False
 
     sell_optimize = True
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=sell_optimize)

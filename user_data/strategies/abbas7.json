@@ -4,49 +4,49 @@
     "roi": {
       "200": 0
     },
+    "stoploss": {
+      "stoploss": -0.057
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0002,
+      "trailing_stop_positive_offset": 0.0201,
+      "trailing_only_offset_is_reached": true
+    },
     "max_open_trades": {
       "max_open_trades": 10
     },
     "buy": {
-      "base_nb_candles_buy": 20,
-      "ewo_high": 1.543,
-      "ewo_high_2": -1.69,
-      "ewo_low": -12.11,
-      "fast_ewo": 43,
-      "low_offset": 1.039,
-      "low_offset_2": 0.943,
-      "min_profit": 0.93,
-      "rsi_buy": 66,
-      "slow_ewo": 122
+      "base_nb_candles_buy": 24,
+      "ewo_high": 2.361,
+      "ewo_high_2": -2.19,
+      "ewo_low": -10.33,
+      "fast_ewo": 53,
+      "low_offset": 1.045,
+      "low_offset_2": 0.958,
+      "min_profit": 0.65,
+      "rsi_buy": 72,
+      "slow_ewo": 96
     },
     "sell": {
-      "base_nb_candles_sell": 10,
-      "high_offset": 1.038
+      "base_nb_candles_sell": 11,
+      "high_offset": 1.008
     },
     "protection": {
-      "cooldown_stop_duration_candles": 5,
-      "lowprofit_lookback_period_candles": 24,
-      "lowprofit_required_profit": 0.0,
-      "lowprofit_stop_duration_candles": 237,
-      "lowprofit_trade_limit": 20,
-      "maxdrawdown_lookback_period_candles": 40,
-      "maxdrawdown_max_allowed_drawdown": 0.19,
-      "maxdrawdown_stop_duration_candles": 27,
+      "cooldown_stop_duration_candles": 3,
+      "lowprofit_lookback_period_candles": 8,
+      "lowprofit_required_profit": 0.001,
+      "lowprofit_stop_duration_candles": 241,
+      "lowprofit_trade_limit": 10,
+      "maxdrawdown_lookback_period_candles": 36,
+      "maxdrawdown_max_allowed_drawdown": 0.26,
+      "maxdrawdown_stop_duration_candles": 10,
       "maxdrawdown_trade_limit": 2,
-      "stoplossguard_lookback_period_candles": 238,
-      "stoplossguard_stop_duration_candles": 1,
-      "stoplossguard_trade_limit": 12
-    },
-    "stoploss": {
-      "stoploss": -0.025
-    },
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0004,
-      "trailing_stop_positive_offset": 0.0199,
-      "trailing_only_offset_is_reached": true
+      "stoplossguard_lookback_period_candles": 68,
+      "stoplossguard_stop_duration_candles": 17,
+      "stoplossguard_trade_limit": 2
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-10-04 18:53:28.558543+00:00"
+  "export_time": "2023-10-06 05:51:15.152414+00:00"
 }
