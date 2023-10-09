@@ -116,6 +116,8 @@ class abbas7(IStrategy):
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
+    stoploss = -0.078
+
     # Sell signal
     use_exit_signal = False
     ignore_roi_if_entry_signal = False
@@ -144,9 +146,6 @@ class abbas7(IStrategy):
 
     process_only_new_candles = True
     startup_candle_count = 200
-
-    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
-        return True
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() # get access to all pairs available in whitelist.
@@ -204,7 +203,7 @@ class abbas7(IStrategy):
 
         return dataframe
 
-    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < 35) &
@@ -238,16 +237,21 @@ class abbas7(IStrategy):
         dont_buy_conditions = []
         dont_buy_conditions.append(
             (
-                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value )) |
+                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
+            )
+        )
+        dont_buy_conditions.append(
+            (
                 (dataframe['pump'].rolling(20).max() < 1)
             )
         )
+        
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "buy"] = 0
         return dataframe
 
-    def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
