@@ -40,8 +40,8 @@ buy_params = {
     "low_offset_2": 0.942,
     "min_profit": 0.74,
     "rsi_buy": 60,
-    "fast_ewo": 50,
-    "slow_ewo": 200
+    "fast_ewo": 15,
+    "slow_ewo": 163
 }
 # Sell hyperspace params:
 sell_params = {
@@ -106,7 +106,7 @@ class abbas7(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.200, -0.050, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.120, -0.050, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
@@ -123,15 +123,15 @@ class abbas7(IStrategy):
 
     sell_optimize = True
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=sell_optimize)
-    high_offset = DecimalParameter(1.0, 1.05, default=sell_params["high_offset"], space="sell", decimals=3, optimize=sell_optimize)
+    high_offset = DecimalParameter(1.0, 1.05, default=sell_params["high_offset"], space="sell", decimals=2, optimize=sell_optimize)
 
     buy_optimize= True
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=buy_optimize)
-    ewo_high = DecimalParameter(1.2, 2.4, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=buy_optimize)
+    ewo_high = DecimalParameter(1.2, 2.4, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=buy_optimize)
     ewo_high_2 = DecimalParameter(-4.0, -1.6, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=buy_optimize)
     ewo_low = DecimalParameter(-13.0, -9.0,default=buy_params["ewo_low"], space="buy", decimals=2, optimize=buy_optimize)
-    low_offset = DecimalParameter(1.0, 1.1, default=buy_params["low_offset"], space="buy", decimals=3, optimize=buy_optimize)
-    low_offset_2 = DecimalParameter(0.94, 0.98, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=buy_optimize)
+    low_offset = DecimalParameter(1.0, 1.1, default=buy_params["low_offset"], space="buy", decimals=2, optimize=buy_optimize)
+    low_offset_2 = DecimalParameter(0.94, 0.98, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=buy_optimize)
     min_profit = DecimalParameter(0.60, 1.00, default=buy_params["min_profit"], space="buy", decimals=2, optimize=buy_optimize)
     rsi_buy = IntParameter(55, 85, default=buy_params["rsi_buy"], space="buy", optimize=buy_optimize)
 
