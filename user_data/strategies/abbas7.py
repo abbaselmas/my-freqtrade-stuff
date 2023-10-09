@@ -15,40 +15,41 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-class abbas7(IStrategy):
-    INTERFACE_VERSION = 2
+protection_params = {
+    "base_nb_candles_buy": 24,
+    "ewo_high": 2.361,
+    "ewo_high_2": -2.19,
+    "ewo_low": -10.33,
+    "fast_ewo": 15,
+    "low_offset": 1.045,
+    "low_offset_2": 0.958,
+    "max_change_pump": 35,
+    "min_profit": 0.65,
+    "rsi_buy": 72,
+    "slow_ewo": 163
+}
 
-    buy_params = {
-        "base_nb_candles_buy": 24,
-        "ewo_high": 2.361,
-        "ewo_high_2": -2.19,
-        "ewo_low": -10.33,
-        "fast_ewo": 15,
-        "low_offset": 1.045,
-        "low_offset_2": 0.958,
-        "min_profit": 0.65,
-        "rsi_buy": 72,
-        "slow_ewo": 163,
-        "max_change_pump": 35
-    }
-    sell_params = {
-        "base_nb_candles_sell": 12,
-        "high_offset": 1.0
-    }
-    protection_params = {
-        "cooldown_stop_duration_candles": 3,
-        "lowprofit_lookback_period_candles": 8,
-        "lowprofit_required_profit": 0.001,
-        "lowprofit_stop_duration_candles": 241,
-        "lowprofit_trade_limit": 10,
-        "maxdrawdown_lookback_period_candles": 36,
-        "maxdrawdown_max_allowed_drawdown": 0.26,
-        "maxdrawdown_stop_duration_candles": 10,
-        "maxdrawdown_trade_limit": 2,
-        "stoplossguard_lookback_period_candles": 68,
-        "stoplossguard_stop_duration_candles": 17,
-        "stoplossguard_trade_limit": 2
-    }
+sell_params = {
+    "base_nb_candles_sell": 12,
+    "high_offset": 1.0
+}
+protection_params = {
+    "cooldown_stop_duration_candles": 3,
+    "lowprofit_lookback_period_candles": 8,
+    "lowprofit_required_profit": 0.001,
+    "lowprofit_stop_duration_candles": 241,
+    "lowprofit_trade_limit": 10,
+    "maxdrawdown_lookback_period_candles": 36,
+    "maxdrawdown_max_allowed_drawdown": 0.26,
+    "maxdrawdown_stop_duration_candles": 10,
+    "maxdrawdown_trade_limit": 2,
+    "stoplossguard_lookback_period_candles": 68,
+    "stoplossguard_stop_duration_candles": 17,
+    "stoplossguard_trade_limit": 2
+}
+
+class abbas7(IStrategy):
+    INTERFACE_VERSION = 3
 
     cooldown_stop_duration_candles = IntParameter(0, 15, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
@@ -193,7 +194,7 @@ class abbas7(IStrategy):
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
         dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
-        dataframe['pump'] = pump_warning(dataframe, perc=int(self.max_change_pump.value))
+        dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
 
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
