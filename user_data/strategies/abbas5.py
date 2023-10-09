@@ -342,8 +342,6 @@ class abbas5(IStrategy):
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
-    df = dataframe.copy()
-    ema1 = ta.EMA(df, timeperiod=ema_length)
-    ema2 = ta.EMA(df, timeperiod=ema2_length)
-    emadif = (ema1 - ema2) / df["low"] * 100
-    return emadif
+    ema1 = ta.EMA(dataframe, timeperiod=ema_length)
+    ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
+    return (ema1 - ema2) / dataframe["low"] * 100

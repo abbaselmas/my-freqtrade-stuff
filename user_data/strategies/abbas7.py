@@ -41,7 +41,8 @@ buy_params = {
     "min_profit": 0.74,
     "rsi_buy": 60,
     "fast_ewo": 15,
-    "slow_ewo": 163
+    "slow_ewo": 163,
+    "max_change_pump": 35
 }
 # Sell hyperspace params:
 sell_params = {
@@ -123,7 +124,7 @@ class abbas7(IStrategy):
 
     sell_optimize = True
     base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=sell_optimize)
-    high_offset = DecimalParameter(1.0, 1.05, default=sell_params["high_offset"], space="sell", decimals=2, optimize=sell_optimize)
+    high_offset = DecimalParameter(1.0, 1.05, default=sell_params["high_offset"], space="sell", decimals=3, optimize=sell_optimize)
 
     buy_optimize= True
     base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=buy_optimize)
@@ -139,6 +140,8 @@ class abbas7(IStrategy):
     fast_ewo = IntParameter(5,60, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
     slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
 
+    max_change_pump = IntParameter(2, 50, default=buy_params["max_change_pump"] , space="buy", optimize=True)
+
     inf_1h = "1h"
 
     process_only_new_candles = True
@@ -148,23 +151,6 @@ class abbas7(IStrategy):
         "retries": 3,
         "max_slippage": -0.002
     }
-
-    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        # slippage
-        try:
-            state = self.slippage_protection["__pair_retries"]
-        except KeyError:
-            state = self.slippage_protection["__pair_retries"] = {}
-        candle = dataframe.iloc[-1].squeeze()
-        slippage = (rate / candle["close"]) - 1
-        if slippage < self.slippage_protection["max_slippage"]:
-            pair_retries = state.get(pair, 0)
-            if pair_retries < self.slippage_protection["retries"]:
-                state[pair] = pair_retries + 1
-                return False
-        state[pair] = 0
-        return True
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() # get access to all pairs available in whitelist.
@@ -185,9 +171,7 @@ class abbas7(IStrategy):
         informative_1h["sma_200_dec"] = informative_1h["sma_200"] < informative_1h["sma_200"].shift(20)
         informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
 
-        ema1 = ta.EMA(informative_1h, timeperiod=int(self.fast_ewo.value))
-        ema2 = ta.EMA(informative_1h, timeperiod=int(self.slow_ewo.value))
-        informative_1h["EWO"] = (ema1 - ema2) / informative_1h["low"] * 100
+        informative_1h["ewo"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
 
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
         informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
@@ -213,9 +197,8 @@ class abbas7(IStrategy):
         dataframe["sma_200_dec"] = dataframe["sma_200"] < dataframe["sma_200"].shift(20)
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
-        ema1 = ta.EMA(dataframe, timeperiod=int(self.fast_ewo.value))
-        ema2 = ta.EMA(dataframe, timeperiod=int(self.slow_ewo.value))
-        dataframe["EWO"] = (ema1 - ema2) / dataframe["low"] * 100
+        dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+        dataframe['pump'] = pump_warning(dataframe, perc=int(self.max_change_pump))
 
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
@@ -230,7 +213,7 @@ class abbas7(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["EWO"] > self.ewo_high.value) &
+                (dataframe["ewo"] > self.ewo_high.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
@@ -240,7 +223,7 @@ class abbas7(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
-                (dataframe["EWO"] > self.ewo_high_2.value) &
+                (dataframe["ewo"] > self.ewo_high_2.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
@@ -251,7 +234,7 @@ class abbas7(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["EWO"] < self.ewo_low.value) &
+                (dataframe["ewo"] < self.ewo_low.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
@@ -259,7 +242,8 @@ class abbas7(IStrategy):
         dont_buy_conditions = []
         dont_buy_conditions.append(
             (
-                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
+                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value )) |
+                (dataframe['pump'].rolling(20).max() < 1)
             )
         )
         if dont_buy_conditions:
@@ -269,3 +253,19 @@ class abbas7(IStrategy):
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
+
+def EWO(dataframe, ema_length=5, ema2_length=35):
+    ema1 = ta.EMA(dataframe, timeperiod=ema_length)
+    ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
+    return (ema1 - ema2) / dataframe["low"] * 100
+
+def EWOs(dataframe, sma1_length=5, sma2_length=35):
+    sma1 = ta.SMA(dataframe, timeperiod=sma1_length)
+    sma2 = ta.SMA(dataframe, timeperiod=sma2_length)
+    return (sma1 - sma2) / dataframe['close'] * 100
+
+def pump_warning(dataframe, perc=15):   
+    change = dataframe["high"] - dataframe["low"]
+    test1 = (dataframe["close"] > dataframe["open"])
+    test2 = ((change/dataframe["low"]) > (perc/100))
+    return (test1 & test2).astype('int')
