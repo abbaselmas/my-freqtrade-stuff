@@ -41,7 +41,9 @@ buy_params = {
     "low_offset": 1.083,
     "low_offset_2": 0.942,
     "min_profit": 0.74,
-    "rsi_buy": 60
+    "rsi_buy": 60,
+    # "fast_ewo": 50,
+    # "slow_ewo": 200
 }
 
 # Sell hyperspace params:
@@ -152,6 +154,11 @@ class abbas8(IStrategy):
     # Protection
     fast_ewo = 50
     slow_ewo = 200
+
+    # ewo_optimize = True
+    # fast_ewo = IntParameter(5,60, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
+    # slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+
     protection_optimize = True
     ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(1.0, 2.2, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=protection_optimize)
@@ -227,6 +234,7 @@ class abbas8(IStrategy):
 
         # Elliot
         informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
+        # informative_1h["ewo"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
 
         # RSI
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
@@ -259,6 +267,10 @@ class abbas8(IStrategy):
 
         # Elliot
         dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+        # dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+
+        #Pump
+        # dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
 
         # RSI
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
@@ -312,6 +324,11 @@ class abbas8(IStrategy):
                 (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
             )
         )
+        # dont_buy_conditions.append(
+        #     (
+        #         (dataframe['pump'].rolling(20).max() < 1)
+        #     )
+        # )
 
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
