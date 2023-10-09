@@ -34,22 +34,22 @@ protection_params = {
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 30,
-    "ewo_high": 2.188,
-    "ewo_high_2": -2.24,
-    "ewo_low": -11.56,
-    "low_offset": 1.083,
-    "low_offset_2": 0.942,
-    "min_profit": 0.74,
-    "rsi_buy": 60,
-    # "fast_ewo": 50,
-    # "slow_ewo": 200
+    "base_nb_candles_buy": 24,
+    "ewo_high": 2.361,
+    "ewo_high_2": -2.19,
+    "ewo_low": -10.33,
+    "low_offset": 1.045,
+    "low_offset_2": 0.958,
+    "min_profit": 0.65,
+    "rsi_buy": 72,
+    # "fast_ewo": 53,
+    # "slow_ewo": 96
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 8,
-    "high_offset": 1.002
+    "base_nb_candles_sell": 11,
+    "high_offset": 1.008
 }
 
 class abbas8(IStrategy):
@@ -122,9 +122,7 @@ class abbas8(IStrategy):
             ]
 
     # ROI table:
-    minimal_roi = {
-        "200": 0
-    }
+    minimal_roi = {}
 
     # Stoploss:
     stoploss = -0.094
