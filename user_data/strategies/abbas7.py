@@ -15,7 +15,7 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-protection_params = {
+buy_params = {
     "base_nb_candles_buy": 24,
     "ewo_high": 2.361,
     "ewo_high_2": -2.19,
