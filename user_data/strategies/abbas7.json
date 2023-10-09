@@ -5,16 +5,13 @@
       "200": 0
     },
     "stoploss": {
-      "stoploss": -0.059
+      "stoploss": -0.078
     },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0002,
       "trailing_stop_positive_offset": 0.0201,
       "trailing_only_offset_is_reached": true
-    },
-    "max_open_trades": {
-      "max_open_trades": 10
     },
     "buy": {
       "base_nb_candles_buy": 24,
@@ -24,10 +21,10 @@
       "fast_ewo": 15,
       "low_offset": 1.045,
       "low_offset_2": 0.958,
+      "max_change_pump": 35,
       "min_profit": 0.65,
       "rsi_buy": 72,
-      "slow_ewo": 163,
-      "max_change_pump": 35
+      "slow_ewo": 163
     },
     "sell": {
       "base_nb_candles_sell": 12,
@@ -46,8 +43,11 @@
       "stoplossguard_lookback_period_candles": 68,
       "stoplossguard_stop_duration_candles": 17,
       "stoplossguard_trade_limit": 2
+    },
+    "max_open_trades": {
+      "max_open_trades": 1
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-10-08 15:33:06.703684+00:00"
+  "export_time": "2023-10-09 11:47:35.962602+00:00"
 }

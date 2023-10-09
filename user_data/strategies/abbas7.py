@@ -196,7 +196,7 @@ class abbas7(IStrategy):
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
         dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
-        dataframe['pump'] = pump_warning(dataframe, perc=int(self.max_change_pump))
+        dataframe['pump'] = pump_warning(dataframe, perc=int(self.max_change_pump.value))
 
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
