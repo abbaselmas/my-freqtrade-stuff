@@ -26,7 +26,8 @@
       "low_offset_2": 0.958,
       "min_profit": 0.65,
       "rsi_buy": 72,
-      "slow_ewo": 163
+      "slow_ewo": 163,
+      "max_change_pump": 35
     },
     "sell": {
       "base_nb_candles_sell": 12,

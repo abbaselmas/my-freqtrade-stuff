@@ -15,43 +15,41 @@ import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 4,
-    "lowprofit_lookback_period_candles": 10,
-    "lowprofit_required_profit": 0.001,
-    "lowprofit_stop_duration_candles": 160,
-    "lowprofit_trade_limit": 13,
-    "maxdrawdown_lookback_period_candles": 18,
-    "maxdrawdown_max_allowed_drawdown": 0.12,
-    "maxdrawdown_stop_duration_candles": 26,
-    "maxdrawdown_trade_limit": 26,
-    "stoplossguard_lookback_period_candles": 120,
-    "stoplossguard_stop_duration_candles": 9,
-    "stoplossguard_trade_limit": 18
-}
-# Buy hyperspace params:
-buy_params = {
-    "base_nb_candles_buy": 30,
-    "ewo_high": 2.188,
-    "ewo_high_2": -2.24,
-    "ewo_low": -11.56,
-    "low_offset": 1.083,
-    "low_offset_2": 0.942,
-    "min_profit": 0.74,
-    "rsi_buy": 60,
-    "fast_ewo": 15,
-    "slow_ewo": 163,
-    "max_change_pump": 35
-}
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 8,
-    "high_offset": 1.002
-}
-
 class abbas7(IStrategy):
     INTERFACE_VERSION = 2
+
+    buy_params = {
+        "base_nb_candles_buy": 24,
+        "ewo_high": 2.361,
+        "ewo_high_2": -2.19,
+        "ewo_low": -10.33,
+        "fast_ewo": 15,
+        "low_offset": 1.045,
+        "low_offset_2": 0.958,
+        "min_profit": 0.65,
+        "rsi_buy": 72,
+        "slow_ewo": 163,
+        "max_change_pump": 35
+    }
+    sell_params = {
+        "base_nb_candles_sell": 12,
+        "high_offset": 1.0
+    }
+    protection_params = {
+        "cooldown_stop_duration_candles": 3,
+        "lowprofit_lookback_period_candles": 8,
+        "lowprofit_required_profit": 0.001,
+        "lowprofit_stop_duration_candles": 241,
+        "lowprofit_trade_limit": 10,
+        "maxdrawdown_lookback_period_candles": 36,
+        "maxdrawdown_max_allowed_drawdown": 0.26,
+        "maxdrawdown_stop_duration_candles": 10,
+        "maxdrawdown_trade_limit": 2,
+        "stoplossguard_lookback_period_candles": 68,
+        "stoplossguard_stop_duration_candles": 17,
+        "stoplossguard_trade_limit": 2
+    }
+    stoploss = -0.059
 
     cooldown_stop_duration_candles = IntParameter(0, 15, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
