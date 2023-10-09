@@ -6,6 +6,7 @@
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "timeframe_detail": "1m",
+    "trading_mode": "spot",
     "dry_run": true,
     "dry_run_wallet": 1010,
     "cancel_open_orders_on_exit": false,
