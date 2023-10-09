@@ -45,7 +45,7 @@
       "stoplossguard_trade_limit": 2
     },
     "max_open_trades": {
-      "max_open_trades": 1
+      "max_open_trades": 10
     }
   },
   "ft_stratparam_v": 1,

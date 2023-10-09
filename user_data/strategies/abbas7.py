@@ -49,7 +49,6 @@ class abbas7(IStrategy):
         "stoplossguard_stop_duration_candles": 17,
         "stoplossguard_trade_limit": 2
     }
-    stoploss = -0.059
 
     cooldown_stop_duration_candles = IntParameter(0, 15, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
@@ -145,10 +144,8 @@ class abbas7(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    slippage_protection = {
-        "retries": 3,
-        "max_slippage": -0.002
-    }
+    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
+        return True
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() # get access to all pairs available in whitelist.
