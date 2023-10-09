@@ -18,38 +18,38 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 34,
-    "lowprofit_required_profit": 0.027,
-    "lowprofit_stop_duration_candles": 126,
-    "lowprofit_trade_limit": 36,
-    "maxdrawdown_lookback_period_candles": 36,
-    "maxdrawdown_max_allowed_drawdown": 0.34,
-    "maxdrawdown_stop_duration_candles": 54,
-    "maxdrawdown_trade_limit": 17,
-    "stoplossguard_lookback_period_candles": 3,
-    "stoplossguard_stop_duration_candles": 8,
-    "stoplossguard_trade_limit": 11,
+    "cooldown_stop_duration_candles": 4,
+    "lowprofit_lookback_period_candles": 10,
+    "lowprofit_required_profit": 0.001,
+    "lowprofit_stop_duration_candles": 160,
+    "lowprofit_trade_limit": 13,
+    "maxdrawdown_lookback_period_candles": 18,
+    "maxdrawdown_max_allowed_drawdown": 0.12,
+    "maxdrawdown_stop_duration_candles": 26,
+    "maxdrawdown_trade_limit": 26,
+    "stoplossguard_lookback_period_candles": 120,
+    "stoplossguard_stop_duration_candles": 9,
+    "stoplossguard_trade_limit": 18
 }
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 2.182,
-    "ewo_high_2": -3.44,
-    "ewo_low": -10.26,
-    "low_offset": 1.066,
-    "low_offset_2": 0.961,
-    "rsi_buy": 68,
-    "min_profit": 1.03
+    "base_nb_candles_buy": 30,
+    "ewo_high": 2.188,
+    "ewo_high_2": -2.24,
+    "ewo_low": -11.56,
+    "low_offset": 1.083,
+    "low_offset_2": 0.942,
+    "min_profit": 0.74,
+    "rsi_buy": 60
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 9,
-    "high_offset": 1.01,
-    "high_offset_2": 1.233,
-    "high_offset_ema": 0.931
+    "base_nb_candles_sell": 8,
+    "high_offset": 1.002,
+    "high_offset_2": 1.262,
+    "high_offset_ema": 1.063
 }
 
 class abbas8(IStrategy):
@@ -110,14 +110,14 @@ class abbas8(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.100, -0.030, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.120, -0.050, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
                 SKDecimal(0.0001, 0.0010, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.0080, 0.0180, decimals=4, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.0080, 0.0200, decimals=4, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
@@ -127,12 +127,12 @@ class abbas8(IStrategy):
     }
 
     # Stoploss:
-    stoploss = -0.078
+    stoploss = -0.094
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0005
-    trailing_stop_positive_offset = 0.007
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.0145
     trailing_only_offset_is_reached = True
 
     # Sell signal
