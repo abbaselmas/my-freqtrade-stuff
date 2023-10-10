@@ -42,8 +42,8 @@ buy_params = {
     "low_offset_2": 0.958,
     "min_profit": 0.65,
     "rsi_buy": 72,
-    # "fast_ewo": 53,
-    # "slow_ewo": 96
+    "fast_ewo": 50,
+    "slow_ewo": 200
 }
 
 # Sell hyperspace params:
@@ -56,23 +56,23 @@ class abbas8(IStrategy):
 
     INTERFACE_VERSION = 2
 
-    cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+    cooldown_stop_duration_candles = IntParameter(0, 10, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
     maxdrawdown_optimize = True
-    maxdrawdown_lookback_period_candles = IntParameter(5, 40, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_lookback_period_candles = IntParameter(5, 60, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
     maxdrawdown_trade_limit = IntParameter(1, 40, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(10, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.10, 0.40, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(5, 80, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.05, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(1, 300, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(1, 20, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 20, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_lookback_period_candles = IntParameter(1, 400, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(1, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
-    lowprofit_lookback_period_candles = IntParameter(10, 60, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_lookback_period_candles = IntParameter(1, 100, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
     lowprofit_trade_limit = IntParameter(1, 50, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_stop_duration_candles = IntParameter(10, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_stop_duration_candles = IntParameter(1, 100, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
     lowprofit_required_profit = DecimalParameter(0.000, 0.050, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
 
     @property
@@ -110,14 +110,14 @@ class abbas8(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.120, -0.050, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.120, -0.060, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
-                SKDecimal(0.0001, 0.0010, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.0080, 0.0200, decimals=4, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.0001, 0.0020, decimals=4, name="trailing_stop_positive"),
+                SKDecimal(0.0080, 0.0250, decimals=4, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
@@ -139,13 +139,11 @@ class abbas8(IStrategy):
 
     # SMAOffset
     smaoffset_optimize = True
-    # high_offset_ema = DecimalParameter(0.90, 1.1, default=sell_params["high_offset_ema"], load=True, space="sell", decimals=3, optimize=smaoffset_optimize)
-    base_nb_candles_buy = IntParameter(15, 30, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    base_nb_candles_sell = IntParameter(5, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    low_offset = DecimalParameter(1.0, 1.1, default=buy_params["low_offset"], space="buy", decimals=3, optimize=smaoffset_optimize)
-    low_offset_2 = DecimalParameter(0.94, 0.98, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=smaoffset_optimize)
-    high_offset = DecimalParameter(1.0, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=smaoffset_optimize)
-    # high_offset_2 = DecimalParameter(1.2, 1.5, default=sell_params["high_offset_2"], space="sell", decimals=3, optimize=smaoffset_optimize)
+    base_nb_candles_buy = IntParameter(10, 40, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
+    base_nb_candles_sell = IntParameter(1, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    low_offset = DecimalParameter(0.9, 1.1, default=buy_params["low_offset"], space="buy", decimals=3, optimize=smaoffset_optimize)
+    low_offset_2 = DecimalParameter(0.9, 1.1, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=smaoffset_optimize)
+    high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=smaoffset_optimize)
 
     # Protection
     fast_ewo = 50
@@ -156,12 +154,12 @@ class abbas8(IStrategy):
     # slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
 
     protection_optimize = True
-    ewo_low = DecimalParameter(-12.0, -8.0,default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
-    ewo_high = DecimalParameter(1.0, 2.2, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=protection_optimize)
-    ewo_high_2 = DecimalParameter(-4.0, -2.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
-    rsi_buy = IntParameter(55, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
+    ewo_low = DecimalParameter(-16.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=3, optimize=protection_optimize)
+    ewo_high = DecimalParameter(1.0, 4.0, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=protection_optimize)
+    ewo_high_2 = DecimalParameter(-4.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=3, optimize=protection_optimize)
+    rsi_buy = IntParameter(50, 90, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    min_profit = DecimalParameter(0.70, 1.20, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
+    min_profit = DecimalParameter(0.50, 1.50, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -345,7 +343,7 @@ def EWOs(dataframe, sma1_length=5, sma2_length=35):
     sma2 = ta.SMA(dataframe, timeperiod=sma2_length)
     return (sma1 - sma2) / dataframe['close'] * 100
 
-def pump_warning(dataframe, perc=15):   
+def pump_warning(dataframe, perc=15):
     change = dataframe["high"] - dataframe["low"]
     test1 = (dataframe["close"] > dataframe["open"])
     test2 = ((change/dataframe["low"]) > (perc/100))
