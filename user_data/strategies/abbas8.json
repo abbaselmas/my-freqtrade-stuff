@@ -3,7 +3,7 @@
   "params": {
     "roi": {},
     "max_open_trades": {
-      "max_open_trades": 10
+      "max_open_trades": 6
     },
     "buy": {
       "base_nb_candles_buy": 16,
