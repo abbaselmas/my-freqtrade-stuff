@@ -2,47 +2,47 @@
   "strategy_name": "abbas8",
   "params": {
     "roi": {},
+    "stoploss": {
+      "stoploss": -0.094
+    },
     "max_open_trades": {
       "max_open_trades": 10
     },
     "buy": {
-      "base_nb_candles_buy": 16,
-      "ewo_high": 1.723,
-      "ewo_high_2": -3.49,
-      "ewo_low": -10.14,
-      "low_offset": 1.053,
-      "low_offset_2": 0.947,
-      "min_profit": 0.71,
-      "rsi_buy": 57
+      "base_nb_candles_buy": 13,
+      "ewo_high": 3.93,
+      "ewo_high_2": -3.421,
+      "ewo_low": -4.943,
+      "low_offset": 1.081,
+      "low_offset_2": 0.908,
+      "min_profit": 0.68,
+      "rsi_buy": 64
     },
     "sell": {
       "base_nb_candles_sell": 28,
       "high_offset": 1.059
     },
     "protection": {
-      "cooldown_stop_duration_candles": 7,
-      "lowprofit_lookback_period_candles": 48,
-      "lowprofit_required_profit": 0.015,
-      "lowprofit_stop_duration_candles": 191,
-      "lowprofit_trade_limit": 25,
-      "maxdrawdown_lookback_period_candles": 37,
-      "maxdrawdown_max_allowed_drawdown": 0.27,
-      "maxdrawdown_stop_duration_candles": 23,
-      "maxdrawdown_trade_limit": 23,
-      "stoplossguard_lookback_period_candles": 300,
-      "stoplossguard_stop_duration_candles": 16,
+      "cooldown_stop_duration_candles": 6,
+      "lowprofit_lookback_period_candles": 12,
+      "lowprofit_required_profit": 0.016,
+      "lowprofit_stop_duration_candles": 79,
+      "lowprofit_trade_limit": 28,
+      "maxdrawdown_lookback_period_candles": 55,
+      "maxdrawdown_max_allowed_drawdown": 0.36,
+      "maxdrawdown_stop_duration_candles": 43,
+      "maxdrawdown_trade_limit": 10,
+      "stoplossguard_lookback_period_candles": 31,
+      "stoplossguard_stop_duration_candles": 1,
       "stoplossguard_trade_limit": 15
-    },
-    "stoploss": {
-      "stoploss": -0.068
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.001,
-      "trailing_stop_positive_offset": 0.0189,
+      "trailing_stop_positive": 0.0004,
+      "trailing_stop_positive_offset": 0.0247,
       "trailing_only_offset_is_reached": true
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-10-10 08:45:24.529157+00:00"
+  "export_time": "2023-10-12 12:07:54.157493+00:00"
 }
