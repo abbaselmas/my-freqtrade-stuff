@@ -110,26 +110,54 @@ class abbas8(IStrategy):
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.120, -0.060, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.080, -0.030, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
-                SKDecimal(0.0001, 0.0020, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.0080, 0.0250, decimals=4, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.0002, 0.0030, decimals=4, name="trailing_stop_positive"),
+                SKDecimal(0.0080, 0.0350, decimals=3, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
+        # Define custom ROI space
+        def roi_space() -> List[Dimension]:
+            return [
+                Integer(10, 120, name='roi_t1'),
+                Integer(10, 60, name='roi_t2'),
+                Integer(10, 40, name='roi_t3'),
+                SKDecimal(0.01, 0.04, decimals=3, name='roi_p1'),
+                SKDecimal(0.01, 0.07, decimals=3, name='roi_p2'),
+                SKDecimal(0.01, 0.20, decimals=3, name='roi_p3'),
+            ]
+
+        def generate_roi_table(params: Dict) -> Dict[int, float]:
+
+            roi_table = {}
+            roi_table[0] = params['roi_p1'] + params['roi_p2'] + params['roi_p3']
+            roi_table[params['roi_t3']] = params['roi_p1'] + params['roi_p2']
+            roi_table[params['roi_t3'] + params['roi_t2']] = params['roi_p1']
+            roi_table[params['roi_t3'] + params['roi_t2'] + params['roi_t1']] = 0
+
+            return roi_table
+
+        def max_open_trades_space() -> List[Dimension]:
+            return [
+                Integer(4, 10, name='max_open_trades'),
+            ]
+
     # ROI table:
-    minimal_roi = {}
+    minimal_roi = {
+        "0": 170
+    }
 
     # Stoploss:
-    stoploss = -0.094
+    stoploss = -0.064
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0001
+    trailing_stop_positive = 0.0002
     trailing_stop_positive_offset = 0.0145
     trailing_only_offset_is_reached = True
 
@@ -140,10 +168,10 @@ class abbas8(IStrategy):
     # SMAOffset
     smaoffset_optimize = True
     base_nb_candles_buy = IntParameter(10, 40, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    base_nb_candles_sell = IntParameter(1, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    low_offset = DecimalParameter(0.9, 1.1, default=buy_params["low_offset"], space="buy", decimals=3, optimize=smaoffset_optimize)
-    low_offset_2 = DecimalParameter(0.9, 1.1, default=buy_params["low_offset_2"], space="buy", decimals=3, optimize=smaoffset_optimize)
-    high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=3, optimize=smaoffset_optimize)
+    base_nb_candles_sell = IntParameter(2, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    low_offset = DecimalParameter(0.9, 1.1, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    low_offset_2 = DecimalParameter(0.9, 1.1, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
     # Protection
     fast_ewo = 50
@@ -154,9 +182,9 @@ class abbas8(IStrategy):
     # slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
 
     protection_optimize = True
-    ewo_low = DecimalParameter(-16.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=3, optimize=protection_optimize)
-    ewo_high = DecimalParameter(1.0, 4.0, default=buy_params["ewo_high"], space="buy", decimals=3, optimize=protection_optimize)
-    ewo_high_2 = DecimalParameter(-4.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=3, optimize=protection_optimize)
+    ewo_low = DecimalParameter(-16.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high = DecimalParameter(1.0, 4.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high_2 = DecimalParameter(-4.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 90, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
     min_profit = DecimalParameter(0.50, 1.50, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
