@@ -1,16 +1,15 @@
 {
-    "max_open_trades": 10,
+    "max_open_trades": 6,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "timeframe_detail": "1m",
-    "trading_mode": "spot",
     "dry_run": true,
     "dry_run_wallet": 1010,
     "cancel_open_orders_on_exit": false,
-    "DRAWDOWN_MULT": 0.08,
+    "DRAWDOWN_MULT": 0.080,
     "unfilledtimeout": {
         "entry": 6,
         "exit": 6,
