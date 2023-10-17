@@ -1,50 +1,50 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "170": 0
-    },
-    "stoploss": {
-      "stoploss": -0.071
-    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0004,
-      "trailing_stop_positive_offset": 0.0254,
+      "trailing_stop_positive_offset": 0.0174,
       "trailing_only_offset_is_reached": true
     },
-    "max_open_trades": {
-      "max_open_trades": 6
-    },
     "buy": {
-      "base_nb_candles_buy": 23,
-      "ewo_high": 3.75,
-      "ewo_high_2": -3.55,
-      "ewo_low": -10.34,
-      "low_offset": 1.06,
-      "low_offset_2": 0.95,
-      "min_profit": 0.73,
-      "rsi_buy": 66
+      "base_nb_candles_buy": 24,
+      "ewo_high": 3.85,
+      "ewo_high_2": 0.67,
+      "ewo_low": -4.12,
+      "low_offset": 1.04,
+      "low_offset_2": 1.0,
+      "min_profit": 0.79,
+      "rsi_buy": 82
     },
     "sell": {
-      "base_nb_candles_sell": 34,
-      "high_offset": 1.07
+      "base_nb_candles_sell": 31,
+      "high_offset": 1.08
     },
     "protection": {
-      "cooldown_stop_duration_candles": 10,
-      "lowprofit_lookback_period_candles": 16,
-      "lowprofit_required_profit": 0.031,
-      "lowprofit_stop_duration_candles": 85,
-      "lowprofit_trade_limit": 5,
-      "maxdrawdown_lookback_period_candles": 29,
-      "maxdrawdown_max_allowed_drawdown": 0.12,
-      "maxdrawdown_stop_duration_candles": 53,
-      "maxdrawdown_trade_limit": 13,
-      "stoplossguard_lookback_period_candles": 63,
-      "stoplossguard_stop_duration_candles": 25,
-      "stoplossguard_trade_limit": 5
+      "cooldown_stop_duration_candles": 1,
+      "lowprofit_lookback_period_candles": 6,
+      "lowprofit_required_profit": 0.015,
+      "lowprofit_stop_duration_candles": 94,
+      "lowprofit_trade_limit": 44,
+      "maxdrawdown_lookback_period_candles": 15,
+      "maxdrawdown_max_allowed_drawdown": 0.16,
+      "maxdrawdown_stop_duration_candles": 24,
+      "maxdrawdown_trade_limit": 3,
+      "stoplossguard_lookback_period_candles": 393,
+      "stoplossguard_stop_duration_candles": 20,
+      "stoplossguard_trade_limit": 21
+    },
+    "roi": {
+      "195": 0
+    },
+    "stoploss": {
+      "stoploss": -0.08
+    },
+    "max_open_trades": {
+      "max_open_trades": 2
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-10-15 16:15:14.434367+00:00"
+  "export_time": "2023-10-17 06:58:59.090784+00:00"
 }

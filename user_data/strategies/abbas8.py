@@ -124,36 +124,28 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(10, 120, name='roi_t1'),
-                Integer(10, 60, name='roi_t2'),
-                Integer(10, 40, name='roi_t3'),
-                SKDecimal(0.01, 0.04, decimals=3, name='roi_p1'),
-                SKDecimal(0.01, 0.07, decimals=3, name='roi_p2'),
-                SKDecimal(0.01, 0.20, decimals=3, name='roi_p3'),
+                Integer(30, 200, name='roi_t1')
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
 
             roi_table = {}
-            roi_table[0] = params['roi_p1'] + params['roi_p2'] + params['roi_p3']
-            roi_table[params['roi_t3']] = params['roi_p1'] + params['roi_p2']
-            roi_table[params['roi_t3'] + params['roi_t2']] = params['roi_p1']
-            roi_table[params['roi_t3'] + params['roi_t2'] + params['roi_t1']] = 0
+            roi_table[params['roi_t1']] = 0
 
             return roi_table
 
         def max_open_trades_space() -> List[Dimension]:
             return [
-                Integer(4, 10, name='max_open_trades'),
+                Integer(2, 7, name='max_open_trades'),
             ]
 
     # ROI table:
     minimal_roi = {
-        "0": 170
+        "0": 195
     }
 
     # Stoploss:
-    stoploss = -0.064
+    stoploss = -0.080
 
     # Trailing stop:
     trailing_stop = True
@@ -187,7 +179,7 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-4.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 90, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    min_profit = DecimalParameter(0.50, 1.50, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
+    min_profit = DecimalParameter(0.10, 2.00, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {

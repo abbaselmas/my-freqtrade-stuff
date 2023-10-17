@@ -1,5 +1,5 @@
 {
-    "max_open_trades": 6,
+    "max_open_trades": 2,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
@@ -91,12 +91,12 @@
             "startup": "silent",
             "entry": "silent",
             "exit": {
-                "roi": "silent",
+                "roi": "on",
                 "emergency_exit": "silent",
                 "force_exit": "silent",
                 "exit_signal": "silent",
-                "trailing_stop_loss": "silent",
-                "stop_loss": "silent",
+                "trailing_stop_loss": "on",
+                "stop_loss": "on",
                 "stoploss_on_exchange": "silent",
                 "custom_exit": "silent"
             },
