@@ -247,7 +247,7 @@ class abbas8(IStrategy):
 
         # Elliot
         # informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
-        informative_1h["ewo"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
+        informative_1h["ewo"] = EWO(informative_1h, int(self.fast_ewo.value), int(self.slow_ewo.value))
 
         # RSI
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
@@ -280,7 +280,7 @@ class abbas8(IStrategy):
 
         # Elliot
         # dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
-        dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+        dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
 
         #Pump
         # dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
@@ -301,7 +301,7 @@ class abbas8(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["EWO"] > self.ewo_high.value) &
+                (dataframe["ewo"] > self.ewo_high.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
@@ -312,7 +312,7 @@ class abbas8(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
-                (dataframe["EWO"] > self.ewo_high_2.value) &
+                (dataframe["ewo"] > self.ewo_high_2.value) &
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
@@ -324,7 +324,7 @@ class abbas8(IStrategy):
             (
                 (dataframe["rsi_fast"] < 35) &
                 (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["EWO"] < self.ewo_low.value) &
+                (dataframe["ewo"] < self.ewo_low.value) &
                 (dataframe["volume"] > 0) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
