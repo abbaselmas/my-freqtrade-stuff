@@ -18,43 +18,45 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 4,
-    "lowprofit_lookback_period_candles": 10,
-    "lowprofit_required_profit": 0.001,
-    "lowprofit_stop_duration_candles": 160,
-    "lowprofit_trade_limit": 13,
-    "maxdrawdown_lookback_period_candles": 18,
-    "maxdrawdown_max_allowed_drawdown": 0.12,
-    "maxdrawdown_stop_duration_candles": 26,
-    "maxdrawdown_trade_limit": 26,
-    "stoplossguard_lookback_period_candles": 120,
-    "stoplossguard_stop_duration_candles": 9,
-    "stoplossguard_trade_limit": 18
+    "cooldown_stop_duration_candles": 1,
+    "lowprofit_lookback_period_candles": 6,
+    "lowprofit_required_profit": 0.015,
+    "lowprofit_stop_duration_candles": 94,
+    "lowprofit_trade_limit": 44,
+    "maxdrawdown_lookback_period_candles": 15,
+    "maxdrawdown_max_allowed_drawdown": 0.16,
+    "maxdrawdown_stop_duration_candles": 24,
+    "maxdrawdown_trade_limit": 3,
+    "stoplossguard_lookback_period_candles": 393,
+    "stoplossguard_stop_duration_candles": 20,
+    "stoplossguard_trade_limit": 21
 }
 
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 24,
-    "ewo_high": 2.361,
-    "ewo_high_2": -2.19,
-    "ewo_low": -10.33,
-    "low_offset": 1.045,
-    "low_offset_2": 0.958,
-    "min_profit": 0.65,
-    "rsi_buy": 72,
+    "ewo_high": 3.85,
+    "ewo_high_2": 0.67,
+    "ewo_low": -4.12,
+    "low_offset": 1.04,
+    "low_offset_2": 1.0,
+    "min_profit": 0.79,
+    "rsi_buy": 82,
     "fast_ewo": 50,
     "slow_ewo": 200
 }
 
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 11,
-    "high_offset": 1.008
+    "base_nb_candles_sell": 31,
+    "high_offset": 1.08
 }
 
 class abbas8(IStrategy):
+    def version(self) -> str:
+        return "v8"
 
-    INTERFACE_VERSION = 2
+    INTERFACE_VERSION = 3
 
     cooldown_stop_duration_candles = IntParameter(0, 10, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
@@ -139,6 +141,8 @@ class abbas8(IStrategy):
                 Integer(2, 7, name='max_open_trades'),
             ]
 
+    max_open_trades = 2
+
     # ROI table:
     minimal_roi = {
         "0": 195
@@ -149,8 +153,8 @@ class abbas8(IStrategy):
 
     # Trailing stop:
     trailing_stop = True
-    trailing_stop_positive = 0.0002
-    trailing_stop_positive_offset = 0.0145
+    trailing_stop_positive = 0.0004
+    trailing_stop_positive_offset = 0.0174
     trailing_only_offset_is_reached = True
 
     # Sell signal
@@ -166,12 +170,12 @@ class abbas8(IStrategy):
     high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
     # Protection
-    fast_ewo = 50
-    slow_ewo = 200
+    #fast_ewo = 50
+    #slow_ewo = 200
 
-    # ewo_optimize = True
-    # fast_ewo = IntParameter(5,60, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
-    # slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+    ewo_optimize = True
+    fast_ewo = IntParameter(5,60, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
+    slow_ewo = IntParameter(80,300, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
 
     protection_optimize = True
     ewo_low = DecimalParameter(-16.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
@@ -205,26 +209,22 @@ class abbas8(IStrategy):
 
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
 
-        # slippage
         try:
             state = self.slippage_protection["__pair_retries"]
         except KeyError:
             state = self.slippage_protection["__pair_retries"] = {}
 
         candle = dataframe.iloc[-1].squeeze()
-
         slippage = (rate / candle["close"]) - 1
         if slippage < self.slippage_protection["max_slippage"]:
             pair_retries = state.get(pair, 0)
             if pair_retries < self.slippage_protection["retries"]:
                 state[pair] = pair_retries + 1
                 return False
-
         state[pair] = 0
         return True
 
     def informative_pairs(self):
-        # get access to all pairs available in whitelist.
         pairs = self.dp.current_whitelist()
         # Assign tf to each pair so they can be downloaded and cached for strategy.
         informative_pairs = [(pair, "1h") for pair in pairs]
@@ -232,7 +232,6 @@ class abbas8(IStrategy):
 
     def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
-        # Get the informative pair
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
 
         informative_1h["hma_50"] = qtpylib.hull_moving_average(informative_1h["close"], window=50)
@@ -247,8 +246,8 @@ class abbas8(IStrategy):
         informative_1h["sma_9"] = ta.SMA(informative_1h, timeperiod=9)
 
         # Elliot
-        informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
-        # informative_1h["ewo"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
+        # informative_1h["EWO"] = EWO(informative_1h, self.fast_ewo, self.slow_ewo)
+        informative_1h["ewo"] = EWO(informative_1h, self.fast_ewo.value, self.slow_ewo.value)
 
         # RSI
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
@@ -280,8 +279,8 @@ class abbas8(IStrategy):
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
         # Elliot
-        dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
-        # dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
+        # dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
+        dataframe["ewo"] = EWO(dataframe, self.fast_ewo.value, self.slow_ewo.value)
 
         #Pump
         # dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
