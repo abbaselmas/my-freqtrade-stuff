@@ -51,7 +51,8 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 31,
-    "high_offset": 1.08
+    "high_offset": 1.08,
+    "max_change_pump": 15
 }
 
 class abbas8(IStrategy):
@@ -62,16 +63,16 @@ class abbas8(IStrategy):
 
     cooldown_stop_duration_candles = IntParameter(0, 10, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
-    maxdrawdown_optimize = True
-    maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    # maxdrawdown_optimize = True
+    # maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
-    stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(100, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    # stoplossguard_optimize = True
+    # stoplossguard_lookback_period_candles = IntParameter(100, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    # stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
+    # stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
     lowprofit_lookback_period_candles = IntParameter(1, 20, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
@@ -82,25 +83,24 @@ class abbas8(IStrategy):
     @property
     def protections(self):
         prot = []
-
         prot.append({
             "method": "CooldownPeriod",
             "stop_duration_candles": self.cooldown_stop_duration_candles.value
         })
-        prot.append({
-            "method": "MaxDrawdown",
-            "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
-            "trade_limit": self.maxdrawdown_trade_limit.value,
-            "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-            "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
-        })
-        prot.append({
-            "method": "StoplossGuard",
-            "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
-            "trade_limit": self.stoplossguard_trade_limit.value,
-            "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
-            "only_per_pair": False
-        })
+        # prot.append({
+        #     "method": "MaxDrawdown",
+        #     "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
+        #     "trade_limit": self.maxdrawdown_trade_limit.value,
+        #     "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
+        #     "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
+        # })
+        # prot.append({
+        #     "method": "StoplossGuard",
+        #     "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
+        #     "trade_limit": self.stoplossguard_trade_limit.value,
+        #     "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
+        #     "only_per_pair": False
+        # })
         prot.append({
             "method": "LowProfitPairs",
             "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
@@ -108,7 +108,6 @@ class abbas8(IStrategy):
             "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
             "required_profit": self.lowprofit_required_profit.value
         })
-
         return prot
 
     class HyperOpt:
@@ -121,14 +120,14 @@ class abbas8(IStrategy):
             return[
                 Categorical([True], name="trailing_stop"),
                 SKDecimal(0.0001, 0.0006, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.0100, 0.0300, decimals=3, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.010,  0.025, decimals=3, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(100, 220, name='roi_t1')
+                Integer(120, 220, name='roi_t1')
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
@@ -159,6 +158,8 @@ class abbas8(IStrategy):
 
     use_sell_signal = False
     ignore_roi_if_buy_signal = False
+
+    max_change_pump = IntParameter(5, 20, default=sell_params["max_change_pump"], space="sell", optimize=True)
 
     rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
@@ -276,11 +277,10 @@ class abbas8(IStrategy):
         dataframe["sma_9"] = ta.SMA(dataframe, timeperiod=9)
 
         # Elliot
-        # dataframe["EWO"] = EWO(dataframe, self.fast_ewo, self.slow_ewo)
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
 
         #Pump
-        # dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
+        dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
 
         # RSI
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
@@ -338,11 +338,11 @@ class abbas8(IStrategy):
                 (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
             )
         )
-        # dont_buy_conditions.append(
-        #     (
-        #         (dataframe['pump'].rolling(20).max() < 1)
-        #     )
-        # )
+        dont_buy_conditions.append(
+            (
+                (dataframe['pump'].rolling(20).max() < 1)
+            )
+        )
 
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
