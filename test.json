@@ -1,0 +1,11 @@
+{
+    "pairlists": [
+        {
+            "method": "StaticPairList"
+        }
+    ],
+    "exchange": {
+        "name": "binance",
+        "pair_whitelist": ["ATOM/USDT","LINK/USDT","MTL/USDT","MDT/USDT","CFX/USDT","AVAX/USDT","RNDR/USDT","FLOW/USDT","NEO/USDT","ROSE/USDT","MBOX/USDT","WAVES/USDT","FIL/USDT","XVS/USDT","OP/USDT","UNI/USDT","MASK/USDT","DYDX/USDT","AGIX/USDT","MATIC/USDT","APT/USDT","AAVE/USDT","APE/USDT","QTUM/USDT","LDO/USDT","SOL/USDT","GALA/USDT","ADA/USDT","JST/USDT","WAN/USDT","REN/USDT","XLM/USDT","CAKE/USDT","SNT/USDT","SUI/USDT","FET/USDT","ARB/USDT","RUNE/USDT","DOT/USDT","GRT/USDT","NEAR/USDT","EGLD/USDT","IMX/USDT","ALGO/USDT"]
+    }
+}

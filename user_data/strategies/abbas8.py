@@ -52,12 +52,12 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
-    "max_change_pump": 15
+    "max_change_pump": 10
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.2"
+        return "v8.3"
 
     INTERFACE_VERSION = 3
 
@@ -127,7 +127,7 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(120, 220, name='roi_t1')
+                Integer(100, 220, name='roi_t1')
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
@@ -139,10 +139,10 @@ class abbas8(IStrategy):
 
         def max_open_trades_space() -> List[Dimension]:
             return [
-                Integer(2, 6, name='max_open_trades'),
+                Integer(2, 7, name='max_open_trades'),
             ]
 
-    max_open_trades = 2
+    max_open_trades = 6
 
     # ROI table:
     minimal_roi = {
@@ -159,7 +159,7 @@ class abbas8(IStrategy):
     use_sell_signal = False
     ignore_roi_if_buy_signal = False
 
-    max_change_pump = IntParameter(5, 20, default=sell_params["max_change_pump"], space="sell", optimize=True)
+    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=True)
 
     rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
