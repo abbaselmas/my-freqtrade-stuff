@@ -52,12 +52,12 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
-    "max_change_pump": 10
+    "max_change_pump": 11
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.3"
+        return "v8.4"
 
     INTERFACE_VERSION = 3
 
@@ -142,31 +142,31 @@ class abbas8(IStrategy):
                 Integer(2, 7, name='max_open_trades'),
             ]
 
-    max_open_trades = 6
+    max_open_trades = 3
 
     # ROI table:
     minimal_roi = {
         "200": 0
     }
 
-    stoploss = -0.060
+    stoploss = -0.086
 
     trailing_stop = True
-    trailing_stop_positive = 0.0003
-    trailing_stop_positive_offset = 0.0174
+    trailing_stop_positive = 0.0005
+    trailing_stop_positive_offset = 0.0155
     trailing_only_offset_is_reached = True
 
     use_sell_signal = False
     ignore_roi_if_buy_signal = False
 
-    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=True)
+    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=False)
 
     rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
 
     smaoffset_optimize = True
     base_nb_candles_buy = IntParameter(10, 40, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    base_nb_candles_sell = IntParameter(2, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    base_nb_candles_sell = IntParameter(20, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(0.9, 1.1, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
     low_offset_2 = DecimalParameter(0.9, 1.1, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
     high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
