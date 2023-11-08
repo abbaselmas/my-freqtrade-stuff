@@ -40,7 +40,6 @@ buy_params = {
     "ewo_low": -4.12,
     "low_offset": 1.04,
     "low_offset_2": 1.0,
-    "min_profit": 0.79,
     "rsi_buy": 82,
     "fast_ewo": 50,
     "slow_ewo": 200,
@@ -52,7 +51,8 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
-    "max_change_pump": 11
+    "max_change_pump": 11,
+    "min_profit": 0.79
 }
 
 class abbas8(IStrategy):
@@ -181,7 +181,7 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-2.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 80, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    min_profit = DecimalParameter(0.10, 2.00, default=buy_params["min_profit"], space="buy", decimals=2, optimize=protection_optimize)
+    min_profit = DecimalParameter(0.10, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
     # Optional order time in force.
     order_time_in_force = {
