@@ -52,12 +52,13 @@ sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
     "max_change_pump": 11,
-    "min_profit": 0.79
+    "min_profit": 0.79,
+    "pump_rolling": 20
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.4"
+        return "v8.5"
 
     INTERFACE_VERSION = 3
 
@@ -159,7 +160,8 @@ class abbas8(IStrategy):
     use_sell_signal = False
     ignore_roi_if_buy_signal = False
 
-    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=False)
+    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=True)
+    pump_rolling = IntParameter(5, 40, default=sell_params["pump_rolling"], space="sell", optimize=True)
 
     rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
@@ -340,7 +342,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                (dataframe['pump'].rolling(20).max() < 1)
+                (dataframe['pump'].rolling(self.pump_rolling.value).max() < 1)
             )
         )
 
@@ -365,6 +367,6 @@ def EWOs(dataframe, sma1_length=5, sma2_length=35):
 
 def pump_warning(dataframe, perc=15):
     change = dataframe["high"] - dataframe["low"]
-    test1 = (dataframe["close"] > dataframe["open"])
-    test2 = ((change/dataframe["low"]) > (perc/100))
+    test1 = (dataframe["close"] > dataframe["open"]) # green candle
+    test2 = ((change/dataframe["low"]) > (perc/100)) #
     return (test1 & test2).astype('int')
