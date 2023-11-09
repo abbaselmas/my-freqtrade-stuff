@@ -52,7 +52,7 @@ sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
     "max_change_pump": 11,
-    "min_profit": 0.79,
+    "min_profit": 0.52,
     "pump_rolling": 20
 }
 
@@ -147,21 +147,21 @@ class abbas8(IStrategy):
 
     # ROI table:
     minimal_roi = {
-        "200": 0
+        "215": 0
     }
 
-    stoploss = -0.086
+    stoploss = -0.084
 
     trailing_stop = True
-    trailing_stop_positive = 0.0005
-    trailing_stop_positive_offset = 0.0155
+    trailing_stop_positive = 0.0001
+    trailing_stop_positive_offset = 0.0231
     trailing_only_offset_is_reached = True
 
     use_sell_signal = False
     ignore_roi_if_buy_signal = False
 
-    max_change_pump = IntParameter(10, 40, default=sell_params["max_change_pump"], space="sell", optimize=True)
-    pump_rolling = IntParameter(5, 40, default=sell_params["pump_rolling"], space="sell", optimize=True)
+    max_change_pump = IntParameter(10, 70, default=sell_params["max_change_pump"], space="sell", optimize=True)
+    pump_rolling = IntParameter(2, 70, default=sell_params["pump_rolling"], space="sell", optimize=True)
 
     rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
