@@ -60,16 +60,16 @@ class abbas8(IStrategy):
 
     cooldown_stop_duration_candles = IntParameter(0, 10, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
-    # maxdrawdown_optimize = True
-    # maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_optimize = True
+    maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
-    # stoplossguard_optimize = True
-    # stoplossguard_lookback_period_candles = IntParameter(100, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    # stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    # stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_optimize = True
+    stoplossguard_lookback_period_candles = IntParameter(100, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
     lowprofit_lookback_period_candles = IntParameter(1, 20, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
@@ -84,20 +84,20 @@ class abbas8(IStrategy):
             "method": "CooldownPeriod",
             "stop_duration_candles": self.cooldown_stop_duration_candles.value
         })
-        # prot.append({
-        #     "method": "MaxDrawdown",
-        #     "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
-        #     "trade_limit": self.maxdrawdown_trade_limit.value,
-        #     "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-        #     "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
-        # })
-        # prot.append({
-        #     "method": "StoplossGuard",
-        #     "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
-        #     "trade_limit": self.stoplossguard_trade_limit.value,
-        #     "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
-        #     "only_per_pair": False
-        # })
+        prot.append({
+            "method": "MaxDrawdown",
+            "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
+            "trade_limit": self.maxdrawdown_trade_limit.value,
+            "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
+            "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
+        })
+        prot.append({
+            "method": "StoplossGuard",
+            "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
+            "trade_limit": self.stoplossguard_trade_limit.value,
+            "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
+            "only_per_pair": False
+        })
         prot.append({
             "method": "LowProfitPairs",
             "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
