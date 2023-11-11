@@ -55,27 +55,27 @@ sell_params = {
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.5"
+        return "v8.6"
     INTERFACE_VERSION = 3
 
-    cooldown_stop_duration_candles = IntParameter(0, 10, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+    cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
-    maxdrawdown_optimize = True
-    maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    # maxdrawdown_optimize = True
+    # maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    # maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(100, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_lookback_period_candles = IntParameter(10, 400, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 30, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     lowprofit_optimize = True
-    lowprofit_lookback_period_candles = IntParameter(1, 20, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_trade_limit = IntParameter(20, 60, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_stop_duration_candles = IntParameter(40, 120, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_required_profit = DecimalParameter(0.000, 0.040, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
+    lowprofit_lookback_period_candles = IntParameter(1, 100, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
 
     @property
     def protections(self):
@@ -84,13 +84,13 @@ class abbas8(IStrategy):
             "method": "CooldownPeriod",
             "stop_duration_candles": self.cooldown_stop_duration_candles.value
         })
-        prot.append({
-            "method": "MaxDrawdown",
-            "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
-            "trade_limit": self.maxdrawdown_trade_limit.value,
-            "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-            "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
-        })
+        # prot.append({
+        #     "method": "MaxDrawdown",
+        #     "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
+        #     "trade_limit": self.maxdrawdown_trade_limit.value,
+        #     "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
+        #     "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
+        # })
         prot.append({
             "method": "StoplossGuard",
             "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
@@ -121,29 +121,11 @@ class abbas8(IStrategy):
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
 
-        # Define custom ROI space
-        def roi_space() -> List[Dimension]:
-            return [
-                Integer(100, 220, name='roi_t1')
-            ]
-
-        def generate_roi_table(params: Dict) -> Dict[int, float]:
-
-            roi_table = {}
-            roi_table[params['roi_t1']] = 0
-
-            return roi_table
-
-        def max_open_trades_space() -> List[Dimension]:
-            return [
-                Integer(2, 7, name='max_open_trades'),
-            ]
-
     timeframe = "5m"
     inf_1h = "1h"
-    max_open_trades = 3
+    max_open_trades = 2
     minimal_roi = {
-        "215": 0
+        "200": 0
     }
     stoploss = -0.084
     trailing_stop = True
