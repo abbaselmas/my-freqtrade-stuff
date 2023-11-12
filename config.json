@@ -1,5 +1,5 @@
 {
-    "max_open_trades": 6,
+    "max_open_trades": 2,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
@@ -9,7 +9,7 @@
     "dry_run": true,
     "dry_run_wallet": 1010,
     "cancel_open_orders_on_exit": false,
-    "DRAWDOWN_MULT": 0.080,
+    "DRAWDOWN_MULT": 0.075,
     "unfilledtimeout": {
         "entry": 6,
         "exit": 6,
@@ -91,12 +91,12 @@
             "startup": "silent",
             "entry": "silent",
             "exit": {
-                "roi": "on",
+                "roi": "silent",
                 "emergency_exit": "silent",
                 "force_exit": "silent",
                 "exit_signal": "silent",
-                "trailing_stop_loss": "on",
-                "stop_loss": "on",
+                "trailing_stop_loss": "silent",
+                "stop_loss": "silent",
                 "stoploss_on_exchange": "silent",
                 "custom_exit": "silent"
             },
@@ -120,7 +120,7 @@
         "password": "73"
     },
     "bot_name": "freqtrade",
-    "initial_state": "stopped",
+    "initial_state": "running",
     "force_entry_enable": true,
     "db_url": "sqlite:///abbas.sqlite",
     "internals": {
