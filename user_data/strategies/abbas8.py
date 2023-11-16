@@ -22,10 +22,6 @@ protection_params = {
     "lowprofit_required_profit": 0.015,
     "lowprofit_stop_duration_candles": 94,
     "lowprofit_trade_limit": 44,
-    "maxdrawdown_lookback_period_candles": 15,
-    "maxdrawdown_max_allowed_drawdown": 0.16,
-    "maxdrawdown_stop_duration_candles": 24,
-    "maxdrawdown_trade_limit": 3,
     "stoplossguard_lookback_period_candles": 393,
     "stoplossguard_stop_duration_candles": 20,
     "stoplossguard_trade_limit": 21
@@ -123,11 +119,11 @@ class abbas8(IStrategy):
 
     timeframe = "5m"
     inf_1h = "1h"
-    max_open_trades = 2
+    max_open_trades = 3
     minimal_roi = {
-        "200": 0
+        "197": 0
     }
-    stoploss = -0.084
+    stoploss = -0.076
     trailing_stop = True
     trailing_stop_positive = 0.0001
     trailing_stop_positive_offset = 0.0231

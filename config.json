@@ -1,5 +1,5 @@
 {
-    "max_open_trades": 2,
+    "max_open_trades": 3,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
@@ -7,9 +7,9 @@
     "timeframe": "5m",
     "timeframe_detail": "1m",
     "dry_run": true,
-    "dry_run_wallet": 1010,
+    "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": false,
-    "DRAWDOWN_MULT": 0.075,
+    "DRAWDOWN_MULT": 0.08,
     "unfilledtimeout": {
         "entry": 6,
         "exit": 6,
