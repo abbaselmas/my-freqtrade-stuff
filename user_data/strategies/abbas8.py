@@ -134,29 +134,29 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    max_change_pump = IntParameter(10, 70, default=sell_params["max_change_pump"], space="sell", optimize=True)
-    pump_rolling = IntParameter(2, 70, default=sell_params["pump_rolling"], space="sell", optimize=True)
-    min_profit = DecimalParameter(0.10, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
+    max_change_pump = IntParameter(1, 100, default=sell_params["max_change_pump"], space="sell", optimize=True)
+    pump_rolling = IntParameter(2, 100, default=sell_params["pump_rolling"], space="sell", optimize=True)
+    min_profit = DecimalParameter(0.01, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
-    rsi_fast_ewo1 = IntParameter(30, 50, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
-    rsi_ewo2 = IntParameter(14, 30, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
+    rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
+    rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
 
     smaoffset_optimize = True
-    base_nb_candles_buy = IntParameter(10, 40, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    base_nb_candles_sell = IntParameter(20, 40, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    low_offset = DecimalParameter(0.9, 1.1, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    low_offset_2 = DecimalParameter(0.9, 1.1, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    high_offset = DecimalParameter(0.9, 1.1, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
+    base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
+    base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
     ewo_optimize = True
     fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
     slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
 
     protection_optimize = True
-    ewo_low = DecimalParameter(-12.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
-    ewo_high = DecimalParameter(2.0, 6.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
-    ewo_high_2 = DecimalParameter(-2.0, 4.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
-    rsi_buy = IntParameter(50, 80, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
+    ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
+    rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
