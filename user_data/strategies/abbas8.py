@@ -119,7 +119,6 @@ class abbas8(IStrategy):
 
     timeframe = "5m"
     inf_1h = "1h"
-    max_open_trades = 3
     minimal_roi = {
         "197": 0
     }
