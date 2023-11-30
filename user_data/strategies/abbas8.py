@@ -17,14 +17,7 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 6,
-    "lowprofit_required_profit": 0.015,
-    "lowprofit_stop_duration_candles": 94,
-    "lowprofit_trade_limit": 44,
-    "stoplossguard_lookback_period_candles": 393,
-    "stoplossguard_stop_duration_candles": 20,
-    "stoplossguard_trade_limit": 21
+    "cooldown_stop_duration_candles": 1
 }
 # Buy hyperspace params:
 buy_params = {
@@ -51,27 +44,10 @@ sell_params = {
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.6"
+        return "v8.7"
     INTERFACE_VERSION = 3
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
-
-    # maxdrawdown_optimize = True
-    # maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    # maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
-
-    stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(10, 400, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
-
-    lowprofit_optimize = True
-    lowprofit_lookback_period_candles = IntParameter(1, 100, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
 
     @property
     def protections(self):
@@ -80,33 +56,12 @@ class abbas8(IStrategy):
             "method": "CooldownPeriod",
             "stop_duration_candles": self.cooldown_stop_duration_candles.value
         })
-        # prot.append({
-        #     "method": "MaxDrawdown",
-        #     "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
-        #     "trade_limit": self.maxdrawdown_trade_limit.value,
-        #     "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-        #     "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
-        # })
-        prot.append({
-            "method": "StoplossGuard",
-            "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
-            "trade_limit": self.stoplossguard_trade_limit.value,
-            "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
-            "only_per_pair": False
-        })
-        prot.append({
-            "method": "LowProfitPairs",
-            "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
-            "trade_limit": self.lowprofit_trade_limit.value,
-            "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
-            "required_profit": self.lowprofit_required_profit.value
-        })
         return prot
 
     class HyperOpt:
         # Define a custom stoploss space.
         def stoploss_space():
-            return [SKDecimal(-0.090, -0.040, decimals=3, name="stoploss")]
+            return [SKDecimal(-0.070, -0.030, decimals=3, name="stoploss")]
 
         # Define custom trailing space
         def trailing_space() -> List[Dimension]:
@@ -120,12 +75,12 @@ class abbas8(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "197": 0
+        "200": 0
     }
-    stoploss = -0.076
+    stoploss = -0.07
     trailing_stop = True
     trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.0231
+    trailing_stop_positive_offset = 0.023
     trailing_only_offset_is_reached = True
 
     use_sell_signal = False
@@ -284,11 +239,6 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
-
-def EWOs(dataframe, sma1_length=5, sma2_length=35):
-    sma1 = ta.SMA(dataframe, timeperiod=sma1_length)
-    sma2 = ta.SMA(dataframe, timeperiod=sma2_length)
-    return (sma1 - sma2) / dataframe['close'] * 100
 
 def pump_warning(dataframe, perc=15):
     change = dataframe["high"] - dataframe["low"]
