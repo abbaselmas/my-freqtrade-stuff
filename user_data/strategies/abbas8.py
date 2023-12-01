@@ -31,15 +31,15 @@ buy_params = {
     "fast_ewo": 50,
     "slow_ewo": 200,
     "rsi_fast_ewo1": 35,
-    "rsi_ewo2": 25
+    "rsi_ewo2": 25,
+    "pump_factor": 1.22,
+    "pump_rolling": 20
 }
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 31,
     "high_offset": 1.08,
-    "max_change_pump": 11,
     "min_profit": 0.52,
-    "pump_rolling": 20
 }
 
 class abbas8(IStrategy):
@@ -47,7 +47,10 @@ class abbas8(IStrategy):
         return "v8.7"
     INTERFACE_VERSION = 3
 
-    cooldown_stop_duration_candles = IntParameter(0, 20, default=protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+    cooldown_stop_duration_candles = IntParameter(0, 20, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+
+    pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
+    pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
     @property
     def protections(self):
@@ -88,8 +91,6 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 200
 
-    max_change_pump = IntParameter(1, 100, default=sell_params["max_change_pump"], space="sell", optimize=True)
-    pump_rolling = IntParameter(2, 100, default=sell_params["pump_rolling"], space="sell", optimize=True)
     min_profit = DecimalParameter(0.01, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
@@ -173,7 +174,6 @@ class abbas8(IStrategy):
             dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
 
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
-        dataframe['pump'] = pump_warning(dataframe, perc=self.max_change_pump.value)
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
@@ -224,7 +224,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                (dataframe['pump'].rolling(self.pump_rolling.value).max() < 1)
+                (dataframe['high'].rolling(self.pump_rolling.value).max() >= (dataframe['high'] * self.pump_factor.value ))
             )
         )
         if dont_buy_conditions:
@@ -239,9 +239,3 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
-
-def pump_warning(dataframe, perc=15):
-    change = dataframe["high"] - dataframe["low"]
-    test1 = (dataframe["close"] > dataframe["open"]) # green candle
-    test2 = ((change/dataframe["low"]) > (perc/100)) #
-    return (test1 & test2).astype('int')
