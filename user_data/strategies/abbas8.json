@@ -4,42 +4,42 @@
     "roi": {
       "197": 0
     },
+    "max_open_trades": {
+      "max_open_trades": 3
+    },
+    "buy": {
+      "base_nb_candles_buy": 47,
+      "ewo_high": 8.07,
+      "ewo_high_2": -0.08,
+      "ewo_low": -9.36,
+      "fast_ewo": 13,
+      "low_offset": 1.1,
+      "low_offset_2": 0.89,
+      "pump_factor": 1.66,
+      "pump_rolling": 35,
+      "rsi_buy": 79,
+      "rsi_ewo2": 18,
+      "rsi_fast_ewo1": 47,
+      "slow_ewo": 224
+    },
+    "sell": {
+      "base_nb_candles_sell": 49,
+      "high_offset": 1.1,
+      "min_profit": 0.08
+    },
+    "protection": {
+      "cooldown_stop_duration_candles": 0
+    },
     "stoploss": {
       "stoploss": -0.047
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.0002,
-      "trailing_stop_positive_offset": 0.0122,
+      "trailing_stop_positive": 0.0001,
+      "trailing_stop_positive_offset": 0.0141,
       "trailing_only_offset_is_reached": true
-    },
-    "max_open_trades": {
-      "max_open_trades": 3
-    },
-    "buy": {
-      "base_nb_candles_buy": 41,
-      "ewo_high": 5.71,
-      "ewo_high_2": 2.86,
-      "ewo_low": -8.34,
-      "fast_ewo": 14,
-      "low_offset": 1.14,
-      "low_offset_2": 0.86,
-      "rsi_buy": 72,
-      "rsi_ewo2": 38,
-      "rsi_fast_ewo1": 59,
-      "slow_ewo": 173
-    },
-    "sell": {
-      "base_nb_candles_sell": 27,
-      "high_offset": 1.13,
-      "max_change_pump": 1,
-      "min_profit": 0.39,
-      "pump_rolling": 84
-    },
-    "protection": {
-      "cooldown_stop_duration_candles": 4
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-01 13:09:35.967230+00:00"
+  "export_time": "2023-12-02 07:19:14.867228+00:00"
 }
