@@ -167,11 +167,16 @@ class abbas8(IStrategy):
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # Calculate all ma_buy values
-        for val in self.base_nb_candles_buy.range:
-            dataframe[f"ma_buy_{val}"] = ta.EMA(dataframe, timeperiod=val)
+        # for val in self.base_nb_candles_buy.range:
+        #     dataframe[f"ma_buy_{val}"] = ta.EMA(dataframe, timeperiod=val)
+        
+        dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=self.base_nb_candles_buy.value)
+
         # Calculate all ma_sell values
-        for val in self.base_nb_candles_sell.range:
-            dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
+        # for val in self.base_nb_candles_sell.range:
+        #     dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
+
+        dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=self.base_nb_candles_sell.value)
 
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
