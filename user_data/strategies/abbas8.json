@@ -4,42 +4,53 @@
     "roi": {
       "197": 0
     },
+    "stoploss": {
+      "stoploss": -0.043
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0005,
+      "trailing_stop_positive_offset": 0.0145,
+      "trailing_only_offset_is_reached": true
+    },
     "max_open_trades": {
       "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 47,
-      "ewo_high": 8.07,
-      "ewo_high_2": -0.08,
-      "ewo_low": -9.36,
-      "fast_ewo": 13,
-      "low_offset": 1.1,
-      "low_offset_2": 0.89,
+      "base_nb_candles_buy": 49,
+      "ewo_high": 5.88,
+      "ewo_high_2": 7.29,
+      "ewo_low": -18.77,
+      "fast_ewo": 17,
+      "low_offset": 1.18,
+      "low_offset_2": 1.2,
       "pump_factor": 1.66,
-      "pump_rolling": 35,
-      "rsi_buy": 79,
-      "rsi_ewo2": 18,
-      "rsi_fast_ewo1": 47,
-      "slow_ewo": 224
+      "pump_rolling": 32,
+      "rsi_buy": 60,
+      "rsi_ewo2": 34,
+      "rsi_fast_ewo1": 49,
+      "slow_ewo": 220
     },
     "sell": {
-      "base_nb_candles_sell": 49,
-      "high_offset": 1.1,
-      "min_profit": 0.08
+      "base_nb_candles_sell": 41,
+      "high_offset": 1.2,
+      "min_profit": 0.44
     },
     "protection": {
-      "cooldown_stop_duration_candles": 0
-    },
-    "stoploss": {
-      "stoploss": -0.047
-    },
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0001,
-      "trailing_stop_positive_offset": 0.0141,
-      "trailing_only_offset_is_reached": true
+      "cooldown_stop_duration_candles": 7,
+      "lowprofit_lookback_period_candles": 91,
+      "lowprofit_required_profit": 0.051,
+      "lowprofit_stop_duration_candles": 47,
+      "lowprofit_trade_limit": 72,
+      "maxdrawdown_lookback_period_candles": 25,
+      "maxdrawdown_max_allowed_drawdown": 0.2,
+      "maxdrawdown_stop_duration_candles": 60,
+      "maxdrawdown_trade_limit": 9,
+      "stoplossguard_lookback_period_candles": 284,
+      "stoplossguard_stop_duration_candles": 21,
+      "stoplossguard_trade_limit": 18
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-02 07:19:14.867228+00:00"
+  "export_time": "2023-12-02 17:33:14.317489+00:00"
 }

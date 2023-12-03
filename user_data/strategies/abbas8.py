@@ -17,7 +17,18 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 1
+    "cooldown_stop_duration_candles": 1,
+    "lowprofit_lookback_period_candles": 6,
+    "lowprofit_required_profit": 0.015,
+    "lowprofit_stop_duration_candles": 94,
+    "lowprofit_trade_limit": 44,
+    "maxdrawdown_lookback_period_candles": 15,
+    "maxdrawdown_max_allowed_drawdown": 0.16,
+    "maxdrawdown_stop_duration_candles": 24,
+    "maxdrawdown_trade_limit": 3,
+    "stoplossguard_lookback_period_candles": 393,
+    "stoplossguard_stop_duration_candles": 20,
+    "stoplossguard_trade_limit": 21
 }
 # Buy hyperspace params:
 buy_params = {
@@ -49,6 +60,22 @@ class abbas8(IStrategy):
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
+    maxdrawdown_optimize = True
+    maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+
+    stoplossguard_optimize = True
+    stoplossguard_lookback_period_candles = IntParameter(10, 400, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
+
+    lowprofit_optimize = True
+    lowprofit_lookback_period_candles = IntParameter(1, 100, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
+    lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
     pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
@@ -170,13 +197,13 @@ class abbas8(IStrategy):
         # for val in self.base_nb_candles_buy.range:
         #     dataframe[f"ma_buy_{val}"] = ta.EMA(dataframe, timeperiod=val)
         
-        dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=self.base_nb_candles_buy.value)
+        dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
 
         # Calculate all ma_sell values
         # for val in self.base_nb_candles_sell.range:
         #     dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
 
-        dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=self.base_nb_candles_sell.value)
+        dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
 
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
