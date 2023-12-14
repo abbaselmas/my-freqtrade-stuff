@@ -17,45 +17,45 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 1,
-    "lowprofit_lookback_period_candles": 6,
-    "lowprofit_required_profit": 0.015,
-    "lowprofit_stop_duration_candles": 94,
-    "lowprofit_trade_limit": 44,
+    "cooldown_stop_duration_candles": 4,
+    "lowprofit_lookback_period_candles": 15,
+    "lowprofit_required_profit": 0.05,
+    "lowprofit_stop_duration_candles": 44,
+    "lowprofit_trade_limit": 92,
     "maxdrawdown_lookback_period_candles": 15,
     "maxdrawdown_max_allowed_drawdown": 0.16,
     "maxdrawdown_stop_duration_candles": 24,
     "maxdrawdown_trade_limit": 3,
-    "stoplossguard_lookback_period_candles": 393,
-    "stoplossguard_stop_duration_candles": 20,
-    "stoplossguard_trade_limit": 21
+    "stoplossguard_lookback_period_candles": 258,
+    "stoplossguard_stop_duration_candles": 10,
+    "stoplossguard_trade_limit": 27
 }
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 24,
-    "ewo_high": 3.85,
-    "ewo_high_2": 0.67,
-    "ewo_low": -4.12,
-    "low_offset": 1.04,
-    "low_offset_2": 1.0,
-    "rsi_buy": 82,
-    "fast_ewo": 50,
-    "slow_ewo": 200,
+    "base_nb_candles_buy": 17,
+    "ewo_high": 5.69,
+    "ewo_high_2": -1.02,
+    "ewo_low": -4.03,
+    "low_offset": 1.06,
+    "low_offset_2": 0.9,
+    "rsi_buy": 68,
+    "fast_ewo": 17,
+    "slow_ewo": 213,
     "rsi_fast_ewo1": 35,
     "rsi_ewo2": 25,
     "pump_factor": 1.22,
-    "pump_rolling": 20
+    "pump_rolling": 48
 }
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 31,
-    "high_offset": 1.08,
-    "min_profit": 0.52,
+    "base_nb_candles_sell": 35,
+    "high_offset": 1.09,
+    "min_profit": 0.53,
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v8.7"
+        return "v9"
     INTERFACE_VERSION = 3
 
     cooldown_stop_duration_candles = IntParameter(0, 20, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
@@ -105,12 +105,12 @@ class abbas8(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "200": 0
+        "73": 0
     }
-    stoploss = -0.07
+    stoploss = -0.047
     trailing_stop = True
-    trailing_stop_positive = 0.0001
-    trailing_stop_positive_offset = 0.023
+    trailing_stop_positive = 0.0002
+    trailing_stop_positive_offset = 0.012
     trailing_only_offset_is_reached = True
 
     use_sell_signal = False
@@ -196,7 +196,7 @@ class abbas8(IStrategy):
         # Calculate all ma_buy values
         # for val in self.base_nb_candles_buy.range:
         #     dataframe[f"ma_buy_{val}"] = ta.EMA(dataframe, timeperiod=val)
-        
+
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
 
         # Calculate all ma_sell values
