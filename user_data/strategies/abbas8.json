@@ -2,55 +2,44 @@
   "strategy_name": "abbas8",
   "params": {
     "roi": {
-      "197": 0
+      "173": 0
     },
     "stoploss": {
-      "stoploss": -0.039
+      "stoploss": -0.067
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.0002,
-      "trailing_stop_positive_offset": 0.0112,
+      "trailing_stop_positive": 0.0003,
+      "trailing_stop_positive_offset": 0.017,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 2
+      "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 10,
-      "ewo_high": 6.87,
-      "ewo_high_2": 8.36,
-      "ewo_low": -6.7,
-      "fast_ewo": 8,
-      "low_offset": 1.03,
-      "low_offset_2": 0.9,
-      "pump_factor": 1.35,
-      "pump_rolling": 59,
-      "rsi_buy": 75,
-      "rsi_ewo2": 20,
-      "rsi_fast_ewo1": 44,
-      "slow_ewo": 197
+      "base_nb_candles_buy": 25,
+      "ewo_high": 4.74,
+      "ewo_high_2": -5.91,
+      "ewo_low": -4.13,
+      "fast_ewo": 13,
+      "low_offset": 1.2,
+      "low_offset_2": 0.86,
+      "pump_factor": 1.31,
+      "pump_rolling": 71,
+      "rsi_buy": 73,
+      "rsi_ewo2": 22,
+      "rsi_fast_ewo1": 45,
+      "slow_ewo": 168
     },
     "sell": {
-      "base_nb_candles_sell": 38,
-      "high_offset": 1.19,
-      "min_profit": 0.91
+      "base_nb_candles_sell": 27,
+      "high_offset": 1.1,
+      "min_profit": 0.62
     },
     "protection": {
-      "cooldown_stop_duration_candles": 7,
-      "lowprofit_lookback_period_candles": 91,
-      "lowprofit_required_profit": 0.051,
-      "lowprofit_stop_duration_candles": 47,
-      "lowprofit_trade_limit": 72,
-      "maxdrawdown_lookback_period_candles": 25,
-      "maxdrawdown_max_allowed_drawdown": 0.2,
-      "maxdrawdown_stop_duration_candles": 60,
-      "maxdrawdown_trade_limit": 9,
-      "stoplossguard_lookback_period_candles": 284,
-      "stoplossguard_stop_duration_candles": 21,
-      "stoplossguard_trade_limit": 18
+      "cooldown_stop_duration_candles": 0
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-05 15:55:20.416320+00:00"
+  "export_time": "2023-12-15 08:58:08.433841+00:00"
 }
