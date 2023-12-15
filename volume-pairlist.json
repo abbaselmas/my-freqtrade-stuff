@@ -4,7 +4,7 @@
             "method": "VolumePairList",
             "number_assets": 360,
             "sort_key": "quoteVolume",
-            "min_value": 20000000,
+            "min_value": 10000000,
             "refresh_period": 2700
         },
         {
@@ -13,7 +13,7 @@
         },
         {
             "method": "PriceFilter",
-            "min_price": 0.001,
+            "min_price": 0.0001,
             "low_price_ratio": 0.01,
             "max_price": 200,
             "max_value": 1
@@ -56,9 +56,7 @@
             // Others
             "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|NMR|OMG|ONG|ARDR|DMTR|MLS|TORN|LUNA|BTS|QKC|COS|ACA|FTT|SRM|YFII|SNM|BNX|ANC|AION|MIR|BNX|STG|HNT|WABI|QLC|NEBL|AUTO|VGX|PEPE|VITE|DREP|JASMY|PNT|PERL|AMB|OAX|LOOM|BTS|RAD|ID|PNT|NULS|MLN|MEME|TOKEN|TOMO|BTS|PERL|WTC)/.*",
             //Abbas
-            "(AUCTION|DODO|LUNC|SUPER|SNX|AGLD|ORDI|XVS)/.*"
-            // Seed
-            //"(LQTY|FLOKI|CYBER|FRONT|PEPE|STG|HOOK|GNS|MAGIC|GMX|RPL|SHIB|HFT|ALICE|ID|SLP|RDNT|BAKE|EPX|ARKM|BEL|PERP|FIS|LEVER|BADGER|SYN|CVX|FLM|HARD|ERN|OM|LIT|BAR|DODO|PROS|ALPHA|SEI|SUPER|ATA|KP3R|REEF|CHESS|TRU|DEXE|TVK|OG|BURGER|WNXM|GHST|PEOPLE|BSW|FOR|PROM|UFT|AUCTION|JUV|SUSHI|DEGO|WING|ATM|DF|VIDT|GAL|PSG|PENDLE|POLS|ASR|CVP|MDX|PHA|BIFI|SUN|POND|BNX|UNFI|NTRN|AGLD)/.*" 
+            "(AUCTION|DODO|LUNC|SUPER|SNX|AGLD|ORDI|XVS|QI|XNO|OOKI)/.*"
         ]
     }
 }
