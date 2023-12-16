@@ -1,8 +1,19 @@
 {
   "strategy_name": "abbas8",
   "params": {
+    "roi": {
+      "218": 0,
+      "239": -0.01,
+      "395": -0.02
+    },
     "stoploss": {
       "stoploss": -0.067
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0002,
+      "trailing_stop_positive_offset": 0.0142,
+      "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
       "max_open_trades": 3
@@ -29,17 +40,8 @@
     },
     "protection": {
       "cooldown_stop_duration_candles": 0
-    },
-    "roi": {
-      "190": 0
-    },
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0002,
-      "trailing_stop_positive_offset": 0.0142,
-      "trailing_only_offset_is_reached": true
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-15 10:18:45.982097+00:00"
+  "export_time": "2023-12-16 20:54:07.675721+00:00"
 }
