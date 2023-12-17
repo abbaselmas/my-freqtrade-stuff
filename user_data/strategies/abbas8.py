@@ -44,10 +44,10 @@ sell_params = {
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9"
+        return "v9.1"
     INTERFACE_VERSION = 3
 
-    cooldown_stop_duration_candles = IntParameter(0, 20, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+    cooldown_stop_duration_candles = IntParameter(0, 10, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
     pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
@@ -77,17 +77,17 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(120, 220, name='roi_t1'),
-		Integer(210, 310, name='roi_t2'),
-                Integer(300, 400, name='roi_t3')
+                Integer(180, 220, name='roi_t1'),
+		Integer(240, 360, name='roi_t2'),
+                Integer(400, 600, name='roi_t3')
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
 
             roi_table = {}
             roi_table[params['roi_t1']] = 0
-            roi_table[params['roi_t2']] = -0.01
-            roi_table[params['roi_t3']] = -0.02
+            roi_table[params['roi_t2']] = -0.02
+            roi_table[params['roi_t3']] = -0.04
 
             return roi_table
 
@@ -99,7 +99,9 @@ class abbas8(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "173": 0
+        "200": 0,
+        "250": -0.02,
+        "380": -0.04
     }
     stoploss = -0.067
     trailing_stop = True

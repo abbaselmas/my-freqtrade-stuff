@@ -1,11 +1,6 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "218": 0,
-      "239": -0.01,
-      "395": -0.02
-    },
     "stoploss": {
       "stoploss": -0.067
     },
@@ -40,8 +35,13 @@
     },
     "protection": {
       "cooldown_stop_duration_candles": 0
+    },
+    "roi": {
+      "198": 0,
+      "250": -0.02,
+      "415": -0.04
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-16 20:54:07.675721+00:00"
+  "export_time": "2023-12-17 09:59:03.013937+00:00"
 }
