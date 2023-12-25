@@ -119,15 +119,15 @@ class abbas8(IStrategy):
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
-                SKDecimal(0.0002, 0.0010, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.005,  0.030, decimals=3, name="trailing_stop_positive_offset_p1"),
+                SKDecimal(0.0003, 0.0020, decimals=4, name="trailing_stop_positive"),
+                SKDecimal(0.006,  0.020, decimals=3, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
                 Integer(180, 220, name='roi_t1'),
-		        Integer(240, 360, name='roi_t2'),
+		Integer(240, 360, name='roi_t2'),
                 Integer(400, 600, name='roi_t3')
             ]
 
