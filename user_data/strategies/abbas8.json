@@ -1,47 +1,58 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "190": 0,
-      "292": -0.02,
-      "489": -0.04
-    },
     "stoploss": {
       "stoploss": -0.06
     },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0003,
-      "trailing_stop_positive_offset": 0.0143,
+      "trailing_stop_positive_offset": 0.0146,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 3
+      "max_open_trades": 10
     },
     "buy": {
-      "base_nb_candles_buy": 40,
-      "ewo_high": 3.52,
-      "ewo_high_2": -3.77,
-      "ewo_low": -4.78,
-      "fast_ewo": 6,
-      "low_offset": 1.13,
-      "low_offset_2": 0.84,
-      "pump_factor": 1.4,
-      "pump_rolling": 67,
-      "rsi_buy": 71,
-      "rsi_ewo2": 23,
-      "rsi_fast_ewo1": 56,
-      "slow_ewo": 203
+      "base_nb_candles_buy": 25,
+      "ewo_high": 7.65,
+      "ewo_high_2": -3.73,
+      "ewo_low": -4.5,
+      "fast_ewo": 5,
+      "low_offset": 1.1,
+      "low_offset_2": 0.92,
+      "pump_factor": 1.59,
+      "pump_rolling": 49,
+      "rsi_buy": 52,
+      "rsi_ewo2": 25,
+      "rsi_fast_ewo1": 37,
+      "slow_ewo": 243
     },
     "sell": {
-      "base_nb_candles_sell": 27,
-      "high_offset": 1.18,
-      "min_profit": 0.24
+      "base_nb_candles_sell": 30,
+      "high_offset": 1.06,
+      "min_profit": 0.23
     },
     "protection": {
-      "cooldown_stop_duration_candles": 0
+      "cooldown_stop_duration_candles": 0,
+      "lowprofit_lookback_period_candles": 6,
+      "lowprofit_required_profit": 0.073,
+      "lowprofit_stop_duration_candles": 138,
+      "lowprofit_trade_limit": 47,
+      "maxdrawdown_lookback_period_candles": 23,
+      "maxdrawdown_max_allowed_drawdown": 0.3,
+      "maxdrawdown_stop_duration_candles": 26,
+      "maxdrawdown_trade_limit": 9,
+      "stoplossguard_lookback_period_candles": 25,
+      "stoplossguard_stop_duration_candles": 29,
+      "stoplossguard_trade_limit": 22
+    },
+    "roi": {
+      "220": 0,
+      "272": -0.02,
+      "479": -0.04
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2023-12-18 13:44:31.638857+00:00"
+  "export_time": "2023-12-25 11:35:08.635141+00:00"
 }
