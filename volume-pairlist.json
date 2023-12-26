@@ -19,6 +19,10 @@
             "max_value": 1
         },
         {
+            "method": "SpreadFilter",
+            "max_spread_ratio": 0.005
+        },
+        {
             "method": "RangeStabilityFilter",
             "lookback_days": 3,
             "min_rate_of_change": 0.03,
