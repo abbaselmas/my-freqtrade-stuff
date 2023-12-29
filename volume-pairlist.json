@@ -7,7 +7,8 @@
             "min_value": 30000000,
             "refresh_period": 2700
         },
-        // {   "method": "FullTradesFilter"},
+        {   "method": "FullTradesFilter"},
+        {   "method": "PrecisionFilter"},
         {
             "method": "AgeFilter",
             "min_days_listed": 31
