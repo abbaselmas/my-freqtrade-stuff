@@ -2,9 +2,9 @@
     "pairlists": [
         {
             "method": "VolumePairList",
-            "number_assets": 360,
+            "number_assets": 120,
             "sort_key": "quoteVolume",
-            "min_value": 30000000,
+            "min_value": 15000000,
             "refresh_period": 2700
         },
         {   "method": "FullTradesFilter"},
@@ -53,7 +53,9 @@
             // Fiat
             "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
             // Stable
-            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*"
+            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
+            // Abbas
+            "(NMR|ORDI|AUCTION|ALCX)/.*"
             // "(ADA|ALCX|ALGO|ALICE|ANKR|APT|AR|ARB|ARKM|ARPA|ATOM|AVAX|BLUR|BSW|BURGER|C98|CAKE|CELO|CFX|CHESS|COMBO|COMP|CREAM|CRV|CTK|CVP|CYBER|DENT|DOCK|DOGE|DUSK|DYDX|EGLD|ELF|EOS|EPX|FARM|FET|FIL|FLUX|FORTH|FRONT|FTM|GALA|GMT|GRT|HOOK|HOT|ICP|ILV|IMX|IOTX|JOE|JTO|KDA|KP3R|KSM|LAZIO|LDO|LEVER|LIT|LPT|LRC|MAGIC|MANA|MAV|NEO|NTRN|OM|ONE|OP|OSMO|OXT|PERP|PHA|POLS|PYR|QUICK|RARE|RDNT|REEF|RIF|RNDR|RSR|SAND|SEI|SFP|SKL|SLP|SOL|SPELL|SSV|STORJ|STRAX|STX|SUI|UFT|UNFI|UNI|VANRY|VET|VIDT|VTHO|WAVES|WING|WLD|WOO|YGG|ZIL)/.*"
         ]
     }
