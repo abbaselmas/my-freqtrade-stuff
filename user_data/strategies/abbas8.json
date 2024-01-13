@@ -2,7 +2,7 @@
   "strategy_name": "abbas8",
   "params": {
     "stoploss": {
-      "stoploss": -0.067
+      "stoploss": -0.1
     },
     "trailing": {
       "trailing_stop": true,
@@ -14,45 +14,45 @@
       "max_open_trades": 6
     },
     "buy": {
-      "base_nb_candles_buy": 26,
-      "ewo_high": 6.3,
-      "ewo_high_2": 11.67,
-      "ewo_low": -4.07,
-      "fast_ewo": 24,
-      "low_offset": 1.18,
-      "low_offset_2": 1.08,
-      "pump_factor": 1.63,
-      "pump_rolling": 35,
-      "rsi_buy": 74,
-      "rsi_ewo2": 20,
-      "rsi_fast_ewo1": 57,
-      "slow_ewo": 191
+      "base_nb_candles_buy": 43,
+      "ewo_high": 8.01,
+      "ewo_high_2": 1.47,
+      "ewo_low": -5.04,
+      "fast_ewo": 8,
+      "low_offset": 1.11,
+      "low_offset_2": 0.86,
+      "pump_factor": 1.54,
+      "pump_rolling": 43,
+      "rsi_buy": 60,
+      "rsi_ewo2": 35,
+      "rsi_fast_ewo1": 60,
+      "slow_ewo": 232
     },
     "sell": {
-      "base_nb_candles_sell": 32,
-      "high_offset": 1.14,
-      "min_profit": 0.71
+      "base_nb_candles_sell": 29,
+      "high_offset": 1.17,
+      "min_profit": 0.85
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
-      "lowprofit_lookback_period_candles": 27,
-      "lowprofit_required_profit": 0.057,
-      "lowprofit_stop_duration_candles": 127,
-      "lowprofit_trade_limit": 24,
-      "maxdrawdown_lookback_period_candles": 19,
-      "maxdrawdown_max_allowed_drawdown": 0.45,
-      "maxdrawdown_stop_duration_candles": 32,
-      "maxdrawdown_trade_limit": 1,
-      "stoplossguard_lookback_period_candles": 211,
+      "lowprofit_lookback_period_candles": 6,
+      "lowprofit_required_profit": 0.061,
+      "lowprofit_stop_duration_candles": 32,
+      "lowprofit_trade_limit": 15,
+      "maxdrawdown_lookback_period_candles": 11,
+      "maxdrawdown_max_allowed_drawdown": 0.47,
+      "maxdrawdown_stop_duration_candles": 23,
+      "maxdrawdown_trade_limit": 6,
+      "stoplossguard_lookback_period_candles": 28,
       "stoplossguard_stop_duration_candles": 24,
-      "stoplossguard_trade_limit": 11
+      "stoplossguard_trade_limit": 18
     },
     "roi": {
-      "175": 0,
-      "390": -0.02,
-      "493": -0.04
+      "187": 0,
+      "266": -0.02,
+      "571": -0.04
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-01-10 09:23:45.663475+00:00"
+  "export_time": "2024-01-12 21:25:14.383993+00:00"
 }
