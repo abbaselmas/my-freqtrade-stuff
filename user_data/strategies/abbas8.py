@@ -17,40 +17,36 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 # Protection hyperspace params:
 protection_params = {
-    "cooldown_stop_duration_candles": 4,
-    # "lowprofit_lookback_period_candles": 15,
-    # "lowprofit_required_profit": 0.05,
-    # "lowprofit_stop_duration_candles": 44,
-    # "lowprofit_trade_limit": 92,
-    "maxdrawdown_lookback_period_candles": 15,
-    "maxdrawdown_max_allowed_drawdown": 0.16,
-    "maxdrawdown_stop_duration_candles": 24,
-    "maxdrawdown_trade_limit": 3,
-    "stoplossguard_lookback_period_candles": 100,
-    "stoplossguard_stop_duration_candles": 4,
+    "cooldown_stop_duration_candles": 0,
+    "maxdrawdown_lookback_period_candles": 3,
+    "maxdrawdown_max_allowed_drawdown": 0.06,
+    "maxdrawdown_stop_duration_candles": 162,
+    "maxdrawdown_trade_limit": 10,
+    "stoplossguard_lookback_period_candles": 24,
+    "stoplossguard_stop_duration_candles": 29,
     "stoplossguard_trade_limit": 3
 }
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 17,
-    "ewo_high": 5.69,
-    "ewo_high_2": -1.02,
-    "ewo_low": -4.03,
-    "low_offset": 1.06,
-    "low_offset_2": 0.9,
-    "rsi_buy": 68,
-    "fast_ewo": 17,
-    "slow_ewo": 213,
-    "rsi_fast_ewo1": 35,
-    "rsi_ewo2": 25,
-    "pump_factor": 1.22,
-    "pump_rolling": 48
+    "base_nb_candles_buy": 36,
+    "ewo_high": 4.46,
+    "ewo_high_2": -0.56,
+    "ewo_low": -6.0,
+    "fast_ewo": 6,
+    "low_offset": 1.2,
+    "low_offset_2": 1.12,
+    "pump_factor": 1.67,
+    "pump_rolling": 69,
+    "rsi_buy": 80,
+    "rsi_ewo2": 21,
+    "rsi_fast_ewo1": 57,
+    "slow_ewo": 229
 }
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 35,
-    "high_offset": 1.09,
-    "min_profit": 0.53,
+    "base_nb_candles_sell": 23,
+    "high_offset": 1.1,
+    "min_profit": 0.73
 }
 
 class abbas8(IStrategy):
@@ -148,10 +144,12 @@ class abbas8(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "190": 0,
-        "290": -0.02,
-        "490": -0.04
+        "191": 0,
+        "232": -0.02,
+        "578": -0.04
     }
+
+
     stoploss = -0.067
     trailing_stop = True
     trailing_stop_positive = 0.0003
