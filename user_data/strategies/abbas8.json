@@ -2,7 +2,7 @@
   "strategy_name": "abbas8",
   "params": {
     "stoploss": {
-      "stoploss": -0.1
+      "stoploss": -0.067
     },
     "trailing": {
       "trailing_stop": true,
@@ -14,45 +14,41 @@
       "max_open_trades": 6
     },
     "buy": {
-      "base_nb_candles_buy": 43,
-      "ewo_high": 8.01,
-      "ewo_high_2": 1.47,
-      "ewo_low": -5.04,
-      "fast_ewo": 8,
-      "low_offset": 1.11,
-      "low_offset_2": 0.86,
-      "pump_factor": 1.54,
-      "pump_rolling": 43,
-      "rsi_buy": 60,
-      "rsi_ewo2": 35,
-      "rsi_fast_ewo1": 60,
-      "slow_ewo": 232
+      "base_nb_candles_buy": 36,
+      "ewo_high": 4.46,
+      "ewo_high_2": -0.56,
+      "ewo_low": -6.0,
+      "fast_ewo": 6,
+      "low_offset": 1.2,
+      "low_offset_2": 1.12,
+      "pump_factor": 1.67,
+      "pump_rolling": 69,
+      "rsi_buy": 80,
+      "rsi_ewo2": 21,
+      "rsi_fast_ewo1": 57,
+      "slow_ewo": 229
     },
     "sell": {
-      "base_nb_candles_sell": 29,
-      "high_offset": 1.17,
-      "min_profit": 0.85
+      "base_nb_candles_sell": 23,
+      "high_offset": 1.1,
+      "min_profit": 0.73
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
-      "lowprofit_lookback_period_candles": 6,
-      "lowprofit_required_profit": 0.061,
-      "lowprofit_stop_duration_candles": 32,
-      "lowprofit_trade_limit": 15,
-      "maxdrawdown_lookback_period_candles": 11,
-      "maxdrawdown_max_allowed_drawdown": 0.47,
-      "maxdrawdown_stop_duration_candles": 23,
-      "maxdrawdown_trade_limit": 6,
-      "stoplossguard_lookback_period_candles": 28,
-      "stoplossguard_stop_duration_candles": 24,
-      "stoplossguard_trade_limit": 18
+      "maxdrawdown_lookback_period_candles": 3,
+      "maxdrawdown_max_allowed_drawdown": 0.06,
+      "maxdrawdown_stop_duration_candles": 162,
+      "maxdrawdown_trade_limit": 10,
+      "stoplossguard_lookback_period_candles": 24,
+      "stoplossguard_stop_duration_candles": 29,
+      "stoplossguard_trade_limit": 3
     },
     "roi": {
-      "187": 0,
-      "266": -0.02,
-      "571": -0.04
+      "191": 0,
+      "232": -0.02,
+      "578": -0.04
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-01-12 21:25:14.383993+00:00"
+  "export_time": "2024-01-15 11:21:45.944244+00:00"
 }
