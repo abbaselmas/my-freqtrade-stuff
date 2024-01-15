@@ -18,17 +18,17 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 4,
-    "lowprofit_lookback_period_candles": 15,
-    "lowprofit_required_profit": 0.05,
-    "lowprofit_stop_duration_candles": 44,
-    "lowprofit_trade_limit": 92,
+    # "lowprofit_lookback_period_candles": 15,
+    # "lowprofit_required_profit": 0.05,
+    # "lowprofit_stop_duration_candles": 44,
+    # "lowprofit_trade_limit": 92,
     "maxdrawdown_lookback_period_candles": 15,
     "maxdrawdown_max_allowed_drawdown": 0.16,
     "maxdrawdown_stop_duration_candles": 24,
     "maxdrawdown_trade_limit": 3,
-    "stoplossguard_lookback_period_candles": 258,
-    "stoplossguard_stop_duration_candles": 10,
-    "stoplossguard_trade_limit": 27
+    "stoplossguard_lookback_period_candles": 100,
+    "stoplossguard_stop_duration_candles": 4,
+    "stoplossguard_trade_limit": 3
 }
 # Buy hyperspace params:
 buy_params = {
@@ -58,24 +58,24 @@ class abbas8(IStrategy):
         return "v9.2"
     INTERFACE_VERSION = 3
 
-    cooldown_stop_duration_candles = IntParameter(0, 10, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
+    cooldown_stop_duration_candles = IntParameter(0, 5, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
     maxdrawdown_optimize = True
-    maxdrawdown_lookback_period_candles = IntParameter(10, 30, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_lookback_period_candles = IntParameter(1, 200, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
     maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(20, 60, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.50, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
+    maxdrawdown_stop_duration_candles = IntParameter(20, 200, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
+    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.10, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
 
     stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(10, 400, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(10, 30, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_lookback_period_candles = IntParameter(5, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
+    stoplossguard_trade_limit = IntParameter(1, 5, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
-    lowprofit_optimize = True
-    lowprofit_lookback_period_candles = IntParameter(1, 100, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
-    lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
+    # lowprofit_optimize = True
+    # lowprofit_lookback_period_candles = IntParameter(1, 30, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
+    # lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
+    # lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
+    # lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
 
     pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
@@ -101,13 +101,13 @@ class abbas8(IStrategy):
             "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
             "only_per_pair": False
         })
-        prot.append({
-            "method": "LowProfitPairs",
-            "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
-            "trade_limit": self.lowprofit_trade_limit.value,
-            "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
-            "required_profit": self.lowprofit_required_profit.value
-        })
+        # prot.append({
+        #     "method": "LowProfitPairs",
+        #     "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
+        #     "trade_limit": self.lowprofit_trade_limit.value,
+        #     "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
+        #     "required_profit": self.lowprofit_required_profit.value
+        # })
         return prot
 
     class HyperOpt:
