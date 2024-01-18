@@ -123,7 +123,7 @@ class abbas8(IStrategy):
         def roi_space() -> List[Dimension]:
             return [
                 Integer( 35,  80, name='roi_t1'),
-		        Integer( 75, 130, name='roi_t2'),
+                Integer( 75, 130, name='roi_t2'),
                 Integer(120, 200, name='roi_t3'),
                 Integer(190, 400, name='roi_t4'),
             ]
@@ -238,16 +238,7 @@ class abbas8(IStrategy):
         return informative_1h
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        # Calculate all ma_buy values
-        # for val in self.base_nb_candles_buy.range:
-        #     dataframe[f"ma_buy_{val}"] = ta.EMA(dataframe, timeperiod=val)
-
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
-
-        # Calculate all ma_sell values
-        # for val in self.base_nb_candles_sell.range:
-        #     dataframe[f"ma_sell_{val}"] = ta.EMA(dataframe, timeperiod=val)
-
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
 
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
@@ -259,6 +250,8 @@ class abbas8(IStrategy):
         # dataframe["bb_lowerband"] = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=21, stds=2.8)["lower"]
         # dataframe["bb_bottom_cross"] = qtpylib.crossed_below(dataframe['low'], dataframe['bb_lowerband']).astype('int')
         # dataframe["bb_top_cross"] = qtpylib.crossed_above(dataframe['high'], dataframe['bb_upperband']).astype('int')
+        dataframe["volume24hsum"] = dataframe["volume"].rolling(24).sum()
+        dataframe["volume24mean"] = dataframe["volume"].rolling(24).mean()
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
@@ -293,6 +286,7 @@ class abbas8(IStrategy):
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
             ["buy", "buy_tag"]] = (1, "ewolow")
+        
         dont_buy_conditions = []
         dont_buy_conditions.append(
             (
@@ -302,6 +296,11 @@ class abbas8(IStrategy):
         dont_buy_conditions.append(
             (
                 (dataframe['high'].rolling(self.pump_rolling.value).max() >= (dataframe['high'] * self.pump_factor.value ))
+            )
+        )
+        dont_buy_conditions.append(
+            (
+                (dataframe["volume24hsum"] > (dataframe["volume24hsum"].shift(1)))
             )
         )
         if dont_buy_conditions:
