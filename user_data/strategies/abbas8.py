@@ -154,7 +154,6 @@ class abbas8(IStrategy):
         "578": -0.04
     }
 
-
     stoploss = -0.067
     trailing_stop = True
     trailing_stop_positive = 0.0003
@@ -231,7 +230,6 @@ class abbas8(IStrategy):
         informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
 
         dataframe["volume24hsum"] = dataframe["volume"].rolling(24).sum()
-        logger.info(dataframe["volume24hsum"].iloc[-1])
 
         # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=21, stds=2.8)
         # informative_1h["bb_upperband"] = bollinger["upper"]
@@ -256,6 +254,8 @@ class abbas8(IStrategy):
         # dataframe["bb_lowerband"] = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=21, stds=2.8)["lower"]
         # dataframe["bb_bottom_cross"] = qtpylib.crossed_below(dataframe['low'], dataframe['bb_lowerband']).astype('int')
         # dataframe["bb_top_cross"] = qtpylib.crossed_above(dataframe['high'], dataframe['bb_upperband']).astype('int')
+
+        dataframe["volume24hsum5x"] = dataframe["volume"].rolling(288).sum()
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
@@ -304,7 +304,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                (dataframe["volume24hsum"] < dataframe["volume24hsum"].shift(1))
+                (dataframe["volume24hsum"] < dataframe["volume24hsum5x"])
             )
         )
         if dont_buy_conditions:
