@@ -27,13 +27,13 @@
             "max_rate_of_change": 0.49,
             "refresh_period": 21600
         },
-        // {
-        //     "method": "VolatilityFilter",
-        //     "lookback_days": 2,
-        //     "min_volatility": 0.02,
-        //     "max_volatility": 0.25,
-        //     "refresh_period": 21600
-        // },
+        {
+            "method": "VolatilityFilter",
+            "lookback_days": 2,
+            "min_volatility": 0.02,
+            "max_volatility": 0.25,
+            "refresh_period": 21600
+        },
         {
             "method": "ShuffleFilter",
             "shuffle_frequency": "candle",
@@ -55,7 +55,7 @@
             // Stable
             "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
             // Abbas
-            "(1000SATS|1INCH|ALCX|AUCTION|BAKE|EOS|KLAY|LAZIO|LUNA|LUNC|MOVR|NMR|NTRN|ORDI|PERP|POLYX|PROS|RAD|REQ|SANTOS|T)/.*"
+            "(1000SATS|1INCH|ALCX|AUCTION|BAKE|EOS|KLAY|LAZIO|LUNA|LUNC|MOVR|NMR|NTRN|ORDI|PERP|POLYX|PROS|RAD|REQ|SANTOS|SEI|SYN|T)/.*"
         ]
     }
 }
