@@ -7,6 +7,7 @@ import talib.abstract as ta
 import numpy as np
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import datetime
+import logging
 from technical.util import resample_to_interval, resampled_merge
 from datetime import datetime, timedelta
 from freqtrade.persistence import Trade
@@ -14,6 +15,8 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
+
+logger = logging.getLogger(__name__)
 
 # Protection hyperspace params:
 protection_params = {
@@ -300,9 +303,11 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                (dataframe["volume24hsum"] > (dataframe["volume24hsum"].shift(1)))
+                (dataframe["volume24hsum"] < (dataframe["volume24mean"] * 2 ))
             )
         )
+        logger.info(dataframe["volume24hsum"])
+        logger.info(dataframe["volume24mean"])
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "buy"] = 0
