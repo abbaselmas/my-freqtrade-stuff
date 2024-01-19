@@ -70,12 +70,6 @@ class abbas8(IStrategy):
     stoplossguard_trade_limit = IntParameter(1, 5, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
-    # lowprofit_optimize = True
-    # lowprofit_lookback_period_candles = IntParameter(1, 30, default=protection_params["lowprofit_lookback_period_candles"], space="protection", optimize=lowprofit_optimize)
-    # lowprofit_trade_limit = IntParameter(2, 100, default=protection_params["lowprofit_trade_limit"], space="protection", optimize=lowprofit_optimize)
-    # lowprofit_stop_duration_candles = IntParameter(20, 200, default=protection_params["lowprofit_stop_duration_candles"], space="protection", optimize=lowprofit_optimize)
-    # lowprofit_required_profit = DecimalParameter(0.000, 0.100, default=protection_params["lowprofit_required_profit"], space="protection", decimals=3, optimize=lowprofit_optimize)
-
     pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
@@ -100,13 +94,6 @@ class abbas8(IStrategy):
             "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
             "only_per_pair": False
         })
-        # prot.append({
-        #     "method": "LowProfitPairs",
-        #     "lookback_period_candles": self.lowprofit_lookback_period_candles.value,
-        #     "trade_limit": self.lowprofit_trade_limit.value,
-        #     "stop_duration_candles": self.lowprofit_stop_duration_candles.value,
-        #     "required_profit": self.lowprofit_required_profit.value
-        # })
         return prot
 
     class HyperOpt:
@@ -228,35 +215,15 @@ class abbas8(IStrategy):
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
         informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
         informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
-
-        dataframe["volume24hsum"] = dataframe["volume"].rolling(24).sum()
-
-        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=21, stds=2.8)
-        # informative_1h["bb_upperband"] = bollinger["upper"]
-        # informative_1h["bb_middleband"] = bollinger["mid"]
-        # informative_1h["bb_lowerband"] = bollinger["lower"]
-
-        # informative_1h["bb_bottom_cross"] = qtpylib.crossed_below(informative_1h['low'], informative_1h['bb_lowerband']).astype('int')
-        # informative_1h["bb_top_cross"] = qtpylib.crossed_above(informative_1h['high'], informative_1h['bb_upperband']).astype('int')
-
         return informative_1h
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
-
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
-        # dataframe["bb_upperband"] = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=21, stds=2.8)["upper"]
-        # dataframe["bb_middleband"] = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=21, stds=2.8)["mid"]
-        # dataframe["bb_lowerband"] = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=21, stds=2.8)["lower"]
-        # dataframe["bb_bottom_cross"] = qtpylib.crossed_below(dataframe['low'], dataframe['bb_lowerband']).astype('int')
-        # dataframe["bb_top_cross"] = qtpylib.crossed_above(dataframe['high'], dataframe['bb_upperband']).astype('int')
-
-        dataframe["volume24hsum5x"] = dataframe["volume"].rolling(288).sum()
-
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
@@ -300,11 +267,6 @@ class abbas8(IStrategy):
         dont_buy_conditions.append(
             (
                 (dataframe['high'].rolling(self.pump_rolling.value).max() >= (dataframe['high'] * self.pump_factor.value ))
-            )
-        )
-        dont_buy_conditions.append(
-            (
-                (dataframe["volume24hsum"] < dataframe["volume24hsum5x"])
             )
         )
         if dont_buy_conditions:
