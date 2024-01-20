@@ -170,7 +170,7 @@ class abbas8(IStrategy):
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
         # Calculate market profile
-        self.calculate_market_profile(dataframe)
+        calculate_market_profile(dataframe)
         logger.info(f"Market profile: VAH {dataframe["VAH"].iloc[-1]}, POC {dataframe['POC'].iloc[-1]}, VAL {dataframe['VAL'].iloc[-1]}")
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
@@ -237,7 +237,7 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     return (ema1 - ema2) / dataframe["low"] * 100
 
 
-def calculate_market_profile(self, dataframe: DataFrame) -> None:
+def calculate_market_profile(dataframe: DataFrame) -> None:
         market_open_hour_gmt = 0  # Market open hour in GMT
         market_open_hour_local = (market_open_hour_gmt + 3) % 24  # Convert to local time (GMT+3)
 
@@ -247,12 +247,11 @@ def calculate_market_profile(self, dataframe: DataFrame) -> None:
 
         for idx, row in dataframe.iterrows():
             if row["date"].hour == market_open_hour_local and row["date"].minute == 0:
-                start_idx = idx - int(row["date"].minute / self.timeframe)  # Start from the beginning of the day
+                start_idx = idx - int(row["date"].minute / 5)  # Start from the beginning of the day
                 end_idx = idx + 1  # Include the current candle
                 if start_idx >= 0:
                     profile_data = dataframe["close"][start_idx:end_idx]
                     mp = MarketProfile(profile_data, decimals=2)
-                    mp_values = mp.get_value_area()
-                    dataframe.loc[start_idx:end_idx, "POC"] = mp_values["POC"]
-                    dataframe.loc[start_idx:end_idx, "VAH"] = mp_values["VAH"]
-                    dataframe.loc[start_idx:end_idx, "VAL"] = mp_values["VAL"]
+                    dataframe.loc[start_idx:end_idx, "POC"] = mp.poc_price
+                    dataframe.loc[start_idx:end_idx, "VAH"] = mp.value_area[1]
+                    dataframe.loc[start_idx:end_idx, "VAL"] = mp.value_area[0]
