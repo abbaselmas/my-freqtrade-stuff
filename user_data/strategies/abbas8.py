@@ -169,11 +169,12 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        # Calculate last day start time (GMT+0)
-        last_day_start = dataframe.index[-1] - timedelta(days=1)
-
-        # Call the function to get Market Profile values
-        market_profile_values = calculate_market_profile_values(dataframe, last_day_start)
+        # below is the minutes since the day started
+        minutes_since_midnight = (dataframe.index.hour * 60) + dataframe.index.minute
+        # how many candles have we seen so far today?
+        candles_since_midnight = minutes_since_midnight / 5
+        # calculate market profile values for the last day
+        market_profile_values = calculate_market_profile_values(dataframe, candles_since_midnight)
 
         # Assign the calculated values to dataframe columns
         dataframe["poc"] = market_profile_values["poc"]
@@ -238,12 +239,12 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
 
-def calculate_market_profile_values(dataframe: DataFrame, last_day_start: datetime) -> Dict[str, float]:
+def calculate_market_profile_values(dataframe: DataFrame, candle_count) -> Dict[str, float]:
     # Filter dataframe for the last day's candles
-    last_day_candles = dataframe[dataframe.index >= last_day_start]
+    df = dataframe.iloc[-candle_count:]
 
     # Calculate Market Profile using the MarketProfile package
-    mp = MarketProfile(last_day_candles)
+    mp = MarketProfile(df)
     mp_slice = mp[0]  # Assuming you are interested in the profile for the entire day
 
     # Extract POC, VAL, and VAH values
