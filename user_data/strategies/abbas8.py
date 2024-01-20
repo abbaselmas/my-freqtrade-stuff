@@ -171,13 +171,14 @@ class abbas8(IStrategy):
 
         # Calculate market profile
         self.calculate_market_profile(dataframe)
+        logger.info(f"Market profile: VAH {dataframe["VAH"].iloc[-1]}, POC {dataframe['POC'].iloc[-1]}, VAL {dataframe['VAL'].iloc[-1]}")
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-
+        dataframe['enter_tag'] = ''
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -186,7 +187,7 @@ class abbas8(IStrategy):
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
-            ["buy", "buy_tag"]] = (1, "ewo1")
+            ["enter", "enter_tag"]] = (1, "ewo1")
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -196,7 +197,7 @@ class abbas8(IStrategy):
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
                 (dataframe["rsi"] < self.rsi_ewo2.value)
             ),
-            ["buy", "buy_tag"]] = (1, "ewo2")
+            ["enter", "enter_tag"]] = (1, "ewo2")
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -204,7 +205,7 @@ class abbas8(IStrategy):
                 (dataframe["ewo"] < self.ewo_low.value) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
-            ["buy", "buy_tag"]] = (1, "ewolow")
+            ["enter", "enter_tag"]] = (1, "ewolow")
 
         dont_buy_conditions = []
         dont_buy_conditions.append(
@@ -224,7 +225,7 @@ class abbas8(IStrategy):
         )
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
-                dataframe.loc[condition, "buy"] = 0
+                dataframe.loc[condition, "enter"] = 0
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
