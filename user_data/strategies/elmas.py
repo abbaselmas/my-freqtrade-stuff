@@ -16,161 +16,120 @@ from freqtrade.strategy import (BooleanParameter, CategoricalParameter, DecimalP
 import talib.abstract as ta
 import pandas_ta as pta
 from technical import qtpylib
+import logging
 
+logger = logging.getLogger(__name__)
 
 class elmas(IStrategy):
-    """
-    This is a strategy template to get you started.
-    More information in https://www.freqtrade.io/en/latest/strategy-customization/
-
-    You can:
-        :return: a Dataframe with all mandatory indicators for the strategies
-    - Rename the class name (Do not forget to update class_name)
-    - Add any methods you want to build your strategy
-    - Add any lib you need to build your strategy
-
-    You must keep:
-    - the lib in the section "Do not remove these libs"
-    - the methods: populate_indicators, populate_entry_trend, populate_exit_trend
-    You should keep:
-    - timeframe, minimal_roi, stoploss, trailing_*
-    """
-    # Strategy interface version - allow new iterations of the strategy interface.
-    # Check the documentation or the Sample strategy to get the latest version.
     INTERFACE_VERSION = 3
+    def version(self) -> str:
+        return "v0.1"
 
-    # Optimal timeframe for the strategy.
     timeframe = '5m'
-
-    # Can this strategy go short?
+    inf_1h = "1h"
+    inf_30m = "30m"
+    inf_15m = "15m"
     can_short: bool = False
-
-    # Minimal ROI designed for the strategy.
-    # This attribute will be overridden if the config file contains "minimal_roi".
     minimal_roi = {
         "60": 0.01,
         "30": 0.02,
         "0": 0.04
     }
+    stoploss = -0.067
+    trailing_stop = True
+    trailing_stop_positive = 0.0003
+    trailing_stop_positive_offset = 0.0146
+    trailing_only_offset_is_reached = True
 
-    # Optimal stoploss designed for the strategy.
-    # This attribute will be overridden if the config file contains "stoploss".
-    stoploss = -0.10
-
-    # Trailing stoploss
-    trailing_stop = False
-    # trailing_only_offset_is_reached = False
-    # trailing_stop_positive = 0.01
-    # trailing_stop_positive_offset = 0.0  # Disabled / not configured
-
-    # Run "populate_indicators()" only for new candle.
     process_only_new_candles = True
-
-    # These values can be overridden in the config.
-    use_exit_signal = True
+    use_exit_signal = False
     exit_profit_only = False
     ignore_roi_if_entry_signal = False
-
-    # Number of candles the strategy requires before producing valid signals
-    startup_candle_count: int = 30
+    startup_candle_count: int = 120
 
     # Strategy parameters
     buy_rsi = IntParameter(10, 40, default=30, space="buy")
     sell_rsi = IntParameter(60, 90, default=70, space="sell")
 
-    
-    
-
     def informative_pairs(self):
-        """
-        Define additional, informative pair/interval combinations to be cached from the exchange.
-        These pair/interval combinations are non-tradeable, unless they are part
-        of the whitelist as well.
-        For more information, please consult the documentation
-        :return: List of tuples in the format (pair, interval)
-            Sample: return [("ETH/USDT", "5m"),
-                            ("BTC/USDT", "15m"),
-                            ]
-        """
-        return []
+        pairs = self.dp.current_whitelist()
+        informative_pairs = [(pair, "1h") for pair in pairs]
+        return informative_pairs
+
+    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
+        
+        return informative_1h
+    
+    def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_30m)
+        
+        return informative_30m
+    
+    def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_15m)
+        
+        return informative_15m
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        """
-        Adds several different TA indicators to the given DataFrame
-
-        Performance Note: For the best performance be frugal on the number of indicators
-        you are using. Let uncomment only the indicator you are using in your strategies
-        or your hyperopt configuration, otherwise you will waste your memory and CPU usage.
-        :param dataframe: Dataframe with data from the exchange
-        :param metadata: Additional information, like the currently traded pair
-        :return: a Dataframe with all mandatory indicators for the strategies
-        """
-        
-        # Momentum Indicators
-        # ------------------------------------
-
-        # RSI
-        dataframe['rsi'] = ta.RSI(dataframe)
-
-        # Retrieve best bid and best ask from the orderbook
-        # ------------------------------------
-        """
-        # first check if dataprovider is available
-        if self.dp:
-            if self.dp.runmode.value in ('live', 'dry_run'):
-                ob = self.dp.orderbook(metadata['pair'], 1)
-                dataframe['best_bid'] = ob['bids'][0][0]
-                dataframe['best_ask'] = ob['asks'][0][0]
-        """
+        informative_1h = self.informative_1h_indicators(dataframe, metadata)
+        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+        informative_30m = self.informative_30m_indicators(dataframe, metadata)
+        dataframe = merge_informative_pair(dataframe, informative_30m, self.timeframe, self.inf_30m, ffill=True)
+        informative_15m = self.informative_15m_indicators(dataframe, metadata)
+        dataframe = merge_informative_pair(dataframe, informative_15m, self.timeframe, self.inf_15m, ffill=True)
 
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        """
-        Based on TA indicators, populates the entry signal for the given dataframe
-        :param dataframe: DataFrame
-        :param metadata: Additional information, like the currently traded pair
-        :return: DataFrame with entry columns populated
-        """
-        dataframe.loc[
-            (
-                (qtpylib.crossed_above(dataframe['rsi'], self.buy_rsi.value)) &  # Signal: RSI crosses above buy_rsi
-                (dataframe['volume'] > 0)  # Make sure Volume is not 0
-            ),
-            'enter_long'] = 1
-        # Uncomment to use shorts (Only used in futures/margin mode. Check the documentation for more info)
-        """
-        dataframe.loc[
-            (
-                (qtpylib.crossed_above(dataframe['rsi'], self.sell_rsi.value)) &  # Signal: RSI crosses above sell_rsi
-                (dataframe['volume'] > 0)  # Make sure Volume is not 0
-            ),
-            'enter_short'] = 1
-        """
-
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        """
-        Based on TA indicators, populates the exit signal for the given dataframe
-        :param dataframe: DataFrame
-        :param metadata: Additional information, like the currently traded pair
-        :return: DataFrame with exit columns populated
-        """
-        dataframe.loc[
-            (
-                (qtpylib.crossed_above(dataframe['rsi'], self.sell_rsi.value)) &  # Signal: RSI crosses above sell_rsi
-                (dataframe['volume'] > 0)  # Make sure Volume is not 0
-            ),
-            'exit_long'] = 1
-        # Uncomment to use shorts (Only used in futures/margin mode. Check the documentation for more info)
-        """
-        dataframe.loc[
-            (
-                (qtpylib.crossed_above(dataframe['rsi'], self.buy_rsi.value)) &  # Signal: RSI crosses above buy_rsi
-                (dataframe['volume'] > 0)  # Make sure Volume is not 0
-            ),
-            'exit_short'] = 1
-        """
         return dataframe
     
+    slippage_protection = {
+        "retries": 3,
+        "max_slippage": -0.002
+    }
+    def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        try:
+            state = self.slippage_protection["__pair_retries"]
+        except KeyError:
+            state = self.slippage_protection["__pair_retries"] = {}
+
+        candle = dataframe.iloc[-1].squeeze()
+        slippage = (rate / candle["close"]) - 1
+        if slippage < self.slippage_protection["max_slippage"]:
+            pair_retries = state.get(pair, 0)
+            if pair_retries < self.slippage_protection["retries"]:
+                state[pair] = pair_retries + 1
+                return False
+        state[pair] = 0
+        return True
+
+    class HyperOpt:
+        def stoploss_space():
+            return [SKDecimal(-0.08, -0.05, decimals=3, name="stoploss")]
+        def trailing_space() -> List[Dimension]:
+            return[
+                Categorical([True], name="trailing_stop"),
+                SKDecimal(0.0002, 0.0006, decimals=4, name="trailing_stop_positive"),
+                SKDecimal(0.010,  0.020, decimals=3, name="trailing_stop_positive_offset_p1"),
+                Categorical([True], name="trailing_only_offset_is_reached"),
+            ]
+        def roi_space() -> List[Dimension]:
+            return [
+                Integer(  5, 120, name='roi_t1'),
+                Integer( 60, 200, name='roi_t2'),
+                Integer(120, 300, name='roi_t3')
+            ]
+        def generate_roi_table(params: Dict) -> Dict[int, float]:
+            roi_table = {}
+            roi_table[params['roi_t1']] = 0
+            roi_table[params['roi_t2']] = -0.02
+            roi_table[params['roi_t3']] = -0.04
+            return roi_table

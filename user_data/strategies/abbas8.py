@@ -15,6 +15,7 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
+from market_profile import MarketProfile
 
 logger = logging.getLogger(__name__)
 
@@ -92,10 +93,10 @@ class abbas8(IStrategy):
     trailing_stop_positive_offset = 0.0146
     trailing_only_offset_is_reached = True
 
-    use_sell_signal = False
-    ignore_roi_if_buy_signal = False
+    use_exit_signal = False
+    ignore_roi_if_entry_signal = False
     process_only_new_candles = True
-    startup_candle_count = 200
+    startup_candle_count = 120
 
     min_profit = DecimalParameter(0.01, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
@@ -128,8 +129,6 @@ class abbas8(IStrategy):
         "retries": 3,
         "max_slippage": -0.002
     }
-
-    buy_signals = {}
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
@@ -169,11 +168,15 @@ class abbas8(IStrategy):
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
+
+        # Calculate market profile
+        self.calculate_market_profile(dataframe)
+
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
 
-    def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
 
         dataframe.loc[
             (
@@ -214,15 +217,41 @@ class abbas8(IStrategy):
                 (dataframe['high'].rolling(self.pump_rolling.value).max() >= (dataframe['high'] * self.pump_factor.value ))
             )
         )
+        dont_buy_conditions.append(
+            (
+                (dataframe["close"] > dataframe["POC"])
+            )
+        )
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "buy"] = 0
         return dataframe
 
-    def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
+
+
+def calculate_market_profile(self, dataframe: DataFrame) -> None:
+        market_open_hour_gmt = 0  # Market open hour in GMT
+        market_open_hour_local = (market_open_hour_gmt + 3) % 24  # Convert to local time (GMT+3)
+
+        dataframe["POC"] = 0.0
+        dataframe["VAH"] = 0.0
+        dataframe["VAL"] = 0.0
+
+        for idx, row in dataframe.iterrows():
+            if row["date"].hour == market_open_hour_local and row["date"].minute == 0:
+                start_idx = idx - int(row["date"].minute / self.timeframe)  # Start from the beginning of the day
+                end_idx = idx + 1  # Include the current candle
+                if start_idx >= 0:
+                    profile_data = dataframe["close"][start_idx:end_idx]
+                    mp = MarketProfile(profile_data, decimals=2)
+                    mp_values = mp.get_value_area()
+                    dataframe.loc[start_idx:end_idx, "POC"] = mp_values["POC"]
+                    dataframe.loc[start_idx:end_idx, "VAH"] = mp_values["VAH"]
+                    dataframe.loc[start_idx:end_idx, "VAL"] = mp_values["VAL"]
