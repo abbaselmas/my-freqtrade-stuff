@@ -18,17 +18,6 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 
 logger = logging.getLogger(__name__)
 
-# Protection hyperspace params:
-protection_params = {
-    "cooldown_stop_duration_candles": 0,
-    "maxdrawdown_lookback_period_candles": 3,
-    "maxdrawdown_max_allowed_drawdown": 0.06,
-    "maxdrawdown_stop_duration_candles": 162,
-    "maxdrawdown_trade_limit": 10,
-    "stoplossguard_lookback_period_candles": 24,
-    "stoplossguard_stop_duration_candles": 29,
-    "stoplossguard_trade_limit": 3
-}
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 36,
@@ -54,47 +43,11 @@ sell_params = {
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.2"
+        return "v9.4"
     INTERFACE_VERSION = 3
-
-    cooldown_stop_duration_candles = IntParameter(0, 5, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
-
-    maxdrawdown_optimize = True
-    maxdrawdown_lookback_period_candles = IntParameter(1, 200, default=protection_params["maxdrawdown_lookback_period_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_trade_limit = IntParameter(1, 10, default=protection_params["maxdrawdown_trade_limit"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_stop_duration_candles = IntParameter(20, 200, default=protection_params["maxdrawdown_stop_duration_candles"], space="protection", optimize=maxdrawdown_optimize)
-    maxdrawdown_max_allowed_drawdown = DecimalParameter(0.01, 0.10, default=protection_params["maxdrawdown_max_allowed_drawdown"], space="protection", decimals=2, optimize=maxdrawdown_optimize)
-
-    stoplossguard_optimize = True
-    stoplossguard_lookback_period_candles = IntParameter(5, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_trade_limit = IntParameter(1, 5, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
-    stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
 
     pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
-
-    @property
-    def protections(self):
-        prot = []
-        prot.append({
-            "method": "CooldownPeriod",
-            "stop_duration_candles": self.cooldown_stop_duration_candles.value
-        })
-        prot.append({
-            "method": "MaxDrawdown",
-            "lookback_period_candles": self.maxdrawdown_lookback_period_candles.value,
-            "trade_limit": self.maxdrawdown_trade_limit.value,
-            "stop_duration_candles": self.maxdrawdown_stop_duration_candles.value,
-            "max_allowed_drawdown": self.maxdrawdown_max_allowed_drawdown.value
-        })
-        prot.append({
-            "method": "StoplossGuard",
-            "lookback_period_candles": self.stoplossguard_lookback_period_candles.value,
-            "trade_limit": self.stoplossguard_trade_limit.value,
-            "stop_duration_candles": self.stoplossguard_stop_duration_candles.value,
-            "only_per_pair": False
-        })
-        return prot
 
     class HyperOpt:
         # Define a custom stoploss space.
@@ -112,26 +65,18 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer( 35,  80, name='roi_t1'),
-                Integer( 75, 130, name='roi_t2'),
-                Integer(120, 200, name='roi_t3'),
-                Integer(190, 400, name='roi_t4'),
+                Integer(  5, 120, name='roi_t1'),
+                Integer( 60, 200, name='roi_t2'),
+                Integer(120, 300, name='roi_t3')
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
 
             roi_table = {}
             roi_table[params['roi_t1']] = 0
-            roi_table[params['roi_t2']] = -0.015
-            roi_table[params['roi_t3']] = -0.030
-            roi_table[params['roi_t4']] = -0.045
-
+            roi_table[params['roi_t2']] = -0.02
+            roi_table[params['roi_t3']] = -0.04
             return roi_table
-
-        def max_open_trades_space() -> List[Dimension]:
-            return [
-                Integer(2, 12, name='max_open_trades'),
-            ]
 
     timeframe = "5m"
     inf_1h = "1h"
