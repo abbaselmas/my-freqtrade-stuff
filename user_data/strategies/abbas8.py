@@ -169,8 +169,16 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        # Calculate Volume Profile and add VAL, VAH, and POC to the dataframe
-        dataframe = calculate_market_profile(dataframe)
+        # Calculate last day start time (GMT+0)
+        last_day_start = dataframe.index[-1] - timedelta(days=1)
+
+        # Call the function to get Market Profile values
+        market_profile_values = calculate_market_profile_values(dataframe, last_day_start)
+
+        # Assign the calculated values to dataframe columns
+        dataframe["poc"] = market_profile_values["poc"]
+        dataframe["val"] = market_profile_values["val"]
+        dataframe["vah"] = market_profile_values["vah"]
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
@@ -230,27 +238,17 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
 
-def calculate_daily_market_profile(dataframe: DataFrame) -> DataFrame:
-    # Ensure the dataframe is sorted by datetime in ascending order
-    dataframe = dataframe.sort_values(by='datetime')
+def calculate_market_profile_values(dataframe: DataFrame, last_day_start: datetime) -> Dict[str, float]:
+    # Filter dataframe for the last day's candles
+    last_day_candles = dataframe[dataframe.index >= last_day_start]
 
-    # Find the timestamp of the last candle
-    last_candle_timestamp = dataframe['datetime'].iloc[-1]
+    # Calculate Market Profile using the MarketProfile package
+    mp = MarketProfile(last_day_candles)
+    mp_slice = mp[0]  # Assuming you are interested in the profile for the entire day
 
-    # Find the timestamp of the first candle of the day
-    day_start_timestamp = last_candle_timestamp.replace(hour=0, minute=0, second=0, microsecond=0)
+    # Extract POC, VAL, and VAH values
+    poc = mp_slice.poc_price
+    val = mp_slice.value_area.low
+    vah = mp_slice.value_area.high
 
-    # Filter dataframe for the current day
-    daily_dataframe = dataframe[dataframe['datetime'] >= day_start_timestamp]
-
-    # Extract relevant OHLCV data for the current day
-    ohlcv_data = daily_dataframe[['open', 'high', 'low', 'close', 'volume']]
-
-    # Calculate Market Profile values for the current day
-    mp = MarketProfile(ohlcv_data)
-    
-    dataframe["VAL"] = mp.value_area[0]
-    dataframe["VAH"] = mp.value_area[1]
-    dataframe["POC"] = mp.value_area.poc
-
-    return dataframe
+    return {"poc": poc, "val": val, "vah": vah}
