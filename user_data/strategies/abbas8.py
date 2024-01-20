@@ -47,7 +47,7 @@ class abbas8(IStrategy):
         return "v9.4"
     INTERFACE_VERSION = 3
 
-    pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
+    pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = "buy", decimals = 2, optimize = True)
     pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
     class HyperOpt:
@@ -66,17 +66,17 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(  5, 120, name='roi_t1'),
-                Integer( 60, 200, name='roi_t2'),
-                Integer(120, 300, name='roi_t3')
+                Integer(  5, 120, name="roi_t1"),
+                Integer( 60, 200, name="roi_t2"),
+                Integer(120, 300, name="roi_t3")
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
 
             roi_table = {}
-            roi_table[params['roi_t1']] = 0
-            roi_table[params['roi_t2']] = -0.02
-            roi_table[params['roi_t3']] = -0.04
+            roi_table[params["roi_t1"]] = 0
+            roi_table[params["roi_t2"]] = -0.02
+            roi_table[params["roi_t3"]] = -0.04
             return roi_table
 
     timeframe = "5m"
@@ -169,16 +169,15 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        # Calculate market profile
-        calculate_market_profile(dataframe)
-        logger.info(f"Market profile: VAH {dataframe['VAH'].iloc[-1]}, POC {dataframe['POC'].iloc[-1]}, VAL {dataframe['VAL'].iloc[-1]}")
+        # Calculate Volume Profile and add VAL, VAH, and POC to the dataframe
+        dataframe = calculate_market_profile(dataframe)
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['enter_tag'] = ''
+        dataframe["enter_tag"] = ""
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -215,12 +214,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                (dataframe['high'].rolling(self.pump_rolling.value).max() >= (dataframe['high'] * self.pump_factor.value ))
-            )
-        )
-        dont_buy_conditions.append(
-            (
-                (dataframe["close"] > dataframe["POC"])
+                (dataframe["high"].rolling(self.pump_rolling.value).max() >= (dataframe["high"] * self.pump_factor.value ))
             )
         )
         if dont_buy_conditions:
@@ -236,23 +230,27 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
 
+def calculate_daily_market_profile(dataframe: DataFrame) -> DataFrame:
+    # Ensure the dataframe is sorted by datetime in ascending order
+    dataframe = dataframe.sort_values(by='datetime')
 
-def calculate_market_profile(dataframe: DataFrame) -> None:
-        market_open_hour_gmt = 0  # Market open hour in GMT
-        market_open_hour_local = (market_open_hour_gmt + 3) % 24  # Convert to local time (GMT+3)
+    # Find the timestamp of the last candle
+    last_candle_timestamp = dataframe['datetime'].iloc[-1]
 
-        dataframe["POC"] = 0.0
-        dataframe["VAH"] = 0.0
-        dataframe["VAL"] = 0.0
+    # Find the timestamp of the first candle of the day
+    day_start_timestamp = last_candle_timestamp.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        for idx, row in dataframe.iterrows():
-            if row["date"].hour == market_open_hour_local and row["date"].minute == 0:
-                start_idx = idx - int(row["date"].minute / 5)  # Start from the beginning of the day
-                end_idx = idx + 1  # Include the current candle
-                if start_idx >= 0:
-                    profile_data = dataframe["close"][start_idx:end_idx]
-                    mp = MarketProfile(dataframe, decimals=2)
-                    mp_slice = mp[profile_data.index[0]:profile_data.index[-1]]
-                    dataframe.loc[start_idx:end_idx, "POC"] = mp_slice.poc_price
-                    dataframe.loc[start_idx:end_idx, "VAH"] = mp_slice.value_area[1]
-                    dataframe.loc[start_idx:end_idx, "VAL"] = mp_slice.value_area[0]
+    # Filter dataframe for the current day
+    daily_dataframe = dataframe[dataframe['datetime'] >= day_start_timestamp]
+
+    # Extract relevant OHLCV data for the current day
+    ohlcv_data = daily_dataframe[['open', 'high', 'low', 'close', 'volume']]
+
+    # Calculate Market Profile values for the current day
+    mp = MarketProfile(ohlcv_data)
+    
+    dataframe["VAL"] = mp.value_area[0]
+    dataframe["VAH"] = mp.value_area[1]
+    dataframe["POC"] = mp.value_area.poc
+
+    return dataframe
