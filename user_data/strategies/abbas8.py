@@ -171,7 +171,7 @@ class abbas8(IStrategy):
 
         # Calculate market profile
         calculate_market_profile(dataframe)
-        logger.info(f"Market profile: VAH {dataframe["VAH"].iloc[-1]}, POC {dataframe['POC'].iloc[-1]}, VAL {dataframe['VAL'].iloc[-1]}")
+        logger.info(f"Market profile: VAH {dataframe['VAH'].iloc[-1]}, POC {dataframe['POC'].iloc[-1]}, VAL {dataframe['VAL'].iloc[-1]}")
 
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
@@ -251,7 +251,8 @@ def calculate_market_profile(dataframe: DataFrame) -> None:
                 end_idx = idx + 1  # Include the current candle
                 if start_idx >= 0:
                     profile_data = dataframe["close"][start_idx:end_idx]
-                    mp = MarketProfile(profile_data, decimals=2)
-                    dataframe.loc[start_idx:end_idx, "POC"] = mp.poc_price
-                    dataframe.loc[start_idx:end_idx, "VAH"] = mp.value_area[1]
-                    dataframe.loc[start_idx:end_idx, "VAL"] = mp.value_area[0]
+                    mp = MarketProfile(dataframe, decimals=2)
+                    mp_slice = mp[profile_data.index[0]:profile_data.index[-1]]
+                    dataframe.loc[start_idx:end_idx, "POC"] = mp_slice.poc_price
+                    dataframe.loc[start_idx:end_idx, "VAH"] = mp_slice.value_area[1]
+                    dataframe.loc[start_idx:end_idx, "VAL"] = mp_slice.value_area[0]
