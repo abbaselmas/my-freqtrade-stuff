@@ -95,7 +95,7 @@ class abbas8(IStrategy):
     use_exit_signal = False
     ignore_roi_if_entry_signal = False
     process_only_new_candles = True
-    startup_candle_count = 120
+    startup_candle_count = 449
 
     min_profit = DecimalParameter(0.01, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
