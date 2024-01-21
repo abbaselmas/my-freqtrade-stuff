@@ -72,7 +72,6 @@ class abbas8(IStrategy):
             ]
 
         def generate_roi_table(params: Dict) -> Dict[int, float]:
-
             roi_table = {}
             roi_table[params["roi_t1"]] = 0
             roi_table[params["roi_t2"]] = -0.02
@@ -159,6 +158,7 @@ class abbas8(IStrategy):
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
         informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
         informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
+        logger.debug(f"informative 1h dataframe values: {informative_1h.iloc[-1]}")
         return informative_1h
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -169,8 +169,12 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
+        logger.debug(f"populate indicators before combine dataframe values: {dataframe.iloc[-1]}")
+
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+
+        logger.debug(f"populate indicators after combine dataframe values: {dataframe.iloc[-1]}")
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -217,9 +221,11 @@ class abbas8(IStrategy):
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "enter_long"] = 0
+        logger.debug(f"populate entry dataframe values: {dataframe.iloc[-1]}")
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        logger.debug(f"populate exit dataframe values: {dataframe.iloc[-1]}")
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
