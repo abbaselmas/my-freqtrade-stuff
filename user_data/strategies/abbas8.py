@@ -169,6 +169,15 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
+        # Market Profile
+        # minutes since midnight
+        minutes_since_midnight = dataframe["date"].dt.hour * 60 + dataframe["date"].dt.minute
+        candle_count = minutes_since_midnight / 5
+        market_profile_values = calculate_market_profile_values(dataframe, candle_count)
+        dataframe["poc"] = market_profile_values["poc"]
+        dataframe["val"] = market_profile_values["val"]
+        dataframe["vah"] = market_profile_values["vah"]
+
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
@@ -183,7 +192,7 @@ class abbas8(IStrategy):
                 (dataframe["rsi"] < self.rsi_buy.value) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
-            ["enter", "enter_tag"]] = (1, "ewo1")
+            ["enter_long", "enter_tag"]] = (1, "ewo1")
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -193,7 +202,7 @@ class abbas8(IStrategy):
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
                 (dataframe["rsi"] < self.rsi_ewo2.value)
             ),
-            ["enter", "enter_tag"]] = (1, "ewo2")
+            ["enter_long", "enter_tag"]] = (1, "ewo2")
         dataframe.loc[
             (
                 (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
@@ -201,7 +210,7 @@ class abbas8(IStrategy):
                 (dataframe["ewo"] < self.ewo_low.value) &
                 (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
             ),
-            ["enter", "enter_tag"]] = (1, "ewolow")
+            ["enter_long", "enter_tag"]] = (1, "ewolow")
 
         dont_buy_conditions = []
         dont_buy_conditions.append(
@@ -216,7 +225,7 @@ class abbas8(IStrategy):
         )
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
-                dataframe.loc[condition, "enter"] = 0
+                dataframe.loc[condition, "enter_long"] = 0
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -226,3 +235,15 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
+
+def calculate_market_profile_values(dataframe, period_count):
+    mp = MarketProfile(dataframe, period_count=period_count)
+    mp_slice = mp[0:period_count]
+    poc = mp_slice.poc_price
+    val = mp_slice.value_area.low
+    vah = mp_slice.value_area.high
+    return Series({
+        "poc": poc,
+        "val": val,
+        "vah": vah
+    } )
