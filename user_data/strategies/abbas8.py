@@ -169,15 +169,6 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        # Market Profile
-        # minutes since midnight
-        minutes_since_midnight = dataframe["date"].dt.hour * 60 + dataframe["date"].dt.minute
-        candle_count = minutes_since_midnight / 5
-        market_profile_values = calculate_market_profile_values(dataframe, candle_count)
-        dataframe["poc"] = market_profile_values["poc"]
-        dataframe["val"] = market_profile_values["val"]
-        dataframe["vah"] = market_profile_values["vah"]
-
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
         return dataframe
@@ -235,15 +226,3 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
-
-def calculate_market_profile_values(dataframe, period_count):
-    mp = MarketProfile(dataframe, period_count=period_count)
-    mp_slice = mp[0:period_count]
-    poc = mp_slice.poc_price
-    val = mp_slice.value_area.low
-    vah = mp_slice.value_area.high
-    return Series({
-        "poc": poc,
-        "val": val,
-        "vah": vah
-    } )
