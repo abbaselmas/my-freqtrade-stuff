@@ -21,25 +21,25 @@ logger = logging.getLogger(__name__)
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 36,
-    "ewo_high": 4.46,
-    "ewo_high_2": -0.56,
-    "ewo_low": -6.0,
-    "fast_ewo": 6,
-    "low_offset": 1.2,
-    "low_offset_2": 1.12,
-    "pump_factor": 1.67,
-    "pump_rolling": 69,
-    "rsi_buy": 80,
-    "rsi_ewo2": 21,
-    "rsi_fast_ewo1": 57,
-    "slow_ewo": 229
+    "base_nb_candles_buy": 12,
+    "ewo_high": 7.54,
+    "ewo_high_2": 9.88,
+    "ewo_low": -5.53,
+    "fast_ewo": 9,
+    "low_offset": 1.18,
+    "low_offset_2": 0.97,
+    "pump_factor": 1.59,
+    "pump_rolling": 80,
+    "rsi_buy": 55,
+    "rsi_ewo2": 38,
+    "rsi_fast_ewo1": 52,
+    "slow_ewo": 168
 }
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 23,
-    "high_offset": 1.1,
-    "min_profit": 0.73
+    "base_nb_candles_sell": 21,
+    "high_offset": 1.01,
+    "min_profit": 0.96
 }
 
 class abbas8(IStrategy):
@@ -81,9 +81,9 @@ class abbas8(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "191": 0,
-        "232": -0.02,
-        "578": -0.04
+        "106": 0,
+        "189": -0.02,
+        "224": -0.04
     }
 
     stoploss = -0.067
