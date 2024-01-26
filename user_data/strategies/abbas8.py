@@ -116,7 +116,7 @@ class abbas8(IStrategy):
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(  5, 120, name="roi_t1"),
+                Integer(  6, 120, name="roi_t1"),
                 Integer( 60, 200, name="roi_t2"),
                 Integer(120, 300, name="roi_t3")
             ]
@@ -124,8 +124,8 @@ class abbas8(IStrategy):
         def generate_roi_table(params: Dict) -> Dict[int, float]:
             roi_table = {}
             roi_table[params["roi_t1"]] = 0
-            roi_table[params["roi_t2"]] = -0.02
-            roi_table[params["roi_t3"]] = -0.04
+            roi_table[params["roi_t2"]] = -0.015
+            roi_table[params["roi_t3"]] = -0.030
             return roi_table
 
     timeframe = "5m"
