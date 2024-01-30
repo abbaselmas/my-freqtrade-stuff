@@ -48,8 +48,7 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 21,
     "high_offset": 1.01,
-    "volume_warn": 5.0,
-    "btc_rsi_8_1h": 35
+    "volume_warn": 5.0
 }
 
 class abbas8(IStrategy):
@@ -122,8 +121,6 @@ class abbas8(IStrategy):
             return roi_table
 
     timeframe = "5m"
-    inf_1h = "1h"
-    btc_info_pair = "BTC/USDT"
     minimal_roi = {
         "106": 0,
         "189": -0.02,
@@ -163,7 +160,6 @@ class abbas8(IStrategy):
 
     dontbuy_optimize = True
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=dontbuy_optimize)
-    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=dontbuy_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -175,34 +171,12 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
 
-    def informative_pairs(self):
-        pairs = self.dp.current_whitelist()
-        informative_pairs = [(pair, '1h') for pair in pairs]
-        informative_pairs.append((self.btc_info_pair, self.timeframe))
-        informative_pairs.append((self.btc_info_pair, self.inf_1h))
-        return informative_pairs
-
     def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         df36h = dataframe.copy().shift( 432 )
         df24h = dataframe.copy().shift( 288 )
         dataframe['volume_mean_short'] = dataframe['volume'].rolling(4).mean()
         dataframe['volume_mean_long'] = df24h['volume'].rolling(48).mean()
-        dataframe['volume_mean_base'] = df36h['volume'].rolling(288).mean()
-        dataframe['volume_change_percentage'] = (dataframe['volume_mean_long'] / dataframe['volume_mean_base'])
-        dataframe['rsi_mean'] = dataframe['rsi'].rolling(48).mean()
         dataframe['pnd_volume_warn'] = np.where((dataframe['volume_mean_short'] / dataframe['volume_mean_long'] > self.volume_warn.value), -1, 0)
-        return dataframe
-
-    def base_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['price_trend_long'] = (dataframe['close'].rolling(8).mean() / dataframe['close'].shift(8).rolling(144).mean())
-        ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)
-        return dataframe
-    
-    def info_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['rsi_8_1h'] = ta.RSI(dataframe['close'], timeperiod=8 * 12)
-        ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)  # Rename other columns
         return dataframe
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -223,18 +197,7 @@ class abbas8(IStrategy):
         return True
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        btc_info_tf = self.dp.get_pair_dataframe(self.btc_info_pair, self.inf_1h)
-        btc_info_tf = self.info_tf_btc_indicators(btc_info_tf, metadata)
-        dataframe = merge_informative_pair(dataframe, btc_info_tf, self.timeframe, self.inf_1h, ffill=True)
-        drop_columns = [f"{s}_{self.inf_1h}" for s in ['date', 'open', 'high', 'low', 'close', 'volume']]
-        dataframe.drop(columns=dataframe.columns.intersection(drop_columns), inplace=True)
-
-        btc_base_tf = self.dp.get_pair_dataframe(self.btc_info_pair, self.timeframe)
-        btc_base_tf = self.base_tf_btc_indicators(btc_base_tf, metadata)
-        dataframe = merge_informative_pair(dataframe, btc_base_tf, self.timeframe, self.timeframe, ffill=True)
-        drop_columns = [f"{s}_{self.timeframe}" for s in ['date', 'open', 'high', 'low', 'close', 'volume']]
-        dataframe.drop(columns=dataframe.columns.intersection(drop_columns), inplace=True)
-
+        
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
@@ -280,12 +243,6 @@ class abbas8(IStrategy):
         dont_buy_conditions.append(
             (
                 (dataframe['pnd_volume_warn'] < 0.0)
-            )
-        )
-        # BTC price protection
-        dont_buy_conditions.append(
-            (
-                (dataframe['btc_rsi_8_1h'] < self.btc_rsi_8_1h.value)
             )
         )
         if dont_buy_conditions:
