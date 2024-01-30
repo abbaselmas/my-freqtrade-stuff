@@ -38,7 +38,7 @@ buy_params = {
     "ewo_low": -5.53,
     "fast_ewo": 9,
     "low_offset": 1.18,
-    "low_offset_2": 0.97,-
+    "low_offset_2": 0.97,
     "rsi_buy": 55,
     "rsi_ewo2": 38,
     "rsi_fast_ewo1": 52,
@@ -47,7 +47,9 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 21,
-    "high_offset": 1.01
+    "high_offset": 1.01,
+    "volume_warn": 5.0,
+    "btc_rsi_8_1h": 35
 }
 
 class abbas8(IStrategy):
@@ -159,6 +161,10 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
+    dontbuy_optimize = True
+    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=dontbuy_optimize)
+    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=dontbuy_optimize)
+
     # Optional order time in force.
     order_time_in_force = {
         "entry": "gtc",
@@ -184,20 +190,21 @@ class abbas8(IStrategy):
         dataframe['volume_mean_base'] = df36h['volume'].rolling(288).mean()
         dataframe['volume_change_percentage'] = (dataframe['volume_mean_long'] / dataframe['volume_mean_base'])
         dataframe['rsi_mean'] = dataframe['rsi'].rolling(48).mean()
-        dataframe['pnd_volume_warn'] = np.where((dataframe['volume_mean_short'] / dataframe['volume_mean_long'] > 5.0), -1, 0)
+        dataframe['pnd_volume_warn'] = np.where((dataframe['volume_mean_short'] / dataframe['volume_mean_long'] > self.volume_warn.value), -1, 0)
         return dataframe
-
 
     def base_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe['price_trend_long'] = (dataframe['close'].rolling(8).mean() / dataframe['close'].shift(8).rolling(144).mean())
         ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
         dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)
         return dataframe
-
+    
     def info_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
+        dataframe_1h = dataframe.resample('1H').agg({'close': 'last'})  # Resample to 1-hour timeframe
+        dataframe_1h['rsi_8_1h'] = ta.RSI(dataframe_1h['close'], timeperiod=8)  # Calculate RSI for 1-hour timeframe
+        dataframe = dataframe.merge(dataframe_1h[['rsi_8_1h']], left_index=True, right_index=True, how='left')  # Merge RSI back with original DataFrame
         ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)
+        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)  # Rename other columns
         return dataframe
 
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -280,7 +287,7 @@ class abbas8(IStrategy):
         # BTC price protection
         dont_buy_conditions.append(
             (
-                (dataframe['btc_rsi_8_1h'] < 35.0)
+                (dataframe['btc_rsi_8_1h'] < self.btc_rsi_8_1h.value)
             )
         )
         if dont_buy_conditions:
