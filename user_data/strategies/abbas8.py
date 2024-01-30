@@ -266,7 +266,7 @@ class abbas8(IStrategy):
         # BTC price protection
         dont_buy_conditions.append(
             (
-                (dataframe['btc_rsi_8_1h'] < self.btc_rsi_8_1h.value)
+                (dataframe['BTC_rsi_8_1h'] < self.btc_rsi_8_1h.value)
             )
         )
         if dont_buy_conditions:
