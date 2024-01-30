@@ -58,8 +58,8 @@ class abbas8(IStrategy):
         return "v9.5"
     INTERFACE_VERSION = 3
 
-    pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = "buy", decimals = 2, optimize = True)
-    pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
+    # pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = "buy", decimals = 2, optimize = True)
+    # pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
     cooldown_stop_duration_candles = IntParameter(0, 5, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
@@ -73,9 +73,6 @@ class abbas8(IStrategy):
     stoplossguard_lookback_period_candles = IntParameter(5, 200, default=protection_params["stoplossguard_lookback_period_candles"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_trade_limit = IntParameter(1, 5, default=protection_params["stoplossguard_trade_limit"], space="protection", optimize=stoplossguard_optimize)
     stoplossguard_stop_duration_candles = IntParameter(1, 50, default=protection_params["stoplossguard_stop_duration_candles"], space="protection", optimize=stoplossguard_optimize)
-
-    pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = 'buy', decimals = 2, optimize = True)
-    pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
     @property
     def protections(self):
@@ -130,6 +127,7 @@ class abbas8(IStrategy):
 
     timeframe = "5m"
     inf_1h = "1h"
+    btc_info_pair = "BTC/USDT"
     minimal_roi = {
         "106": 0,
         "189": -0.02,
@@ -179,6 +177,37 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
 
+    def informative_pairs(self):
+        pairs = self.dp.current_whitelist()
+        informative_pairs = [(pair, '1h') for pair in pairs]
+        informative_pairs.append((self.btc_info_pair, self.timeframe))
+        informative_pairs.append((self.btc_info_pair, self.inf_1h))
+        return informative_pairs
+
+    def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        df36h = dataframe.copy().shift( 432 )
+        df24h = dataframe.copy().shift( 288 )
+        dataframe['volume_mean_short'] = dataframe['volume'].rolling(4).mean()
+        dataframe['volume_mean_long'] = df24h['volume'].rolling(48).mean()
+        dataframe['volume_mean_base'] = df36h['volume'].rolling(288).mean()
+        dataframe['volume_change_percentage'] = (dataframe['volume_mean_long'] / dataframe['volume_mean_base'])
+        dataframe['rsi_mean'] = dataframe['rsi'].rolling(48).mean()
+        dataframe['pnd_volume_warn'] = np.where((dataframe['volume_mean_short'] / dataframe['volume_mean_long'] > 5.0), -1, 0)
+        return dataframe
+
+
+    def base_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe['price_trend_long'] = (dataframe['close'].rolling(8).mean() / dataframe['close'].shift(8).rolling(144).mean())
+        ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)
+        return dataframe
+
+    def info_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
+        ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+        dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)
+        return dataframe
+
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         try:
@@ -196,22 +225,19 @@ class abbas8(IStrategy):
         state[pair] = 0
         return True
 
-    def informative_pairs(self):
-        pairs = self.dp.current_whitelist()
-        informative_pairs = [(pair, "1h") for pair in pairs]
-        return informative_pairs
-
-    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
-        informative_1h["ewo"] = EWO(informative_1h, int(self.fast_ewo.value), int(self.slow_ewo.value))
-        informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
-        informative_1h["rsi_fast"] = ta.RSI(informative_1h, timeperiod=4)
-        informative_1h["rsi_slow"] = ta.RSI(informative_1h, timeperiod=20)
-        logger.debug(f"informative 1h dataframe values: {informative_1h.iloc[-1]}")
-        return informative_1h
-
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        btc_info_tf = self.dp.get_pair_dataframe(self.btc_info_pair, self.inf_1h)
+        btc_info_tf = self.info_tf_btc_indicators(btc_info_tf, metadata)
+        dataframe = merge_informative_pair(dataframe, btc_info_tf, self.timeframe, self.inf_1h, ffill=True)
+        drop_columns = [f"{s}_{self.inf_1h}" for s in ['date', 'open', 'high', 'low', 'close', 'volume']]
+        dataframe.drop(columns=dataframe.columns.intersection(drop_columns), inplace=True)
+
+        btc_base_tf = self.dp.get_pair_dataframe(self.btc_info_pair, self.timeframe)
+        btc_base_tf = self.base_tf_btc_indicators(btc_base_tf, metadata)
+        dataframe = merge_informative_pair(dataframe, btc_base_tf, self.timeframe, self.timeframe, ffill=True)
+        drop_columns = [f"{s}_{self.timeframe}" for s in ['date', 'open', 'high', 'low', 'close', 'volume']]
+        dataframe.drop(columns=dataframe.columns.intersection(drop_columns), inplace=True)
+
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
@@ -219,12 +245,10 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        logger.debug(f"populate indicators before combine dataframe values: {dataframe.iloc[-1]}")
-
         informative_1h = self.informative_1h_indicators(dataframe, metadata)
         dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
 
-        logger.debug(f"populate indicators after combine dataframe values: {dataframe.iloc[-1]}")
+        dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -263,19 +287,29 @@ class abbas8(IStrategy):
                 (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
             )
         )
+        # dont_buy_conditions.append(
+        #     (
+        #         (dataframe["high"].rolling(self.pump_rolling.value).max() >= (dataframe["high"] * self.pump_factor.value ))
+        #     )
+        # )
+        # don't buy if there seems to be a Pump and Dump event.
         dont_buy_conditions.append(
             (
-                (dataframe["high"].rolling(self.pump_rolling.value).max() >= (dataframe["high"] * self.pump_factor.value ))
+                (dataframe['pnd_volume_warn'] < 0.0)
+            )
+        )
+        # BTC price protection
+        dont_buy_conditions.append(
+            (
+                (dataframe['btc_rsi_8_1h'] < 35.0)
             )
         )
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "enter_long"] = 0
-        logger.debug(f"populate entry dataframe values: {dataframe.iloc[-1]}")
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        logger.debug(f"populate exit dataframe values: {dataframe.iloc[-1]}")
         return dataframe
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
