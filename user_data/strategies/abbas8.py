@@ -200,9 +200,7 @@ class abbas8(IStrategy):
         return dataframe
     
     def info_tf_btc_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe_1h = dataframe.resample('1H').agg({'close': 'last'})  # Resample to 1-hour timeframe
-        dataframe_1h['rsi_8_1h'] = ta.RSI(dataframe_1h['close'], timeperiod=8)  # Calculate RSI for 1-hour timeframe
-        dataframe = dataframe.merge(dataframe_1h[['rsi_8_1h']], left_index=True, right_index=True, how='left')  # Merge RSI back with original DataFrame
+        dataframe['rsi_8_1h'] = dataframe['close'].rolling(12).apply(lambda x: ta.RSI(x, timeperiod=8)).ffill()
         ignore_columns = ['date', 'open', 'high', 'low', 'close', 'volume']
         dataframe.rename(columns=lambda s: f"btc_{s}" if s not in ignore_columns else s, inplace=True)  # Rename other columns
         return dataframe
