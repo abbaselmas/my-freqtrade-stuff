@@ -38,9 +38,7 @@ buy_params = {
     "ewo_low": -5.53,
     "fast_ewo": 9,
     "low_offset": 1.18,
-    "low_offset_2": 0.97,
-    "pump_factor": 1.59,
-    "pump_rolling": 80,
+    "low_offset_2": 0.97,-
     "rsi_buy": 55,
     "rsi_ewo2": 38,
     "rsi_fast_ewo1": 52,
@@ -49,17 +47,13 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 21,
-    "high_offset": 1.01,
-    "min_profit": 0.96
+    "high_offset": 1.01
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.5"
+        return "v9.6"
     INTERFACE_VERSION = 3
-
-    # pump_factor = DecimalParameter(1.00, 1.70, default = buy_params["pump_factor"] , space = "buy", decimals = 2, optimize = True)
-    # pump_rolling = IntParameter(2, 100, default = buy_params["pump_rolling"], space="buy", optimize=True)
 
     cooldown_stop_duration_candles = IntParameter(0, 5, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
 
@@ -144,8 +138,6 @@ class abbas8(IStrategy):
     ignore_roi_if_entry_signal = False
     process_only_new_candles = True
     startup_candle_count = 449
-
-    min_profit = DecimalParameter(0.01, 2.00, default=sell_params["min_profit"], space="sell", decimals=2, optimize=True)
 
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
@@ -279,16 +271,6 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "ewolow")
 
         dont_buy_conditions = []
-        dont_buy_conditions.append(
-            (
-                (dataframe["close_1h"].rolling(24).max() < (dataframe["close"] * self.min_profit.value ))
-            )
-        )
-        # dont_buy_conditions.append(
-        #     (
-        #         (dataframe["high"].rolling(self.pump_rolling.value).max() >= (dataframe["high"] * self.pump_factor.value ))
-        #     )
-        # )
         # don't buy if there seems to be a Pump and Dump event.
         dont_buy_conditions.append(
             (
