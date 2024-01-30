@@ -1,6 +1,9 @@
 {
   "strategy_name": "abbas8",
   "params": {
+    "stoploss": {
+      "stoploss": -0.07
+    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0002,
@@ -11,44 +14,40 @@
       "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 15,
-      "ewo_high": 8.32,
-      "ewo_high_2": -4.44,
-      "ewo_low": -6.42,
-      "fast_ewo": 9,
-      "low_offset": 1.18,
-      "low_offset_2": 0.93,
-      "pump_factor": 1.64,
-      "pump_rolling": 77,
-      "rsi_buy": 67,
-      "rsi_ewo2": 18,
-      "rsi_fast_ewo1": 56,
-      "slow_ewo": 198
+      "base_nb_candles_buy": 11,
+      "ewo_high": 6.83,
+      "ewo_high_2": 0.25,
+      "ewo_low": -5.15,
+      "fast_ewo": 16,
+      "low_offset": 1.05,
+      "low_offset_2": 0.86,
+      "rsi_buy": 56,
+      "rsi_ewo2": 11,
+      "rsi_fast_ewo1": 58,
+      "slow_ewo": 170
     },
     "sell": {
-      "base_nb_candles_sell": 15,
-      "high_offset": 1.11,
-      "min_profit": 0.69
+      "base_nb_candles_sell": 25,
+      "btc_rsi_8_1h": 7,
+      "high_offset": 1.0,
+      "volume_warn": 8.96
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
       "maxdrawdown_lookback_period_candles": 1,
-      "maxdrawdown_max_allowed_drawdown": 0.03,
-      "maxdrawdown_stop_duration_candles": 32,
-      "maxdrawdown_trade_limit": 10,
-      "stoplossguard_lookback_period_candles": 17,
-      "stoplossguard_stop_duration_candles": 15,
-      "stoplossguard_trade_limit": 5
+      "maxdrawdown_max_allowed_drawdown": 0.07,
+      "maxdrawdown_stop_duration_candles": 172,
+      "maxdrawdown_trade_limit": 9,
+      "stoplossguard_lookback_period_candles": 30,
+      "stoplossguard_stop_duration_candles": 11,
+      "stoplossguard_trade_limit": 4
     },
     "roi": {
-      "115": 0,
-      "147": -0.015,
-      "289": -0.03
-    },
-    "stoploss": {
-      "stoploss": -0.07
+      "117": 0,
+      "192": -0.015,
+      "232": -0.03
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-01-29 12:11:36.857103+00:00"
+  "export_time": "2024-01-30 19:30:06.861841+00:00"
 }
