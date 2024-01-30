@@ -48,7 +48,8 @@ buy_params = {
 sell_params = {
     "base_nb_candles_sell": 21,
     "high_offset": 1.01,
-    "volume_warn": 5.0
+    "volume_warn": 5.0,
+    "btc_rsi_8_1h": 35
 }
 
 class abbas8(IStrategy):
@@ -160,6 +161,7 @@ class abbas8(IStrategy):
 
     dontbuy_optimize = True
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=dontbuy_optimize)
+    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=dontbuy_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -170,6 +172,22 @@ class abbas8(IStrategy):
         "retries": 3,
         "max_slippage": -0.002
     }
+
+    # # Define informative upper timeframe for each pair. Decorators can be stacked on same
+    # # method. Available in populate_indicators as 'rsi_30m' and 'rsi_1h'.
+    # @informative('1h')
+    # def populate_indicators_1h(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    #     dataframe['rsi'] = ta.RSI(dataframe, timeperiod=14)
+    #     return dataframe
+
+    # Define BTC/STAKE informative pair. Available in populate_indicators and other methods as
+    # 'btc_rsi_1h'. Current stake currency should be specified as {stake} format variable
+    # instead of hard-coding actual stake currency. Available in populate_indicators and other
+    # methods as 'btc_usdt_rsi_1h' (when stake currency is USDT).
+    @informative('1h', 'BTC/{stake}')
+    def populate_indicators_btc_1h(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
+        return dataframe
 
     def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         df36h = dataframe.copy().shift( 432 )
@@ -243,6 +261,12 @@ class abbas8(IStrategy):
         dont_buy_conditions.append(
             (
                 (dataframe['pnd_volume_warn'] < 0.0)
+            )
+        )
+        # BTC price protection
+        dont_buy_conditions.append(
+            (
+                (dataframe['btc_rsi_8_1h'] < self.btc_rsi_8_1h.value)
             )
         )
         if dont_buy_conditions:
