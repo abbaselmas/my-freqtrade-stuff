@@ -184,7 +184,7 @@ class abbas8(IStrategy):
     # 'btc_rsi_1h'. Current stake currency should be specified as {stake} format variable
     # instead of hard-coding actual stake currency. Available in populate_indicators and other
     # methods as 'btc_usdt_rsi_1h' (when stake currency is USDT).
-    @informative('1h', 'BTC/{stake}')
+    @informative('1h', 'BTC/USDT')
     def populate_indicators_btc_1h(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
         return dataframe
@@ -266,7 +266,7 @@ class abbas8(IStrategy):
         # BTC price protection
         dont_buy_conditions.append(
             (
-                (dataframe['BTC_rsi_8_1h'] < self.btc_rsi_8_1h.value)
+                (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
             )
         )
         if dont_buy_conditions:
