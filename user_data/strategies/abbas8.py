@@ -245,9 +245,6 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
-        informative_1h = self.informative_1h_indicators(dataframe, metadata)
-        dataframe = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
-
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
 
