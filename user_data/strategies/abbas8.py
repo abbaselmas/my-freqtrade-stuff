@@ -184,10 +184,10 @@ class abbas8(IStrategy):
     # 'btc_rsi_1h'. Current stake currency should be specified as {stake} format variable
     # instead of hard-coding actual stake currency. Available in populate_indicators and other
     # methods as 'btc_usdt_rsi_1h' (when stake currency is USDT).
-    @informative('1h', 'BTC/USDT')
-    def populate_indicators_btc_1h(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
-        return dataframe
+    # @informative('1h', 'BTC/USDT')
+    # def populate_indicators_btc_1h(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    #     dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
+    #     return dataframe
 
     def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         df36h = dataframe.copy().shift( 432 )
@@ -203,7 +203,6 @@ class abbas8(IStrategy):
             state = self.slippage_protection["__pair_retries"]
         except KeyError:
             state = self.slippage_protection["__pair_retries"] = {}
-
         candle = dataframe.iloc[-1].squeeze()
         slippage = (rate / candle["close"]) - 1
         if slippage < self.slippage_protection["max_slippage"]:
@@ -222,7 +221,6 @@ class abbas8(IStrategy):
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
-
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
 
@@ -263,12 +261,12 @@ class abbas8(IStrategy):
                 (dataframe['pnd_volume_warn'] < 0.0)
             )
         )
-        # BTC price protection
-        dont_buy_conditions.append(
-            (
-                (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
-            )
-        )
+        # # BTC price protection
+        # dont_buy_conditions.append(
+        #     (
+        #         (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
+        #     )
+        # )
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "enter_long"] = 0
