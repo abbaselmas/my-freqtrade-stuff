@@ -1,9 +1,6 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "stoploss": {
-      "stoploss": -0.07
-    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0002,
@@ -14,40 +11,43 @@
       "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 11,
-      "ewo_high": 6.83,
-      "ewo_high_2": 0.25,
-      "ewo_low": -5.15,
-      "fast_ewo": 16,
-      "low_offset": 1.05,
-      "low_offset_2": 0.86,
-      "rsi_buy": 56,
-      "rsi_ewo2": 11,
-      "rsi_fast_ewo1": 58,
-      "slow_ewo": 170
+      "base_nb_candles_buy": 44,
+      "ewo_high": 6.56,
+      "ewo_high_2": 10.62,
+      "ewo_low": -5.64,
+      "fast_ewo": 15,
+      "low_offset": 1.01,
+      "low_offset_2": 0.82,
+      "rsi_buy": 80,
+      "rsi_ewo2": 22,
+      "rsi_fast_ewo1": 55,
+      "slow_ewo": 204
     },
     "sell": {
-      "base_nb_candles_sell": 25,
-      "btc_rsi_8_1h": 7,
-      "high_offset": 1.0,
-      "volume_warn": 8.96
+      "base_nb_candles_sell": 41,
+      "btc_rsi_8_1h": 11,
+      "high_offset": 1.18,
+      "volume_warn": 9.16
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
       "maxdrawdown_lookback_period_candles": 1,
-      "maxdrawdown_max_allowed_drawdown": 0.07,
-      "maxdrawdown_stop_duration_candles": 172,
-      "maxdrawdown_trade_limit": 9,
-      "stoplossguard_lookback_period_candles": 30,
-      "stoplossguard_stop_duration_candles": 11,
-      "stoplossguard_trade_limit": 4
+      "maxdrawdown_max_allowed_drawdown": 0.06,
+      "maxdrawdown_stop_duration_candles": 196,
+      "maxdrawdown_trade_limit": 10,
+      "stoplossguard_lookback_period_candles": 80,
+      "stoplossguard_stop_duration_candles": 2,
+      "stoplossguard_trade_limit": 5
     },
     "roi": {
       "117": 0,
-      "192": -0.015,
-      "232": -0.03
+      "175": -0.015,
+      "290": -0.03
+    },
+    "stoploss": {
+      "stoploss": -0.073
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-01-30 19:30:06.861841+00:00"
+  "export_time": "2024-01-31 14:34:29.820503+00:00"
 }
