@@ -198,7 +198,7 @@ class abbas8(IStrategy):
 
     def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_1h)
+        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
         bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
         informative_1h["bb20_2_low"] = bollinger["lower"]
@@ -216,7 +216,7 @@ class abbas8(IStrategy):
 
     def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_30m)
+        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
 
         bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.68)
         informative_30m["bb20_2_low"] = bollinger["lower"]
@@ -227,7 +227,7 @@ class abbas8(IStrategy):
     
     def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe=self.inf_15m)
+        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
 
         # BB - 20 STD2
         bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
