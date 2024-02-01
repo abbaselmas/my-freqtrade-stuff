@@ -200,17 +200,17 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
-        informative_1h["bb20_2_low"] = bollinger["lower"]
-        informative_1h["bb20_2_mid"] = bollinger["mid"]
-        informative_1h["bb20_2_upp"] = bollinger["upper"]
+        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
+        # informative_1h["bb20_2_low"] = bollinger["lower"]
+        # informative_1h["bb20_2_mid"] = bollinger["mid"]
+        # informative_1h["bb20_2_upp"] = bollinger["upper"]
 
         # Pump protections
         informative_1h["hl_pct_change_48"] = range_percent_change(self, informative_1h, "HL", 48)
         informative_1h["hl_pct_change_36"] = range_percent_change(self, informative_1h, "HL", 36)
         informative_1h["hl_pct_change_24"] = range_percent_change(self, informative_1h, "HL", 24)
         informative_1h["hl_pct_change_12"] = range_percent_change(self, informative_1h, "HL", 12)
-        informative_1h["hl_pct_change_6"]  = range_percent_change(self, informative_1h, "HL", 6)
+        informative_1h["hl_pct_change_06"]  = range_percent_change(self, informative_1h, "HL", 6)
         
         return informative_1h
 
@@ -218,10 +218,10 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
 
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.68)
-        informative_30m["bb20_2_low"] = bollinger["lower"]
-        informative_30m["bb20_2_mid"] = bollinger["mid"]
-        informative_30m["bb20_2_upp"] = bollinger["upper"]
+        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.68)
+        # informative_30m["bb20_2_low"] = bollinger["lower"]
+        # informative_30m["bb20_2_mid"] = bollinger["mid"]
+        # informative_30m["bb20_2_upp"] = bollinger["upper"]
         
         return informative_30m
     
@@ -229,19 +229,18 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
 
-        # BB - 20 STD2
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
-        informative_15m["bb20_2_low"] = bollinger["lower"]
-        informative_15m["bb20_2_mid"] = bollinger["mid"]
-        informative_15m["bb20_2_upp"] = bollinger["upper"]
+        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
+        # informative_15m["bb20_2_low"] = bollinger["lower"]
+        # informative_15m["bb20_2_mid"] = bollinger["mid"]
+        # informative_15m["bb20_2_upp"] = bollinger["upper"]
         
         return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.68)
-        dataframe["bb20_2_low"] = bollinger["lower"]
-        dataframe["bb20_2_mid"] = bollinger["mid"]
-        dataframe["bb20_2_upp"] = bollinger["upper"]
+        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.68)
+        # dataframe["bb20_2_low"] = bollinger["lower"]
+        # dataframe["bb20_2_mid"] = bollinger["mid"]
+        # dataframe["bb20_2_upp"] = bollinger["upper"]
 
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
@@ -341,11 +340,11 @@ class abbas8(IStrategy):
         # pump protections
         dont_buy_conditions.append(
             (
-                (dataframe['hl_pct_change_48'] > self.hl_pct_change_48_1h.value) &
-                (dataframe['hl_pct_change_36'] > self.hl_pct_change_36_1h.value) &
-                (dataframe['hl_pct_change_24'] > self.hl_pct_change_24_1h.value) &
-                (dataframe['hl_pct_change_12'] > self.hl_pct_change_12_1h.value) &
-                (dataframe['hl_pct_change_06'] > self.hl_pct_change_06_1h.value)
+                (dataframe['hl_pct_change_48_1h'] > self.hl_pct_change_48_1h.value) &
+                (dataframe['hl_pct_change_36_1h'] > self.hl_pct_change_36_1h.value) &
+                (dataframe['hl_pct_change_24_1h'] > self.hl_pct_change_24_1h.value) &
+                (dataframe['hl_pct_change_12_1h'] > self.hl_pct_change_12_1h.value) &
+                (dataframe['hl_pct_change_06_1h'] > self.hl_pct_change_06_1h.value)
             )
         )
 
