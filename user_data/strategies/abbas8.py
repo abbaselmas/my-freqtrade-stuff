@@ -55,7 +55,9 @@ sell_params = {
     "hl_pct_change_12_1h": 0.90,
     "hl_pct_change_24_1h": 0.95,
     "hl_pct_change_36_1h": 1.00,
-    "hl_pct_change_48_1h": 1.00
+    "hl_pct_change_48_1h": 1.00,
+    "percent_change_low": -0.05,
+    "percent_change_high": 0.05
 }
 
 class abbas8(IStrategy):
@@ -167,17 +169,19 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    dontbuy_optimize = False
-    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=dontbuy_optimize)
-    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=dontbuy_optimize)
-    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=dontbuy_optimize)
+    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=False)
+    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
 
-    pct_chage_optimize = True
+    pct_chage_optimize = False
     hl_pct_change_06_1h = DecimalParameter(00.30, 0.90, default=sell_params["hl_pct_change_06_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_12_1h = DecimalParameter(00.40, 1.00, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_24_1h = DecimalParameter(00.50, 1.20, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_36_1h = DecimalParameter(00.50, 1.40, default=sell_params["hl_pct_change_36_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_48_1h = DecimalParameter(00.60, 1.60, default=sell_params["hl_pct_change_48_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+
+    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=True)
+    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=True)
+    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=True)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -333,12 +337,13 @@ class abbas8(IStrategy):
         #         (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
         #     )
         # )
-        # # don't buy if the price has changed too much in the last *5 hours
-        # dont_buy_conditions.append(
-        #     (
-        #         ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'])
-        #     )
-        # )
+        # don't buy if the price has changed too much in the last *5 hours
+        dont_buy_conditions.append(
+            (
+                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) |
+                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
+            )
+        )
         # pump protections
         dont_buy_conditions.append(
             (
