@@ -1,6 +1,14 @@
 {
   "strategy_name": "abbas8",
   "params": {
+    "roi": {
+      "105": 0,
+      "144": -0.015,
+      "263": -0.03
+    },
+    "stoploss": {
+      "stoploss": -0.07
+    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0003,
@@ -27,7 +35,15 @@
       "base_nb_candles_sell": 25,
       "btc_rsi_8_1h": 7,
       "high_offset": 1.05,
-      "volume_warn": 9.38
+      "hl_pct_change_06_1h": 0.52,
+      "hl_pct_change_12_1h": 0.61,
+      "hl_pct_change_24_1h": 0.95,
+      "hl_pct_change_36_1h": 1.1,
+      "hl_pct_change_48_1h": 0.87,
+      "volume_warn": 9.38,
+      "percent_change_high": 0.62,
+      "percent_change_length": 169,
+      "percent_change_low": -0.03
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
@@ -38,16 +54,8 @@
       "stoplossguard_lookback_period_candles": 197,
       "stoplossguard_stop_duration_candles": 6,
       "stoplossguard_trade_limit": 5
-    },
-    "roi": {
-      "105": 0,
-      "144": -0.015,
-      "263": -0.03
-    },
-    "stoploss": {
-      "stoploss": -0.07
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-01 06:20:22.235347+00:00"
+  "export_time": "2024-02-01 13:43:58.561711+00:00"
 }
