@@ -280,11 +280,11 @@ class abbas8(IStrategy):
         dataframe       = self.base_tf_5m_indicators(metadata, dataframe)
 
         informative_1h  = self.informative_1h_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, self.inf_1h, ffill=True)
+        dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
         informative_30m = self.informative_30m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, self.inf_30m, ffill=True)
+        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
         informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, self.inf_15m, ffill=True)
+        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
 
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
