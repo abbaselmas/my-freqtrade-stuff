@@ -54,6 +54,7 @@ sell_params = {
     "hl_pct_change_06_1h": 0.80,
     "hl_pct_change_12_1h": 0.90,
     "hl_pct_change_24_1h": 0.95,
+    "hl_pct_change_36_1h": 1.00,
     "hl_pct_change_48_1h": 1.00
 }
 
@@ -175,6 +176,7 @@ class abbas8(IStrategy):
     hl_pct_change_06_1h = DecimalParameter(00.30, 0.90, default=sell_params["hl_pct_change_06_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_12_1h = DecimalParameter(00.40, 1.00, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_24_1h = DecimalParameter(00.50, 1.20, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_36_1h = DecimalParameter(00.50, 1.40, default=sell_params["hl_pct_change_36_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_48_1h = DecimalParameter(00.60, 1.60, default=sell_params["hl_pct_change_48_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
     # Optional order time in force.
