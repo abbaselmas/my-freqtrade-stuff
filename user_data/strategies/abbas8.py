@@ -152,7 +152,7 @@ class abbas8(IStrategy):
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
 
-    smaoffset_optimize = False
+    smaoffset_optimize = True
     base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
@@ -172,12 +172,12 @@ class abbas8(IStrategy):
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=False)
     btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
 
-    pct_chage_optimize = False
-    hl_pct_change_06_1h = DecimalParameter(00.30, 0.90, default=sell_params["hl_pct_change_06_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_12_1h = DecimalParameter(00.40, 1.00, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_24_1h = DecimalParameter(00.50, 1.20, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_36_1h = DecimalParameter(00.50, 1.40, default=sell_params["hl_pct_change_36_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_48_1h = DecimalParameter(00.60, 1.60, default=sell_params["hl_pct_change_48_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    pct_chage_optimize = True
+    hl_pct_change_06_1h = DecimalParameter(0.30, 0.90, default=sell_params["hl_pct_change_06_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_12_1h = DecimalParameter(0.40, 1.00, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_24_1h = DecimalParameter(0.50, 1.20, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_36_1h = DecimalParameter(0.50, 1.40, default=sell_params["hl_pct_change_36_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_48_1h = DecimalParameter(0.60, 1.60, default=sell_params["hl_pct_change_48_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
     percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=True)
     percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=True)
