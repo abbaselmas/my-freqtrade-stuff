@@ -135,9 +135,9 @@ class abbas8(IStrategy):
     info_timeframes = ["15m", "30m", "1h"]
 
     minimal_roi = {
-        "106": 0,
-        "189": -0.02,
-        "224": -0.04
+        "99": 0,
+        "140": -0.015,
+        "232": -0.03
     }
 
     stoploss = -0.067
@@ -176,14 +176,14 @@ class abbas8(IStrategy):
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=volume_optimize)
     #btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
 
-    pct_chage_optimize = False
+    pct_chage_optimize = True
     hl_pct_change_24_1h = DecimalParameter(0.20, 1.00, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_12_1h = DecimalParameter(0.15, 0.80, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_6_1h = DecimalParameter(0.10, 0.60, default=sell_params["hl_pct_change_6_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_4_1h = DecimalParameter(0.05, 0.40, default=sell_params["hl_pct_change_4_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_2_1h = DecimalParameter(0.00, 0.20, default=sell_params["hl_pct_change_2_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
-    percent_change_optimize = False
+    percent_change_optimize = True
     percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=percent_change_optimize)
     percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=percent_change_optimize)
     percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=percent_change_optimize)
