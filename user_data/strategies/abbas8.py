@@ -51,11 +51,11 @@ sell_params = {
     "volume_warn": 5.0,
     "btc_rsi_8_1h": 35,
     "percent_change_length": 60,
-    "hl_pct_change_06_1h": 0.80,
-    "hl_pct_change_12_1h": 0.90,
-    "hl_pct_change_24_1h": 0.95,
-    "hl_pct_change_36_1h": 1.00,
-    "hl_pct_change_48_1h": 1.00,
+    "hl_pct_change_2_1h": 0.80,
+    "hl_pct_change_4_1h": 0.90,
+    "hl_pct_change_6_1h": 0.95,
+    "hl_pct_change_12_1h": 1.00,
+    "hl_pct_change_24_1h": 1.00,
     "percent_change_low": -0.05,
     "percent_change_high": 0.05
 }
@@ -173,11 +173,11 @@ class abbas8(IStrategy):
     btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
 
     pct_chage_optimize = True
-    hl_pct_change_06_1h = DecimalParameter(0.30, 0.90, default=sell_params["hl_pct_change_06_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_12_1h = DecimalParameter(0.40, 1.00, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_24_1h = DecimalParameter(0.50, 1.20, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_36_1h = DecimalParameter(0.50, 1.40, default=sell_params["hl_pct_change_36_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_48_1h = DecimalParameter(0.60, 1.60, default=sell_params["hl_pct_change_48_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_24_1h = DecimalParameter(0.20, 1.00, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_12_1h = DecimalParameter(0.15, 0.80, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_6_1h = DecimalParameter(0.10, 0.60, default=sell_params["hl_pct_change_6_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_4_1h = DecimalParameter(0.05, 0.40, default=sell_params["hl_pct_change_4_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
+    hl_pct_change_2_1h = DecimalParameter(0.00, 0.20, default=sell_params["hl_pct_change_2_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
     percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=True)
     percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=True)
@@ -212,11 +212,11 @@ class abbas8(IStrategy):
         # informative_1h["bb20_2_upp"] = bollinger["upper"]
 
         # Pump protections
-        informative_1h["hl_pct_change_48"] = range_percent_change(self, informative_1h, "HL", 48)
-        informative_1h["hl_pct_change_36"] = range_percent_change(self, informative_1h, "HL", 36)
         informative_1h["hl_pct_change_24"] = range_percent_change(self, informative_1h, "HL", 24)
         informative_1h["hl_pct_change_12"] = range_percent_change(self, informative_1h, "HL", 12)
-        informative_1h["hl_pct_change_06"] = range_percent_change(self, informative_1h, "HL", 6)
+        informative_1h["hl_pct_change_6"] = range_percent_change(self, informative_1h, "HL", 6)
+        informative_1h["hl_pct_change_4"] = range_percent_change(self, informative_1h, "HL", 4)
+        informative_1h["hl_pct_change_2"] = range_percent_change(self, informative_1h, "HL", 2)
         
         return informative_1h
 
@@ -347,11 +347,11 @@ class abbas8(IStrategy):
         # pump protections
         dont_buy_conditions.append(
             (
-                (dataframe['hl_pct_change_48_1h'] > self.hl_pct_change_48_1h.value) &
-                (dataframe['hl_pct_change_36_1h'] > self.hl_pct_change_36_1h.value) &
                 (dataframe['hl_pct_change_24_1h'] > self.hl_pct_change_24_1h.value) &
                 (dataframe['hl_pct_change_12_1h'] > self.hl_pct_change_12_1h.value) &
-                (dataframe['hl_pct_change_06_1h'] > self.hl_pct_change_06_1h.value)
+                (dataframe['hl_pct_change_6_1h'] > self.hl_pct_change_6_1h.value) &
+                (dataframe['hl_pct_change_4_1h'] > self.hl_pct_change_4_1h.value) &
+                (dataframe['hl_pct_change_2_1h'] > self.hl_pct_change_2_1h.value)
             )
         )
 
