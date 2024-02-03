@@ -32,18 +32,18 @@
       "slow_ewo": 234
     },
     "sell": {
-      "btc_rsi_8_1h": 7,
-      "volume_warn": 9.38,
       "base_nb_candles_sell": 44,
+      "btc_rsi_8_1h": 7,
       "high_offset": 1.19,
-      "hl_pct_change_06_1h": 0.48,
-      "hl_pct_change_12_1h": 0.83,
-      "hl_pct_change_24_1h": 0.76,
-      "hl_pct_change_36_1h": 0.57,
-      "hl_pct_change_48_1h": 0.72,
       "percent_change_high": 0.7,
       "percent_change_length": 229,
-      "percent_change_low": -0.38
+      "percent_change_low": -0.38,
+      "volume_warn": 9.38,
+      "hl_pct_change_12_1h": 0.54,
+      "hl_pct_change_24_1h": 0.83,
+      "hl_pct_change_2_1h": 0.15,
+      "hl_pct_change_4_1h": 0.31,
+      "hl_pct_change_6_1h": 0.55
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
@@ -57,5 +57,5 @@
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-02 11:51:42.632816+00:00"
+  "export_time": "2024-02-03 21:09:31.709496+00:00"
 }

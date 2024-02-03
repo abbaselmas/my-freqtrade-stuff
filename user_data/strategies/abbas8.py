@@ -152,7 +152,7 @@ class abbas8(IStrategy):
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
     rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
 
-    smaoffset_optimize = True
+    smaoffset_optimize = False
     base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
@@ -179,9 +179,9 @@ class abbas8(IStrategy):
     hl_pct_change_4_1h = DecimalParameter(0.05, 0.40, default=sell_params["hl_pct_change_4_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_2_1h = DecimalParameter(0.00, 0.20, default=sell_params["hl_pct_change_2_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
-    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=True)
-    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=True)
-    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=True)
+    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=False)
+    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=False)
+    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=False)
 
     # Optional order time in force.
     order_time_in_force = {
