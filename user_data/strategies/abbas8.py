@@ -49,20 +49,22 @@ sell_params = {
     "base_nb_candles_sell": 21,
     "high_offset": 1.01,
     "volume_warn": 5.0,
-    "btc_rsi_8_1h": 35,
+    #"btc_rsi_8_1h": 35,
     "percent_change_length": 60,
-    "hl_pct_change_2_1h": 0.80,
-    "hl_pct_change_4_1h": 0.90,
-    "hl_pct_change_6_1h": 0.95,
-    "hl_pct_change_12_1h": 1.00,
-    "hl_pct_change_24_1h": 1.00,
+    "hl_pct_change_12_1h": 0.54,
+    "hl_pct_change_24_1h": 0.83,
+    "hl_pct_change_2_1h": 0.15,
+    "hl_pct_change_4_1h": 0.31,
+    "hl_pct_change_6_1h": 0.55,
     "percent_change_low": -0.05,
-    "percent_change_high": 0.05
+    "percent_change_high": 0.05,
+    "volume_mean_long": 48,
+    "volume_mean_short": 4
 }
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.6"
+        return "v9.7"
     INTERFACE_VERSION = 3
 
     cooldown_stop_duration_candles = IntParameter(0, 5, default = protection_params["cooldown_stop_duration_candles"], space="protection", optimize=True)
@@ -149,9 +151,6 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 449
 
-    rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=True)
-    rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=True)
-
     smaoffset_optimize = False
     base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
@@ -159,29 +158,35 @@ class abbas8(IStrategy):
     low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
     high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
-    ewo_optimize = True
+    ewo_optimize = False
     fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
     slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+    rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
+    rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
 
-    protection_optimize = True
+    protection_optimize = False
     ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=False)
-    btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
+    volume_optimize = True
+    volume_mean_long = IntParameter(20, 200, default=sell_params["volume_mean_long"], space="sell", optimize=volume_optimize)
+    volume_mean_short = IntParameter(2, 50, default=sell_params["volume_mean_short"], space="sell", optimize=volume_optimize)
+    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=volume_optimize)
+    #btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
 
-    pct_chage_optimize = True
+    pct_chage_optimize = False
     hl_pct_change_24_1h = DecimalParameter(0.20, 1.00, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_12_1h = DecimalParameter(0.15, 0.80, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_6_1h = DecimalParameter(0.10, 0.60, default=sell_params["hl_pct_change_6_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_4_1h = DecimalParameter(0.05, 0.40, default=sell_params["hl_pct_change_4_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
     hl_pct_change_2_1h = DecimalParameter(0.00, 0.20, default=sell_params["hl_pct_change_2_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
-    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=False)
-    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=False)
-    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=False)
+    percent_change_optimize = False
+    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=percent_change_optimize)
+    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=percent_change_optimize)
+    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=percent_change_optimize)
 
     # Optional order time in force.
     order_time_in_force = {
@@ -258,10 +263,8 @@ class abbas8(IStrategy):
         return dataframe
 
     def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        df36h = dataframe.copy().shift( 432 )
-        df24h = dataframe.copy().shift( 288 )
-        dataframe['volume_mean_short'] = dataframe['volume'].rolling(4).mean()
-        dataframe['volume_mean_long'] = df24h['volume'].rolling(48).mean()
+        dataframe['volume_mean_short'] = dataframe['volume'].rolling(self.volume_mean_short.value).mean()
+        dataframe['volume_mean_long'] = dataframe['volume'].rolling(self.volume_mean_long.value).mean()
         dataframe['pnd_volume_warn'] = np.where((dataframe['volume_mean_short'] / dataframe['volume_mean_long'] > self.volume_warn.value), -1, 0)
         return dataframe
 
@@ -325,19 +328,18 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "ewolow")
 
         dont_buy_conditions = []
-        # # don't buy if there seems to be a Pump and Dump event.
-        # dont_buy_conditions.append(
-        #     (
-        #         (dataframe['pnd_volume_warn'] < 0.0)
-        #     )
-        # )
+        # don't buy if there seems to be a Pump and Dump event.
+        dont_buy_conditions.append(
+            (
+                (dataframe['pnd_volume_warn'] < 0.0)
+            )
+        )
         # # BTC price protection
         # dont_buy_conditions.append(
         #     (
         #         (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
         #     )
         # )
-        # don't buy if the price has changed too much in the last *5 hours
         dont_buy_conditions.append(
             (
                 ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) |
