@@ -1,11 +1,6 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "105": 0,
-      "144": -0.015,
-      "263": -0.03
-    },
     "stoploss": {
       "stoploss": -0.07
     },
@@ -33,17 +28,18 @@
     },
     "sell": {
       "base_nb_candles_sell": 44,
-      "btc_rsi_8_1h": 7,
       "high_offset": 1.19,
-      "percent_change_high": 0.7,
-      "percent_change_length": 229,
-      "percent_change_low": -0.38,
-      "volume_warn": 9.38,
       "hl_pct_change_12_1h": 0.54,
       "hl_pct_change_24_1h": 0.83,
       "hl_pct_change_2_1h": 0.15,
       "hl_pct_change_4_1h": 0.31,
-      "hl_pct_change_6_1h": 0.55
+      "hl_pct_change_6_1h": 0.55,
+      "percent_change_high": 0.7,
+      "percent_change_length": 229,
+      "percent_change_low": -0.38,
+      "volume_mean_long": 176,
+      "volume_mean_short": 24,
+      "volume_warn": 3.96
     },
     "protection": {
       "cooldown_stop_duration_candles": 0,
@@ -54,8 +50,13 @@
       "stoplossguard_lookback_period_candles": 197,
       "stoplossguard_stop_duration_candles": 6,
       "stoplossguard_trade_limit": 5
+    },
+    "roi": {
+      "99": 0,
+      "140": -0.015,
+      "232": -0.03
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-03 21:09:31.709496+00:00"
+  "export_time": "2024-02-03 22:19:30.597155+00:00"
 }
