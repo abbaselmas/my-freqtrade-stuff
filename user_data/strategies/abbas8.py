@@ -49,13 +49,7 @@ sell_params = {
     "base_nb_candles_sell": 21,
     "high_offset": 1.01,
     "volume_warn": 5.0,
-    #"btc_rsi_8_1h": 35,
     "percent_change_length": 60,
-    "hl_pct_change_12_1h": 0.54,
-    "hl_pct_change_24_1h": 0.83,
-    "hl_pct_change_2_1h": 0.15,
-    "hl_pct_change_4_1h": 0.31,
-    "hl_pct_change_6_1h": 0.55,
     "percent_change_low": -0.05,
     "percent_change_high": 0.05,
     "volume_mean_long": 48,
@@ -151,20 +145,20 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 449
 
-    smaoffset_optimize = False
+    smaoffset_optimize = True
     base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
     low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
     high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
-    ewo_optimize = False
+    ewo_optimize = True
     fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
     slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
     rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
 
-    protection_optimize = False
+    protection_optimize = True
     ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
@@ -174,14 +168,6 @@ class abbas8(IStrategy):
     volume_mean_long = IntParameter(20, 200, default=sell_params["volume_mean_long"], space="sell", optimize=volume_optimize)
     volume_mean_short = IntParameter(2, 50, default=sell_params["volume_mean_short"], space="sell", optimize=volume_optimize)
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=volume_optimize)
-    #btc_rsi_8_1h = IntParameter(0, 50, default=sell_params["btc_rsi_8_1h"], space="sell", optimize=False)
-
-    pct_chage_optimize = True
-    hl_pct_change_24_1h = DecimalParameter(0.20, 1.00, default=sell_params["hl_pct_change_24_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_12_1h = DecimalParameter(0.15, 0.80, default=sell_params["hl_pct_change_12_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_6_1h = DecimalParameter(0.10, 0.60, default=sell_params["hl_pct_change_6_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_4_1h = DecimalParameter(0.05, 0.40, default=sell_params["hl_pct_change_4_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
-    hl_pct_change_2_1h = DecimalParameter(0.00, 0.20, default=sell_params["hl_pct_change_2_1h"], decimals=2, space="sell", optimize=pct_chage_optimize)
 
     percent_change_optimize = True
     percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=percent_change_optimize)
@@ -198,32 +184,25 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
 
-    def informative_pairs(self):
-        pairs = self.dp.current_whitelist()
+    # def informative_pairs(self):
+    #     pairs = self.dp.current_whitelist()
 
-        informative_pairs = []
-        for info_timeframe in self.info_timeframes:
-            informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
+    #     informative_pairs = []
+    #     for info_timeframe in self.info_timeframes:
+    #         informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
 
-        return informative_pairs
+    #     return informative_pairs
 
-    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
+    # def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    #     assert self.dp, "DataProvider is required for multiple timeframes."
+    #     informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
-        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
-        # informative_1h["bb20_2_low"] = bollinger["lower"]
-        # informative_1h["bb20_2_mid"] = bollinger["mid"]
-        # informative_1h["bb20_2_upp"] = bollinger["upper"]
-
-        # Pump protections
-        informative_1h["hl_pct_change_24"] = range_percent_change(self, informative_1h, "HL", 24)
-        informative_1h["hl_pct_change_12"] = range_percent_change(self, informative_1h, "HL", 12)
-        informative_1h["hl_pct_change_6"] = range_percent_change(self, informative_1h, "HL", 6)
-        informative_1h["hl_pct_change_4"] = range_percent_change(self, informative_1h, "HL", 4)
-        informative_1h["hl_pct_change_2"] = range_percent_change(self, informative_1h, "HL", 2)
+    #     # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
+    #     # informative_1h["bb20_2_low"] = bollinger["lower"]
+    #     # informative_1h["bb20_2_mid"] = bollinger["mid"]
+    #     # informative_1h["bb20_2_upp"] = bollinger["upper"]
         
-        return informative_1h
+    #     return informative_1h
 
     # def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
     #     assert self.dp, "DataProvider is required for multiple timeframes."
@@ -287,8 +266,8 @@ class abbas8(IStrategy):
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe       = self.base_tf_5m_indicators(metadata, dataframe)
 
-        informative_1h  = self.informative_1h_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
+        # informative_1h  = self.informative_1h_indicators(dataframe, metadata)
+        # dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
         # informative_30m = self.informative_30m_indicators(dataframe, metadata)
         # dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
         # informative_15m = self.informative_15m_indicators(dataframe, metadata)
@@ -334,26 +313,10 @@ class abbas8(IStrategy):
                 (dataframe['pnd_volume_warn'] < 0.0)
             )
         )
-        # # BTC price protection
-        # dont_buy_conditions.append(
-        #     (
-        #         (dataframe['btc_usdt_rsi_8_1h'] < self.btc_rsi_8_1h.value)
-        #     )
-        # )
         dont_buy_conditions.append(
             (
                 ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) |
                 ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
-            )
-        )
-        # pump protections
-        dont_buy_conditions.append(
-            (
-                (dataframe['hl_pct_change_24_1h'] > self.hl_pct_change_24_1h.value) &
-                (dataframe['hl_pct_change_12_1h'] > self.hl_pct_change_12_1h.value) &
-                (dataframe['hl_pct_change_6_1h'] > self.hl_pct_change_6_1h.value) &
-                (dataframe['hl_pct_change_4_1h'] > self.hl_pct_change_4_1h.value) &
-                (dataframe['hl_pct_change_2_1h'] > self.hl_pct_change_2_1h.value)
             )
         )
 

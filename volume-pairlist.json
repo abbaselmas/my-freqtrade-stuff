@@ -7,38 +7,38 @@
             "min_value": 10000000,
             "refresh_period": 2700
         },
-        {   "method": "FullTradesFilter"},
-        {   "method": "PrecisionFilter"},
+        // {   "method": "FullTradesFilter"},
+        // {   "method": "PrecisionFilter"},
         {
             "method": "AgeFilter",
-            "min_days_listed": 31
+            "min_days_listed": 14
         },
         {
             "method": "PriceFilter",
             "min_price": 0.0001,
             "low_price_ratio": 0.01,
             "max_price": 200,
-            "max_value": 1
-        },
-        {
-            "method": "RangeStabilityFilter",
-            "lookback_days": 2,
-            "min_rate_of_change": 0.04,
-            "max_rate_of_change": 0.49,
-            "refresh_period": 21600
-        },
-        {
-            "method": "VolatilityFilter",
-            "lookback_days": 2,
-            "min_volatility": 0.02,
-            "max_volatility": 0.25,
-            "refresh_period": 21600
-        },
-        {
-            "method": "ShuffleFilter",
-            "shuffle_frequency": "candle",
-            "seed": 73
+            "max_value": 0.9
         }
+        // {
+        //     "method": "RangeStabilityFilter",
+        //     "lookback_days": 2,
+        //     "min_rate_of_change": 0.04,
+        //     "max_rate_of_change": 0.49,
+        //     "refresh_period": 21600
+        // },
+        // {
+        //     "method": "VolatilityFilter",
+        //     "lookback_days": 2,
+        //     "min_volatility": 0.02,
+        //     "max_volatility": 0.25,
+        //     "refresh_period": 21600
+        // },
+        // {
+        //     "method": "ShuffleFilter",
+        //     "shuffle_frequency": "candle",
+        //     "seed": 73
+        // }
     ],
     "exchange": {
         "name": "binance",
@@ -48,14 +48,14 @@
         "pair_blacklist": [
             // Exchange
             "(BNB)/.*",
-            // Leverage
-            ".*(_PREMIUM|BEAR|BULL|HALF|HEDGE|UP|DOWN|[1235][SL])/.*",
-            // Fiat
-            "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
-            // Stable
-            "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
-            // Abbas
-            "(1000SATS|1INCH|ALCX|AUCTION|BAKE|BAR|EOS|FTT|KLAY|LAZIO|LUNA|LUNC|MOVR|NMR|NTRN|ORDI|PERP|POND|POLYX|PROS|RAD|REQ|SANTOS|SEI|SYN|T|UTK|CKB)/.*"
+            // // Leverage
+            // ".*(_PREMIUM|BEAR|BULL|HALF|HEDGE|UP|DOWN|[1235][SL])/.*",
+            // // Fiat
+            // "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
+            // // Stable
+            // "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
+            // // Abbas
+            // "(1000SATS|1INCH|ALCX|AUCTION|BAKE|BAR|EOS|FTT|KLAY|LAZIO|LUNA|LUNC|MOVR|NMR|NTRN|ORDI|PERP|POND|POLYX|PROS|RAD|REQ|SANTOS|SEI|SYN|T|UTK|CKB)/.*"
         ]
     }
 }
