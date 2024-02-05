@@ -1,14 +1,6 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "111": 0,
-      "144": -0.015,
-      "165": -0.03
-    },
-    "stoploss": {
-      "stoploss": -0.067
-    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0003,
@@ -41,8 +33,16 @@
       "volume_mean_short": 19,
       "volume_warn": 5.87
     },
-    "protection": {}
+    "protection": {},
+    "roi": {
+      "114": 0,
+      "168": -0.015,
+      "220": -0.03
+    },
+    "stoploss": {
+      "stoploss": -0.069
+    }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-05 21:55:20.076345+00:00"
+  "export_time": "2024-02-05 22:18:49.245022+00:00"
 }
