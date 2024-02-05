@@ -1,6 +1,11 @@
 {
   "strategy_name": "abbas8",
   "params": {
+    "roi": {
+      "120": 0,
+      "190": -0.015,
+      "224": -0.03
+    },
     "stoploss": {
       "stoploss": -0.07
     },
@@ -14,17 +19,17 @@
       "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 38,
-      "ewo_high": 8.27,
-      "ewo_high_2": 11.77,
-      "ewo_low": -5.47,
-      "fast_ewo": 18,
-      "low_offset": 1.14,
-      "low_offset_2": 1.07,
-      "rsi_buy": 51,
-      "rsi_ewo2": 27,
-      "rsi_fast_ewo1": 58,
-      "slow_ewo": 224
+      "base_nb_candles_buy": 16,
+      "ewo_high": 10.68,
+      "ewo_high_2": 7.53,
+      "ewo_low": -6.66,
+      "fast_ewo": 21,
+      "low_offset": 1.18,
+      "low_offset_2": 0.81,
+      "rsi_buy": 54,
+      "rsi_ewo2": 12,
+      "rsi_fast_ewo1": 50,
+      "slow_ewo": 250
     },
     "sell": {
       "base_nb_candles_sell": 48,
@@ -36,13 +41,8 @@
       "volume_mean_short": 31,
       "volume_warn": 3.73
     },
-    "protection": {},
-    "roi": {
-      "120": 0,
-      "190": -0.015,
-      "224": -0.03
-    }
+    "protection": {}
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-05 13:52:56.924299+00:00"
+  "export_time": "2024-02-05 16:27:40.420408+00:00"
 }
