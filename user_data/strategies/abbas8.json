@@ -2,9 +2,9 @@
   "strategy_name": "abbas8",
   "params": {
     "roi": {
-      "99": 0,
-      "140": -0.015,
-      "232": -0.03
+      "118": 0,
+      "135": -0.03,
+      "183": -0.015
     },
     "stoploss": {
       "stoploss": -0.07
@@ -19,44 +19,29 @@
       "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 36,
-      "ewo_high": 6.65,
-      "ewo_high_2": -2.37,
-      "ewo_low": -6.12,
-      "fast_ewo": 9,
-      "low_offset": 1.12,
-      "low_offset_2": 0.81,
-      "rsi_buy": 66,
-      "rsi_ewo2": 21,
-      "rsi_fast_ewo1": 54,
-      "slow_ewo": 234
+      "base_nb_candles_buy": 38,
+      "ewo_high": 8.27,
+      "ewo_high_2": 11.77,
+      "ewo_low": -5.47,
+      "fast_ewo": 18,
+      "low_offset": 1.14,
+      "low_offset_2": 1.07,
+      "rsi_buy": 51,
+      "rsi_ewo2": 27,
+      "rsi_fast_ewo1": 58,
+      "slow_ewo": 224
     },
     "sell": {
-      "base_nb_candles_sell": 44,
-      "high_offset": 1.19,
-      "hl_pct_change_12_1h": 0.35,
-      "hl_pct_change_24_1h": 0.91,
-      "hl_pct_change_2_1h": 0.08,
-      "hl_pct_change_4_1h": 0.33,
-      "hl_pct_change_6_1h": 0.54,
-      "percent_change_high": 0.67,
-      "percent_change_length": 247,
-      "percent_change_low": -0.46,
-      "volume_mean_long": 181,
+      "base_nb_candles_sell": 48,
+      "high_offset": 1.06,
+      "percent_change_high": 0.63,
+      "percent_change_length": 24,
+      "percent_change_low": -0.48,
+      "volume_mean_long": 77,
       "volume_mean_short": 31,
-      "volume_warn": 4.51
-    },
-    "protection": {
-      "cooldown_stop_duration_candles": 0,
-      "maxdrawdown_lookback_period_candles": 11,
-      "maxdrawdown_max_allowed_drawdown": 0.02,
-      "maxdrawdown_stop_duration_candles": 132,
-      "maxdrawdown_trade_limit": 9,
-      "stoplossguard_lookback_period_candles": 197,
-      "stoplossguard_stop_duration_candles": 6,
-      "stoplossguard_trade_limit": 5
+      "volume_warn": 3.73
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-03 22:52:44.362068+00:00"
+  "export_time": "2024-02-05 13:24:24.196870+00:00"
 }
