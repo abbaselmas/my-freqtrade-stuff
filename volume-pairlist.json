@@ -4,11 +4,11 @@
             "method": "VolumePairList",
             "number_assets": 360,
             "sort_key": "quoteVolume",
-            "min_value": 10000000,
+            "min_value": 5000000,
             "refresh_period": 2700
         },
-        {   "method": "FullTradesFilter"},
-        {   "method": "PrecisionFilter"},
+//        {   "method": "FullTradesFilter"},
+//        {   "method": "PrecisionFilter"},
         {
             "method": "AgeFilter",
             "min_days_listed": 14
@@ -23,7 +23,7 @@
         {
             "method": "RangeStabilityFilter",
             "lookback_days": 2,
-            "min_rate_of_change": 0.04,
+            "min_rate_of_change": 0.02,
             "max_rate_of_change": 0.49,
             "refresh_period": 21600
         },
