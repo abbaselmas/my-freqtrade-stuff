@@ -268,7 +268,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) |
+                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) &
                 ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
             )
         )
