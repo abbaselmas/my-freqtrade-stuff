@@ -276,6 +276,13 @@ class abbas8(IStrategy):
         #         ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
         #     )
         # )
+        dont_buy_conditions.append(
+            (
+                (dataframe["low_15m"] < dataframe["bb20_2_low_15m"]) |
+                (dataframe["low_30m"] < dataframe["bb20_2_low_30m"]) |
+                (dataframe["low_1h"] < dataframe["bb20_2_low_1h"])
+            )
+        )
         
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
