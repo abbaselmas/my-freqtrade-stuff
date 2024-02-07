@@ -6,10 +6,10 @@
     "fiat_display_currency": "USD",
     "timeframe": "5m",
     "timeframe_detail": "1m",
-    "dry_run": true,
-    "dry_run_wallet": 100000,
+    "dry_run": false,
+    "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": false,
-    "DRAWDOWN_MULT": 0.08,
+    "DRAWDOWN_MULT": 0.078,
     "unfilledtimeout": {
         "entry": 6,
         "exit": 6,
@@ -75,7 +75,7 @@
                 "/trades"
             ],
             [
-                "/daily",
+                "/forceexit",
                 "/stats",
                 "/logs"
             ],
@@ -125,7 +125,7 @@
         "password": "73"
     },
     "bot_name": "freqtrade",
-    "initial_state": "running",
+    "initial_state": "stopped",
     "force_entry_enable": true,
     "db_url": "sqlite:///abbas.sqlite",
     "internals": {
