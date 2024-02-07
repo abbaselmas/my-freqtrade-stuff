@@ -47,7 +47,7 @@ sell_params = {
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.7"
+        return "v9.8"
     INTERFACE_VERSION = 3
 
     class HyperOpt:
@@ -137,53 +137,49 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
 
-    # def informative_pairs(self):
-    #     pairs = self.dp.current_whitelist()
+    def informative_pairs(self):
+        pairs = self.dp.current_whitelist()
 
-    #     informative_pairs = []
-    #     for info_timeframe in self.info_timeframes:
-    #         informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
+        informative_pairs = []
+        for info_timeframe in self.info_timeframes:
+            informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
 
-    #     return informative_pairs
+        return informative_pairs
 
-    # def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    #     assert self.dp, "DataProvider is required for multiple timeframes."
-    #     informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
+    def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
-    #     # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
-    #     # informative_1h["bb20_2_low"] = bollinger["lower"]
-    #     # informative_1h["bb20_2_mid"] = bollinger["mid"]
-    #     # informative_1h["bb20_2_upp"] = bollinger["upper"]
+        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
+        informative_1h["bb20_2_low"] = bollinger["lower"]
+        informative_1h["bb20_2_mid"] = bollinger["mid"]
+        informative_1h["bb20_2_upp"] = bollinger["upper"]
         
-    #     return informative_1h
+        return informative_1h
 
-    # def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    #     assert self.dp, "DataProvider is required for multiple timeframes."
-    #     informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
+    def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
 
-    #     # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.68)
-    #     # informative_30m["bb20_2_low"] = bollinger["lower"]
-    #     # informative_30m["bb20_2_mid"] = bollinger["mid"]
-    #     # informative_30m["bb20_2_upp"] = bollinger["upper"]
+        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.8)
+        informative_30m["bb20_2_low"] = bollinger["lower"]
+        informative_30m["bb20_2_mid"] = bollinger["mid"]
+        informative_30m["bb20_2_upp"] = bollinger["upper"]
         
-    #     return informative_30m
+        return informative_30m
     
-    # def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    #     assert self.dp, "DataProvider is required for multiple timeframes."
-    #     informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
+    def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
 
-    #     # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
-    #     # informative_15m["bb20_2_low"] = bollinger["lower"]
-    #     # informative_15m["bb20_2_mid"] = bollinger["mid"]
-    #     # informative_15m["bb20_2_upp"] = bollinger["upper"]
+        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
+        informative_15m["bb20_2_low"] = bollinger["lower"]
+        informative_15m["bb20_2_mid"] = bollinger["mid"]
+        informative_15m["bb20_2_upp"] = bollinger["upper"]
         
-    #     return informative_15m
+        return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
-        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2.68)
-        # dataframe["bb20_2_low"] = bollinger["lower"]
-        # dataframe["bb20_2_mid"] = bollinger["mid"]
-        # dataframe["bb20_2_upp"] = bollinger["upper"]
 
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
         dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
@@ -219,60 +215,68 @@ class abbas8(IStrategy):
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe       = self.base_tf_5m_indicators(metadata, dataframe)
 
-        # informative_1h  = self.informative_1h_indicators(dataframe, metadata)
-        # dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
-        # informative_30m = self.informative_30m_indicators(dataframe, metadata)
-        # dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
-        # informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        # dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
+        informative_1h  = self.informative_1h_indicators(dataframe, metadata)
+        dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
+        informative_30m = self.informative_30m_indicators(dataframe, metadata)
+        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
+        informative_15m = self.informative_15m_indicators(dataframe, metadata)
+        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
 
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe["enter_tag"] = ""
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] > self.ewo_high.value) &
+        #         (dataframe["rsi"] < self.rsi_buy.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewo1")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
+        #         (dataframe["ewo"] > self.ewo_high_2.value) &
+        #         (dataframe["rsi"] < self.rsi_buy.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
+        #         (dataframe["rsi"] < self.rsi_ewo2.value)
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewo2")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] < self.ewo_low.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewolow")
         dataframe.loc[
             (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] > self.ewo_high.value) &
-                (dataframe["rsi"] < self.rsi_buy.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+                (dataframe["low_15m"] > dataframe["bb20_2_mid_15m"]) &
+                (dataframe["low_30m"] > dataframe["bb20_2_mid_30m"]) &
+                (dataframe["low_1h"] > dataframe["bb20_2_mid_1h"]) &
+                (dataframe["high"] < dataframe["high"].rolling(5).max())
             ),
-            ["enter_long", "enter_tag"]] = (1, "ewo1")
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
-                (dataframe["ewo"] > self.ewo_high_2.value) &
-                (dataframe["rsi"] < self.rsi_buy.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
-                (dataframe["rsi"] < self.rsi_ewo2.value)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewo2")
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] < self.ewo_low.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewolow")
+            ["enter_long", "enter_tag"]] = (1, "BB_above_mid_but_lower_highest_5")
 
         dont_buy_conditions = []
-        # don't buy if there seems to be a Pump and Dump event.
-        dont_buy_conditions.append(
-            (
-                (dataframe['pnd_volume_warn'] < 0.0)
-            )
-        )
-        dont_buy_conditions.append(
-            (
-                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) &
-                ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
-            )
-        )
-
+        # # don't buy if there seems to be a Pump and Dump event.
+        # dont_buy_conditions.append(
+        #     (
+        #         (dataframe['pnd_volume_warn'] < 0.0)
+        #     )
+        # )
+        # dont_buy_conditions.append(
+        #     (
+        #         ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] < self.percent_change_low.value) &
+        #         ((dataframe['open'].rolling(self.percent_change_length.value).max() - dataframe['close']) / dataframe['close'] > self.percent_change_high.value)
+        #     )
+        # )
+        
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
                 dataframe.loc[condition, "enter_long"] = 0
