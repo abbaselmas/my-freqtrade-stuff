@@ -300,33 +300,33 @@ class abbas8(IStrategy):
     
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe["enter_tag"] = ""
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] > self.ewo_high.value) &
-                (dataframe["rsi"] < self.rsi_buy.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewo1")
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
-                (dataframe["ewo"] > self.ewo_high_2.value) &
-                (dataframe["rsi"] < self.rsi_buy.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
-                (dataframe["rsi"] < self.rsi_ewo2.value)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewo2")
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] < self.ewo_low.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewolow")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] > self.ewo_high.value) &
+        #         (dataframe["rsi"] < self.rsi_buy.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewo1")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset_2.value)) &
+        #         (dataframe["ewo"] > self.ewo_high_2.value) &
+        #         (dataframe["rsi"] < self.rsi_buy.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value)) &
+        #         (dataframe["rsi"] < self.rsi_ewo2.value)
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewo2")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] < self.ewo_low.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewolow")
         
         # CombinedBinHClucAndMADV9
         dataframe.loc[
