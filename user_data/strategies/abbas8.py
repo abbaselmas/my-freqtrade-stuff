@@ -266,10 +266,10 @@ class abbas8(IStrategy):
 
         informative_1h  = self.informative_1h_indicators(dataframe, metadata)
         dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
-        informative_30m = self.informative_30m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
-        informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
+        # informative_30m = self.informative_30m_indicators(dataframe, metadata)
+        # dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
+        # informative_15m = self.informative_15m_indicators(dataframe, metadata)
+        # dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
 
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
