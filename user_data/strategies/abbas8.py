@@ -179,10 +179,10 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
-        informative_1h["bb20_2_low"] = bollinger["lower"]
-        informative_1h["bb20_2_mid"] = bollinger["mid"]
-        informative_1h["bb20_2_upp"] = bollinger["upper"]
+        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
+        # informative_1h["bb20_2_low"] = bollinger["lower"]
+        # informative_1h["bb20_2_mid"] = bollinger["mid"]
+        # informative_1h["bb20_2_upp"] = bollinger["upper"]
 
         # EMA
         informative_1h['ema_50'] = ta.EMA(informative_1h, timeperiod=50)
@@ -192,27 +192,27 @@ class abbas8(IStrategy):
         
         return informative_1h
 
-    def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
+    # def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    #     assert self.dp, "DataProvider is required for multiple timeframes."
+    #     informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
 
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.8)
-        informative_30m["bb20_2_low"] = bollinger["lower"]
-        informative_30m["bb20_2_mid"] = bollinger["mid"]
-        informative_30m["bb20_2_upp"] = bollinger["upper"]
+    #     bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.8)
+    #     informative_30m["bb20_2_low"] = bollinger["lower"]
+    #     informative_30m["bb20_2_mid"] = bollinger["mid"]
+    #     informative_30m["bb20_2_upp"] = bollinger["upper"]
         
-        return informative_30m
+    #     return informative_30m
     
-    def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        assert self.dp, "DataProvider is required for multiple timeframes."
-        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
+    # def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+    #     assert self.dp, "DataProvider is required for multiple timeframes."
+    #     informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
 
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
-        informative_15m["bb20_2_low"] = bollinger["lower"]
-        informative_15m["bb20_2_mid"] = bollinger["mid"]
-        informative_15m["bb20_2_upp"] = bollinger["upper"]
+    #     bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
+    #     informative_15m["bb20_2_low"] = bollinger["lower"]
+    #     informative_15m["bb20_2_mid"] = bollinger["mid"]
+    #     informative_15m["bb20_2_upp"] = bollinger["upper"]
         
-        return informative_15m
+    #     return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
 
@@ -223,6 +223,10 @@ class abbas8(IStrategy):
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
 
+        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
+        dataframe['bb_lowerband'] = bollinger['lower']
+        dataframe['bb_middleband'] = bollinger['mid']
+        dataframe['bb_upperband'] = bollinger['upper']
         dataframe['volume_mean_slow'] = dataframe['volume'].rolling(window=30).mean()
 
         # EMA
