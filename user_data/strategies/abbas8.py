@@ -136,7 +136,7 @@ class abbas8(IStrategy):
         "retries": 3,
         "max_slippage": -0.002
     }
-    buy_condition_optimize = True
+    buy_condition_optimize = False
     buy_condition_0_enable = CategoricalParameter([True, False], default=True, space='buy', optimize=buy_condition_optimize, load=True)
     buy_condition_1_enable = CategoricalParameter([True, False], default=True, space='buy', optimize=buy_condition_optimize, load=True)
     buy_condition_2_enable = CategoricalParameter([True, False], default=True, space='buy', optimize=buy_condition_optimize, load=True)
