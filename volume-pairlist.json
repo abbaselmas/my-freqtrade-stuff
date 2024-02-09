@@ -7,8 +7,8 @@
             "min_value": 5000000,
             "refresh_period": 2700
         },
-//        {   "method": "FullTradesFilter"},
-//        {   "method": "PrecisionFilter"},
+        {   "method": "FullTradesFilter"},
+        {   "method": "PrecisionFilter"},
         {
             "method": "AgeFilter",
             "min_days_listed": 14
@@ -55,7 +55,7 @@
             // Stable
             "(BUSD|CUSD|CUSDT|DAI|PAXG|SUSD|TUSD|USDC|USDN|USDP|USDT|VAI|UST|USTC|AUSD)/.*",
             // Abbas
-            "(1000SATS|AUCTION|BAR|EOS|FTT|KLAY|LAZIO|LUNA|LUNC|REQ|SANTOS|SYN|T|XMR)/.*",
+            "(1000SATS|AUCTION|BAR|EOS|FTT|KLAY|LAZIO|LUNA|LUNC|REQ|SANTOS|SYN|T|XMR|ANT|MULTI|VAI|OM)/.*",
             // NFI
             "(1EARTH|ILA|BOBA|CTXC|CWAR|HBAR|OMG|ONG|ARDR|DMTR|MLS|TORN|LUNA|BTS|QKC|COS|ACA|FTT|SRM|YFII|SNM|ANC|AION|MIR|BNX|STG|HNT|WABI|QLC|NEBL|AUTO|VGX|PEPE|VITE|DREP|JASMY|PNT|PERL|AMB|OAX|LOOM|RAD|ID|NULS|MLN|MEME|TOKEN|TOMO|WTC|1000SATS|ORDI)/.*"
         ]
