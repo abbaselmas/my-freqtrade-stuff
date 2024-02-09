@@ -22,35 +22,35 @@ logger = logging.getLogger(__name__)
 # Protection hyperspace params:
 protection_params = {
     "cooldown_stop_duration_candles": 0,
-    "maxdrawdown_lookback_period_candles": 3,
-    "maxdrawdown_max_allowed_drawdown": 0.06,
-    "maxdrawdown_stop_duration_candles": 162,
+    "maxdrawdown_lookback_period_candles": 1,
+    "maxdrawdown_max_allowed_drawdown": 0.03,
+    "maxdrawdown_stop_duration_candles": 32,
     "maxdrawdown_trade_limit": 10,
-    "stoplossguard_lookback_period_candles": 24,
-    "stoplossguard_stop_duration_candles": 29,
-    "stoplossguard_trade_limit": 3
+    "stoplossguard_lookback_period_candles": 17,
+    "stoplossguard_stop_duration_candles": 15,
+    "stoplossguard_trade_limit": 5
 }
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 12,
-    "ewo_high": 7.54,
-    "ewo_high_2": 9.88,
-    "ewo_low": -5.53,
+    "base_nb_candles_buy": 15,
+    "ewo_high": 8.32,
+    "ewo_high_2": -4.44,
+    "ewo_low": -6.42,
     "fast_ewo": 9,
     "low_offset": 1.18,
-    "low_offset_2": 0.97,
-    "pump_factor": 1.59,
-    "pump_rolling": 80,
-    "rsi_buy": 55,
-    "rsi_ewo2": 38,
-    "rsi_fast_ewo1": 52,
-    "slow_ewo": 168
+    "low_offset_2": 0.93,
+    "pump_factor": 1.64,
+    "pump_rolling": 77,
+    "rsi_buy": 67,
+    "rsi_ewo2": 18,
+    "rsi_fast_ewo1": 56,
+    "slow_ewo": 198
 }
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 21,
-    "high_offset": 1.01,
-    "min_profit": 0.96
+    "base_nb_candles_sell": 15,
+    "high_offset": 1.11,
+    "min_profit": 0.69
 }
 
 class abbas(IStrategy):
@@ -131,15 +131,15 @@ class abbas(IStrategy):
     timeframe = "5m"
     inf_1h = "1h"
     minimal_roi = {
-        "106": 0,
-        "189": -0.02,
-        "224": -0.04
+        "115": 0,
+        "147": -0.015,
+        "289": -0.03
     }
 
-    stoploss = -0.067
+    stoploss = -0.07
     trailing_stop = True
-    trailing_stop_positive = 0.0003
-    trailing_stop_positive_offset = 0.0146
+    trailing_stop_positive = 0.0002
+    trailing_stop_positive_offset = 0.0142
     trailing_only_offset_is_reached = True
 
     use_exit_signal = False
