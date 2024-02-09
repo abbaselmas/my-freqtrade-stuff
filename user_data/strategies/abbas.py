@@ -15,7 +15,6 @@ from freqtrade.strategy import stoploss_from_open, merge_informative_pair, Decim
 import technical.indicators as ftt
 from freqtrade.exchange import timeframe_to_prev_date
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
-from market_profile import MarketProfile
 
 logger = logging.getLogger(__name__)
 
