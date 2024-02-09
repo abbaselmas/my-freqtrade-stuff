@@ -341,6 +341,23 @@ class abbas8(IStrategy):
         
         # CombinedBinHClucAndMADV9
         dataframe.loc[
+            (   
+                self.buy_condition_9_enable.value &
+                (dataframe["rsi_1h"] < self.buy_rsi_1h_4.value) &
+                (dataframe["rsi"] < self.buy_rsi_2.value) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 9")
+        dataframe.loc[
+            (
+                self.buy_condition_18_enable.value &
+                (dataframe["rsi_1h"] < self.buy_rsi_1h_3.value) &
+                (dataframe["rsi"] < self.buy_rsi_1.value) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 18")
+        dataframe.loc[
             (
                 self.buy_condition_0_enable.value &
                 (dataframe["close"] > dataframe["ema_200"]) &
@@ -351,16 +368,6 @@ class abbas8(IStrategy):
                 (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48))
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 0")
-        dataframe.loc[
-            (   
-                self.buy_condition_2_enable.value &
-                (dataframe["close"] > dataframe["ema_200"]) &
-                (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 2")
         dataframe.loc[
             (   
                 self.buy_condition_3_enable.value &
@@ -402,17 +409,6 @@ class abbas8(IStrategy):
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 6")
         dataframe.loc[
-            (
-                self.buy_condition_7_enable.value &
-                (dataframe["rsi_1h"] < self.buy_rsi_1h_2.value) &
-                (dataframe["ema_26"] > dataframe["ema_12"]) &
-                ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_1.value)) &
-                ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 7")
-        dataframe.loc[
             (   
                 self.buy_condition_8_enable.value &
                 (dataframe["rsi_1h"] < self.buy_rsi_1h_3.value) &
@@ -421,40 +417,6 @@ class abbas8(IStrategy):
                 (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 8")
-        dataframe.loc[
-            (   
-                self.buy_condition_9_enable.value &
-                (dataframe["rsi_1h"] < self.buy_rsi_1h_4.value) &
-                (dataframe["rsi"] < self.buy_rsi_2.value) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 9")
-        dataframe.loc[
-            (
-                self.buy_condition_10_enable.value &
-                (dataframe["close"] > dataframe["ema_200"]) &
-                (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 10")
-        dataframe.loc[
-            (
-                self.buy_condition_11_enable.value &
-                (dataframe["close"] > dataframe["ema_200"]) &
-                (dataframe["close"] > dataframe["ema_200_1h"]) &
-                (dataframe["close"] <  dataframe["bb_lowerband"] * self.buy_bb20_close_bblowerband_safe_1.value) &
-                (dataframe["rsi_1h"] < 69) &
-                (dataframe["open"] > dataframe["close"]) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                ((dataframe["open"] - dataframe["close"]) < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 11")
         dataframe.loc[
             (
                 self.buy_condition_12_enable.value &
@@ -471,17 +433,6 @@ class abbas8(IStrategy):
                 ((dataframe["open"] - dataframe["close"]) < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 12")
-        dataframe.loc[
-            (
-                self.buy_condition_13_enable.value &
-                (dataframe["close"] > dataframe["ema_200_1h"]) &
-                (dataframe["close"] < dataframe["bb_lowerband"]) &
-                (dataframe["rsi"] < self.buy_rsi_3.value) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_3.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 13")
         dataframe.loc[
             (
                 self.buy_condition_14_enable.value &
@@ -531,25 +482,6 @@ class abbas8(IStrategy):
                 (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48))
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 17")
-        dataframe.loc[
-            (
-                self.buy_condition_18_enable.value &
-                (dataframe["rsi_1h"] < self.buy_rsi_1h_3.value) &
-                (dataframe["rsi"] < self.buy_rsi_1.value) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 18")
-        dataframe.loc[
-            (
-                self.buy_condition_19_enable.value &
-                (dataframe["rsi_1h"] < self.buy_rsi_1h_4.value) &
-                (dataframe["rsi"] < self.buy_rsi_2.value) &
-                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cond 19")
-        
         dont_buy_conditions = []
         dont_buy_conditions.append(
             (
