@@ -183,27 +183,27 @@ class abbas8(IStrategy):
     buy_condition_18_enable = CategoricalParameter([True, False], default=True, space='buy', optimize=buy_condition_optimize)
     buy_condition_19_enable = CategoricalParameter([True, False], default=True, space='buy', optimize=buy_condition_optimize)
 
-    buy_bb20_close_bblowerband_safe_1 = DecimalParameter(0.9, 1.1, default=0.990, space='buy', decimals=3, optimize=True)
-    buy_bb20_close_bblowerband_safe_2 = DecimalParameter(0.9, 1.1, default=0.982, space='buy', decimals=3, optimize=True)
+    buy_bb20_close_bblowerband_safe_1 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_1"], space='buy', decimals=2, optimize=True)
+    buy_bb20_close_bblowerband_safe_2 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_2"], space='buy', decimals=2, optimize=True)
     
     buy_volume_optimize = True
     buy_volume_pump_1 = DecimalParameter(0.1, 0.6, default=buy_params["buy_volume_pump_1"], space='buy', decimals=2, optimize=buy_volume_optimize)
-    buy_volume_drop_1 = DecimalParameter(1, 10, default=4, space='buy', decimals=1, optimize=buy_volume_optimize)
-    buy_volume_drop_2 = DecimalParameter(1, 10, default=3, space='buy', decimals=1, optimize=buy_volume_optimize)
-    buy_volume_drop_3 = DecimalParameter(1, 10, default=2.7, space='buy', decimals=1, optimize=buy_volume_optimize)
+    buy_volume_drop_1 = DecimalParameter(1, 10, default=buy_params["buy_volume_drop_1"], space='buy', decimals=1, optimize=buy_volume_optimize)
+    buy_volume_drop_2 = DecimalParameter(1, 10, default=buy_params["buy_volume_drop_2"], space='buy', decimals=1, optimize=buy_volume_optimize)
+    buy_volume_drop_3 = DecimalParameter(1, 10, default=buy_params["buy_volume_drop_3"], space='buy', decimals=1, optimize=buy_volume_optimize)
     
     buy_rsi_optimize = True
-    buy_rsi_1h_1 = DecimalParameter(10.0, 40.0, default=16.5, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_1h_2 = DecimalParameter(10.0, 40.0, default=15.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_1h_3 = DecimalParameter(10.0, 40.0, default=20.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_1h_4 = DecimalParameter(10.0, 40.0, default=35.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_1h_5 = DecimalParameter(10.0, 60.0, default=39.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_1 = DecimalParameter(10.0, 40.0, default=28.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_2 = DecimalParameter(7.0, 40.0, default=10.0, space='buy', decimals=1, optimize=buy_rsi_optimize)
-    buy_rsi_3 = DecimalParameter(7.0, 40.0, default=14.2, space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1h_1 = DecimalParameter(10.0, 40.0, default=buy_params["buy_rsi_1h_1"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1h_2 = DecimalParameter(10.0, 40.0, default=buy_params["buy_rsi_1h_2"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1h_3 = DecimalParameter(10.0, 40.0, default=buy_params["buy_rsi_1h_3"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1h_4 = DecimalParameter(10.0, 40.0, default=buy_params["buy_rsi_1h_4"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1h_5 = DecimalParameter(10.0, 60.0, default=buy_params["buy_rsi_1h_5"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_1 = DecimalParameter(10.0, 40.0, default=buy_params["buy_rsi_1"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_2 = DecimalParameter(7.0, 40.0, default=buy_params["buy_rsi_2"], space='buy', decimals=1, optimize=buy_rsi_optimize)
+    buy_rsi_3 = DecimalParameter(7.0, 40.0, default=buy_params["buy_rsi_3"], space='buy', decimals=1, optimize=buy_rsi_optimize)
     
-    buy_macd_1 = DecimalParameter(0.01, 0.09, default=0.02, space='buy', decimals=2, optimize=True)
-    buy_macd_2 = DecimalParameter(0.01, 0.09, default=0.03, space='buy', decimals=2, optimize=True)
+    buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space='buy', decimals=2, optimize=True)
+    buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space='buy', decimals=2, optimize=True)
     
     # def informative_pairs(self):
     #     pairs = self.dp.current_whitelist()
