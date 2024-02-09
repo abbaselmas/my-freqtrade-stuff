@@ -341,26 +341,15 @@ class abbas8(IStrategy):
         #     ),
         #     ["enter_long", "enter_tag"]] = (1, "cond 0")
         dataframe.loc[
-            (    
-                self.buy_condition_1_enable.value &
+            (   
+                self.buy_condition_2_enable.value &
                 (dataframe['close'] > dataframe['ema_200']) &
-                (dataframe['close'] > dataframe['ema_200_1h']) &
-                (dataframe['close'] <  dataframe['bb_lowerband'] * self.buy_bb20_close_bblowerband_safe_1.value) &
+                (dataframe['close'] < dataframe['bb_lowerband'] *  self.buy_bb20_close_bblowerband_safe_2.value) &
                 (dataframe['volume_mean_slow'] > dataframe['volume_mean_slow'].shift(30) * self.buy_volume_pump_1.value) &
                 (dataframe['volume'] < (dataframe['volume'].shift() * self.buy_volume_drop_1.value)) &
                 (dataframe['open'] - dataframe['close'] < dataframe['bb_upperband'].shift(2) - dataframe['bb_lowerband'].shift(2))
             ),
-            ["enter_long", "enter_tag"]] = (1, "cond 1")
-        # dataframe.loc[
-        #     (   
-        #         self.buy_condition_2_enable.value &
-        #         (dataframe['close'] > dataframe['ema_200']) &
-        #         (dataframe['close'] < dataframe['bb_lowerband'] *  self.buy_bb20_close_bblowerband_safe_2.value) &
-        #         (dataframe['volume_mean_slow'] > dataframe['volume_mean_slow'].shift(30) * self.buy_volume_pump_1.value) &
-        #         (dataframe['volume'] < (dataframe['volume'].shift() * self.buy_volume_drop_1.value)) &
-        #         (dataframe['open'] - dataframe['close'] < dataframe['bb_upperband'].shift(2) - dataframe['bb_lowerband'].shift(2))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 2")
+            ["enter_long", "enter_tag"]] = (1, "cond 2")
         # dataframe.loc[
         #     (   
         #         self.buy_condition_3_enable.value &
