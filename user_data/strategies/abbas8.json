@@ -1,48 +1,64 @@
 {
   "strategy_name": "abbas8",
   "params": {
+    "roi": {
+      "99": 0,
+      "140": -0.015,
+      "232": -0.03
+    },
+    "stoploss": {
+      "stoploss": -0.067
+    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.0003,
-      "trailing_stop_positive_offset": 0.0153,
+      "trailing_stop_positive_offset": 0.0146,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 3
+      "max_open_trades": 10
     },
     "buy": {
-      "base_nb_candles_buy": 11,
-      "ewo_high": 6.23,
-      "ewo_high_2": 4.38,
-      "ewo_low": -4.37,
-      "fast_ewo": 10,
-      "low_offset": 1.12,
-      "low_offset_2": 0.83,
-      "rsi_buy": 54,
-      "rsi_ewo2": 20,
-      "rsi_fast_ewo1": 59,
-      "slow_ewo": 178
+      "base_nb_candles_buy": 15,
+      "ewo_high": 8.32,
+      "ewo_high_2": -4.44,
+      "ewo_low": -6.42,
+      "fast_ewo": 9,
+      "low_offset": 1.18,
+      "low_offset_2": 0.93,
+      "rsi_buy": 67,
+      "rsi_ewo2": 18,
+      "rsi_fast_ewo1": 56,
+      "slow_ewo": 198,
+      "buy_bb20_close_bblowerband_safe_1": 0.99,
+      "buy_bb20_close_bblowerband_safe_2": 0.93,
+      "buy_macd_1": 0.04,
+      "buy_macd_2": 0.02,
+      "buy_rsi_1": 31,
+      "buy_rsi_1h_1": 25,
+      "buy_rsi_1h_2": 36,
+      "buy_rsi_1h_3": 10,
+      "buy_rsi_1h_4": 31,
+      "buy_rsi_1h_5": 25,
+      "buy_rsi_2": 9,
+      "buy_rsi_3": 39,
+      "buy_volume_drop_1": 13,
+      "buy_volume_drop_2": 2,
+      "buy_volume_drop_3": 3,
+      "buy_volume_pump_1": 0.16
     },
     "sell": {
-      "base_nb_candles_sell": 18,
-      "high_offset": 1.1,
-      "percent_change_high": 0.65,
-      "percent_change_length": 153,
-      "percent_change_low": -0.2,
-      "volume_mean_long": 49,
-      "volume_mean_short": 15,
-      "volume_warn": 7.93
+      "base_nb_candles_sell": 15,
+      "high_offset": 1.11,
+      "percent_change_high": 0.05,
+      "percent_change_length": 60,
+      "percent_change_low": -0.05,
+      "volume_mean_long": 48,
+      "volume_mean_short": 4,
+      "volume_warn": 5.0
     },
-    "protection": {},
-    "roi": {
-      "120": 0,
-      "134": -0.015,
-      "148": -0.03
-    },
-    "stoploss": {
-      "stoploss": -0.053
-    }
+    "protection": {}
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-07 12:34:46.190667+00:00"
+  "export_time": "2024-02-12 20:29:13.287988+00:00"
 }
