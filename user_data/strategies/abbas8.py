@@ -30,26 +30,6 @@ buy_params = {
     "rsi_ewo2": 18,
     "rsi_fast_ewo1": 56,
     "slow_ewo": 198,
-    "buy_condition_0_enable": True,
-    "buy_condition_10_enable": True,
-    "buy_condition_11_enable": True,
-    "buy_condition_12_enable": True,
-    "buy_condition_13_enable": True,
-    "buy_condition_14_enable": True,
-    "buy_condition_15_enable": True,
-    "buy_condition_16_enable": True,
-    "buy_condition_17_enable": True,
-    "buy_condition_18_enable": True,
-    "buy_condition_19_enable": True,
-    "buy_condition_1_enable": True,
-    "buy_condition_2_enable": True,
-    "buy_condition_3_enable": True,
-    "buy_condition_4_enable": True,
-    "buy_condition_5_enable": True,
-    "buy_condition_6_enable": True,
-    "buy_condition_7_enable": True,
-    "buy_condition_8_enable": True,
-    "buy_condition_9_enable": True,
     "buy_bb20_close_bblowerband_safe_1": 0.726,
     "buy_bb20_close_bblowerband_safe_2": 0.99,
     "buy_macd_1": 0.09,
@@ -124,24 +104,24 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 449
 
-    # smaoffset_optimize = False
-    # base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    # base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    # low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    # low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    # high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
+    smaoffset_optimize = False
+    base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
+    base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
-    # ewo_optimize = False
-    # fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
-    # slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
-    # rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
-    # rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
+    ewo_optimize = False
+    fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
+    slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+    rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
+    rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
 
-    # protection_optimize = False
-    # ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
-    # ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
-    # ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
-    # rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
+    protection_optimize = False
+    ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
+    ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
+    rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
     volume_optimize = True
     volume_mean_long = IntParameter(20, 200, default=sell_params["volume_mean_long"], space="sell", optimize=volume_optimize)
@@ -161,15 +141,7 @@ class abbas8(IStrategy):
         "retries": 3,
         "max_slippage": -0.002
     }
-    buy_condition_optimize = False
-    buy_condition_2_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_4_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_6_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_7_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_10_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_12_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-    buy_condition_16_enable = CategoricalParameter([True, False], default=True, space="buy", optimize=buy_condition_optimize)
-
+    
     buy_bb20_close_bblowerband_safe_1 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_1"], space="buy", decimals=2, optimize=True)
     buy_bb20_close_bblowerband_safe_2 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_2"], space="buy", decimals=2, optimize=True)
     
@@ -244,9 +216,9 @@ class abbas8(IStrategy):
     #     return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
-        # dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
-        # dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
-        # dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
+        dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
+        dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
+        dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)

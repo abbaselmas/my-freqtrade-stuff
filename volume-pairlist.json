@@ -4,7 +4,7 @@
             "method": "VolumePairList",
             "number_assets": 360,
             "sort_key": "quoteVolume",
-            "min_value": 5000000,
+            "min_value": 10000000,
             "refresh_period": 2700
         },
         {   "method": "FullTradesFilter"},
