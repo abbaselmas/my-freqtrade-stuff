@@ -30,8 +30,8 @@ buy_params = {
     "rsi_ewo2": 18,
     "rsi_fast_ewo1": 56,
     "slow_ewo": 198,
-    "buy_bb20_close_bblowerband_safe_1": 0.726,
-    "buy_bb20_close_bblowerband_safe_2": 0.99,
+    "buy_bb20_close_bblowerband_safe_1": 0.983,
+    "buy_bb20_close_bblowerband_safe_2": 0.998,
     "buy_macd_1": 0.09,
     "buy_macd_2": 0.01,
     "buy_rsi_1": 35.6,
@@ -342,8 +342,8 @@ class abbas8(IStrategy):
             (
                 (dataframe['close'] > dataframe['ema_200']) &
                 (dataframe['close'] > dataframe['ema_200_1h']) &
-                (dataframe['close'] < dataframe['bb_lowerband'] * 0.993) &
-                (dataframe['low'] < dataframe['bb_lowerband'] * 0.985) &
+                (dataframe['close'] < dataframe['bb_lowerband'] * self.buy_bb20_close_bblowerband_safe_1.value) &
+                (dataframe['low'] < dataframe['bb_lowerband'] * self.buy_bb20_close_bblowerband_safe_2.value) &
                 (dataframe['close'].shift() > dataframe['bb_lowerband']) &
                 (dataframe['rsi_1h'] < 72.8) &
                 (dataframe['open'] > dataframe['close']) &
