@@ -1,6 +1,7 @@
 from freqtrade.strategy import (IStrategy, informative)
 from typing import Dict, List
 from pandas import DataFrame
+import pandas_ta as pta
 # --------------------------------
 import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
@@ -130,26 +131,11 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
 
-    # Signal 1
-    s1_ema_xs = 3
-    s1_ema_sm = 5
-    s1_ema_md = 10
-    s1_ema_xl = 50
-    s1_ema_xxl = 240
+    is_optimize_vwap = True
+    buy_vwap_width      = DecimalParameter(0.05, 10.0, default=0.80, optimize = is_optimize_vwap)
+    buy_vwap_closedelta = DecimalParameter(10.0, 30.0, default=15.0, optimize = is_optimize_vwap)
+    buy_vwap_cti        = DecimalParameter(-0.9, -0.0, default=-0.6, optimize = is_optimize_vwap)
 
-    # Signal 2
-    s2_ema_input = 50
-    s2_ema_offset_input = -1
-
-    s2_bb_sma_length = 49
-    s2_bb_std_dev_length = 64
-    s2_bb_lower_offset = 3
-
-    s2_fib_sma_len = 50
-    s2_fib_atr_len = 14
-
-    s2_fib_lower_value = 4.236
-    
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
         informative_pairs = []
@@ -165,6 +151,11 @@ class abbas8(IStrategy):
         informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
 
+        # Heikin Ashi
+        inf_heikinashi = qtpylib.heikinashi(informative_1h)
+        informative_1h['ha_close'] = inf_heikinashi['close']
+        informative_1h['rocr'] = ta.ROCR(informative_1h['ha_close'], timeperiod=168)
+
         return informative_1h
     
     def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -175,33 +166,6 @@ class abbas8(IStrategy):
     def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
-
-        # Adding EMA's into the dataframe
-        informative_15m["s1_ema_xs"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xs)
-        informative_15m["s1_ema_sm"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_sm)
-        informative_15m["s1_ema_md"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_md)
-        informative_15m["s1_ema_xl"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xl)
-        informative_15m["s1_ema_xxl"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xxl)
-        s2_ema_value = ta.EMA(informative_15m, timeperiod=self.s2_ema_input)
-        s2_ema_xxl_value = ta.EMA(informative_15m, timeperiod=200)
-        informative_15m["s2_ema"] = s2_ema_value - s2_ema_value * self.s2_ema_offset_input
-        informative_15m["s2_ema_xxl_off"] = s2_ema_xxl_value - s2_ema_xxl_value * self.s2_fib_lower_value
-        informative_15m["s2_ema_xxl"] = ta.EMA(informative_15m, timeperiod=200)
-        s2_bb_sma_value = ta.SMA(informative_15m, timeperiod=self.s2_bb_sma_length)
-        s2_bb_std_dev_value = ta.STDDEV(informative_15m, self.s2_bb_std_dev_length)
-        informative_15m["s2_bb_std_dev_value"] = s2_bb_std_dev_value
-        informative_15m["s2_bb_lower_band"] = s2_bb_sma_value - (s2_bb_std_dev_value * self.s2_bb_lower_offset)
-        s2_fib_atr_value = ta.ATR(informative_15m, timeframe=self.s2_fib_atr_len)
-        s2_fib_sma_value = ta.SMA(informative_15m, timeperiod=self.s2_fib_sma_len)
-        informative_15m["s2_fib_lower_band"] = s2_fib_sma_value - s2_fib_atr_value * self.s2_fib_lower_value
-        s3_bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=3)
-        informative_15m["s3_bb_lowerband"] = s3_bollinger["lower"]
-        # Volume weighted MACD
-        informative_15m["fastMA"] = ta.EMA(informative_15m["volume"] * informative_15m["close"], 12) / ta.EMA(informative_15m["volume"], 12)
-        informative_15m["slowMA"] = ta.EMA(informative_15m["volume"] * informative_15m["close"], 26) / ta.EMA(informative_15m["volume"], 26)
-        informative_15m["vwmacd"] = informative_15m["fastMA"] - informative_15m["slowMA"]
-        informative_15m["signal"] = ta.EMA(informative_15m["vwmacd"], 9)
-        informative_15m["hist"] = informative_15m["vwmacd"] - informative_15m["signal"]
 
         return informative_15m
 
@@ -223,6 +187,31 @@ class abbas8(IStrategy):
         dataframe["ema_12"] = ta.EMA(dataframe, timeperiod=12)
         # RSI
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
+        dataframe['rsi_6'] = ta.RSI(dataframe, timeperiod=6)
+        dataframe['rsi_8'] = ta.RSI(dataframe, timeperiod=8)
+        dataframe['rsi_84'] = ta.RSI(dataframe, timeperiod=84)
+        dataframe['rsi_112'] = ta.RSI(dataframe, timeperiod=112)
+        # VWAP
+        vwap_low, vwap, vwap_high = VWAPB(dataframe, 20, 1)
+        dataframe['vwap_upperband'] = vwap_high
+        dataframe['vwap_middleband'] = vwap
+        dataframe['vwap_lowerband'] = vwap_low
+        dataframe['vwap_width'] = ( (dataframe['vwap_upperband'] - dataframe['vwap_lowerband']) / dataframe['vwap_middleband'] ) * 100
+        # Cofi
+        stoch_fast = ta.STOCHF(dataframe, 5, 3, 0, 3, 0)
+        dataframe['fastd'] = stoch_fast['fastd']
+        dataframe['fastk'] = stoch_fast['fastk']
+        dataframe['adx'] = ta.ADX(dataframe)
+        # ClucHA
+        dataframe['bb_delta_cluc'] = (dataframe['bb_middleband2_40'] - dataframe['bb_lowerband2_40']).abs()
+        dataframe['ha_closedelta'] = (dataframe['ha_close'] - dataframe['ha_close'].shift()).abs()
+        dataframe['tail'] = (dataframe['ha_close'] - dataframe['ha_low']).abs()
+        dataframe['ema_slow'] = ta.EMA(dataframe['ha_close'], timeperiod=50)
+        dataframe['rocr'] = ta.ROCR(dataframe['ha_close'], timeperiod=28)
+        # CTI
+        dataframe['cti'] = pta.cti(dataframe["close"], length=20)
+        # BinH
+        dataframe['closedelta'] = (dataframe['close'] - dataframe['close'].shift()).abs()
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -350,29 +339,42 @@ class abbas8(IStrategy):
         #     ),
         #     ["enter_long", "enter_tag"]] = (1, "cond 16")
         
+
         dataframe.loc[
             (
-                (dataframe["vwmacd_15m"] < dataframe["signal_15m"]) &
-                (dataframe["low_15m"] < dataframe["s1_ema_xxl_15m"]) &
-                (dataframe["close_15m"] > dataframe["s1_ema_xxl_15m"]) &
-                (qtpylib.crossed_above(dataframe["s1_ema_sm_15m"], dataframe["s1_ema_md_15m"])) &
-                (dataframe["s1_ema_xs_15m"] < dataframe["s1_ema_xl_15m"])
+                (dataframe['close'] < dataframe['vwap_lowerband']) &
+                (dataframe['vwap_width'] > self.buy_vwap_width.value) &
+                (dataframe['closedelta'] > dataframe['close'] * self.buy_vwap_closedelta.value / 1000 ) &
+                (dataframe['cti'] < self.buy_vwap_cti.value) &
+                (dataframe['rsi_84'] < 60) &
+                (dataframe['rsi_112'] < 60)
             ),
-            ["enter_long", "enter_tag"]] = (1, "apollo11 buy1")
-        
+            ["enter_long", "enter_tag"]] = (1, "vwap")
         dataframe.loc[
             (
-                (qtpylib.crossed_above(dataframe["s2_fib_lower_band_15m"], dataframe["s2_bb_lower_band_15m"])) &
-                (dataframe["close_15m"] < dataframe["s2_ema_15m"])
+                (dataframe['open'] < dataframe['ema_8'] * self.buy_ema_cofi.value) &
+                (qtpylib.crossed_above(dataframe['fastk'], dataframe['fastd'])) &
+                (dataframe['fastk'] < self.buy_fastk.value) &
+                (dataframe['fastd'] < self.buy_fastd.value) &
+                (dataframe['adx'] > self.buy_adx.value) &
+                (dataframe['EWO'] > self.buy_ewo_high.value) &
+                (dataframe['rsi_84'] < 60) &
+                (dataframe['rsi_112'] < 60)
             ),
-            ["enter_long", "enter_tag"]] = (1, "apollo11 buy2")
-        
+            ["enter_long", "enter_tag"]] = (1, "cofi")
         dataframe.loc[
             (
-                (dataframe["low_15m"] < dataframe["s3_bb_lowerband_15m"]) &
-                (dataframe["low_15m"] > dataframe["s1_ema_xxl_15m"])
+                (dataframe['rocr_1h'] > self.buy_clucha_rocr_1h.value )
+                (dataframe['bb_lowerband2_40'].shift() > 0) &
+                (dataframe['bb_delta_cluc'] > dataframe['ha_close'] * self.buy_clucha_bbdelta_close.value) &
+                (dataframe['ha_closedelta'] > dataframe['ha_close'] * self.buy_clucha_closedelta_close.value) &
+                (dataframe['tail'] < dataframe['bb_delta_cluc'] * self.buy_clucha_bbdelta_tail.value) &
+                (dataframe['ha_close'] < dataframe['bb_lowerband2_40'].shift()) &
+                (dataframe['ha_close'] < dataframe['ha_close'].shift()) &
+                (dataframe['rsi_84'] < 60) &
+                (dataframe['rsi_112'] < 60)
             ),
-            ["enter_long", "enter_tag"]] = (1, "apollo11 buy3")
+            ["enter_long", "enter_tag"]] = (1, "clucha")
 
         dont_buy_conditions = []
         
@@ -388,3 +390,34 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
+
+def T3(dataframe, length=5):
+    """
+    T3 Average by HPotter on Tradingview
+    https://www.tradingview.com/script/qzoC9H1I-T3-Average/
+    """
+    df = dataframe.copy()
+
+    df['xe1'] = ta.EMA(df['close'], timeperiod=length)
+    df['xe2'] = ta.EMA(df['xe1'], timeperiod=length)
+    df['xe3'] = ta.EMA(df['xe2'], timeperiod=length)
+    df['xe4'] = ta.EMA(df['xe3'], timeperiod=length)
+    df['xe5'] = ta.EMA(df['xe4'], timeperiod=length)
+    df['xe6'] = ta.EMA(df['xe5'], timeperiod=length)
+    b = 0.7
+    c1 = -b * b * b
+    c2 = 3 * b * b + 3 * b * b * b
+    c3 = -6 * b * b - 3 * b - 3 * b * b * b
+    c4 = 1 + 3 * b + b * b * b + 3 * b * b
+    df['T3Average'] = c1 * df['xe6'] + c2 * df['xe5'] + c3 * df['xe4'] + c4 * df['xe3']
+
+    return df['T3Average']
+
+# VWAP bands
+def VWAPB(dataframe, window_size=20, num_of_std=1):
+    df = dataframe.copy()
+    df['vwap'] = qtpylib.rolling_vwap(df,window=window_size)
+    rolling_std = df['vwap'].rolling(window=window_size).std()
+    df['vwap_low'] = df['vwap'] - (rolling_std * num_of_std)
+    df['vwap_high'] = df['vwap'] + (rolling_std * num_of_std)
+    return df['vwap_low'], df['vwap'], df['vwap_high']
