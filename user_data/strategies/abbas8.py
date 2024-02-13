@@ -34,8 +34,7 @@ buy_params = {
     "buy_volume_drop_1": 10,
     "buy_volume_drop_2": 1.9,
     "buy_volume_drop_3": 10.0,
-    "buy_volume_pump_1": 0.3,
-    "buy_stoch_rsi": 0.82
+    "buy_volume_pump_1": 0.3
 }
 # Sell hyperspace params:
 sell_params = {
@@ -130,8 +129,6 @@ class abbas8(IStrategy):
     
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
-
-    buy_stoch_rsi = DecimalParameter(0.5, 1, default=0.82, space="buy", decimals=3, optimize=True)
     
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
@@ -148,7 +145,6 @@ class abbas8(IStrategy):
         informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
 
-        dataframe['stoch_rsi'] = ta.STOCHRSI(informative_1h["close"], window=14, smooth1=3, smooth2=3)
         return informative_1h
     
     def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -319,17 +315,6 @@ class abbas8(IStrategy):
                 (qtpylib.crossed_above( dataframe['plus_di_15m'],dataframe['minus_di_15m']))
             ),
             ["enter_long", "enter_tag"]] = (1, "adx 15m usdt")
-        
-        dataframe.loc[
-            (
-                (dataframe['ema7_1h'] > dataframe['ema30_1h']) &
-                (dataframe['ema30_1h'] > dataframe['ema50_1h']) &
-                (dataframe['ema50_1h'] > dataframe['ema100_1h']) &
-                (dataframe['ema100_1h'] > dataframe['ema121_1h']) &
-                (dataframe['ema121_1h'] > dataframe['ema200_1h']) &
-                (dataframe['stoch_rsi_1h'] < self.buy_stoch_rsi.value)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "Alligator Strat buy")
         
         dont_buy_conditions = []
         
