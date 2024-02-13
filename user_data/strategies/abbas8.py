@@ -181,6 +181,12 @@ class abbas8(IStrategy):
         dataframe["bb_middleband"] = bollinger["mid"]
         dataframe["bb_upperband"] = bollinger["upper"]
         dataframe["volume_mean_slow"] = dataframe["volume"].rolling(window=30).mean()
+
+        ## BB 40
+        bollinger2_40 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=40, stds=2)
+        dataframe['bb_lowerband2_40'] = bollinger2_40['lower']
+        dataframe['bb_middleband2_40'] = bollinger2_40['mid']
+        dataframe['bb_upperband2_40'] = bollinger2_40['upper']
         # EMA
         dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
         dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
