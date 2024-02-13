@@ -130,7 +130,7 @@ class abbas8(IStrategy):
 
     percent_change_optimize = True
     percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=percent_change_optimize)
-    percent_change_low = DecimalParameter(-0.50, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=percent_change_optimize)
+    percent_change_low = DecimalParameter(-0.20, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=percent_change_optimize)
     percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=percent_change_optimize)
 
     order_time_in_force = {
@@ -361,7 +361,7 @@ class abbas8(IStrategy):
         )
         dont_buy_conditions.append(
             (
-                ((dataframe["open"].rolling(self.percent_change_length.value).max() - dataframe["close"]) / dataframe["close"] < self.percent_change_low.value) &
+                ((dataframe["open"].rolling(self.percent_change_length.value).max() - dataframe["close"]) / dataframe["close"] < self.percent_change_low.value) |	
                 ((dataframe["open"].rolling(self.percent_change_length.value).max() - dataframe["close"]) / dataframe["close"] > self.percent_change_high.value)
             )
         )
