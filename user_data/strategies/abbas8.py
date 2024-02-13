@@ -129,6 +129,26 @@ class abbas8(IStrategy):
     
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
+
+    # Signal 1
+    s1_ema_xs = 3
+    s1_ema_sm = 5
+    s1_ema_md = 10
+    s1_ema_xl = 50
+    s1_ema_xxl = 240
+
+    # Signal 2
+    s2_ema_input = 50
+    s2_ema_offset_input = -1
+
+    s2_bb_sma_length = 49
+    s2_bb_std_dev_length = 64
+    s2_bb_lower_offset = 3
+
+    s2_fib_sma_len = 50
+    s2_fib_atr_len = 14
+
+    s2_fib_lower_value = 4.236
     
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
