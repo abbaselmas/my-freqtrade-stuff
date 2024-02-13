@@ -1,22 +1,15 @@
 from freqtrade.strategy import (IStrategy, informative)
 from typing import Dict, List
-from functools import reduce
-from pandas import DataFrame, Series
+from pandas import DataFrame
 # --------------------------------
-import talib.abstract as ta
-import numpy as np
+import talib as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import datetime
-import logging
-from technical.util import resample_to_interval, resampled_merge
-from datetime import datetime, timedelta
+from datetime import datetime
 from freqtrade.persistence import Trade
-from freqtrade.strategy import stoploss_from_open, merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter
-import technical.indicators as ftt
-from freqtrade.exchange import timeframe_to_prev_date
+from freqtrade.strategy import merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
-from market_profile import MarketProfile
-logger = logging.getLogger(__name__)
+
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 15,
