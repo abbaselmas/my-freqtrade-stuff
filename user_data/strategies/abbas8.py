@@ -50,13 +50,7 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 15,
-    "high_offset": 1.11,
-    "volume_warn": 5.0,
-    "percent_change_length": 60,
-    "percent_change_low": -0.05,
-    "percent_change_high": 0.05,
-    "volume_mean_long": 48,
-    "volume_mean_short": 4
+    "high_offset": 1.11
 }
 class abbas8(IStrategy):
     def version(self) -> str:
@@ -127,11 +121,6 @@ class abbas8(IStrategy):
     volume_mean_long = IntParameter(20, 200, default=sell_params["volume_mean_long"], space="sell", optimize=volume_optimize)
     volume_mean_short = IntParameter(2, 50, default=sell_params["volume_mean_short"], space="sell", optimize=volume_optimize)
     volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=volume_optimize)
-
-    percent_change_optimize = True
-    percent_change_length = IntParameter(5, 288, default=sell_params["percent_change_length"], space="sell", optimize=percent_change_optimize)
-    percent_change_low = DecimalParameter(-0.20, 0.00, default=sell_params["percent_change_low"], decimals=2, space="sell", optimize=percent_change_optimize)
-    percent_change_high = DecimalParameter(0.00, 0.70, default=sell_params["percent_change_high"], decimals=2, space="sell", optimize=percent_change_optimize)
 
     order_time_in_force = {
         "entry": "gtc",
@@ -354,17 +343,11 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "cond 16")
         
         dont_buy_conditions = []
-        dont_buy_conditions.append(
-            (
-                (dataframe["pnd_volume_warn"] < 0.0)
-            )
-        )
-        dont_buy_conditions.append(
-            (
-                ((dataframe["open"].rolling(self.percent_change_length.value).max() - dataframe["close"]) / dataframe["close"] < self.percent_change_low.value) |	
-                ((dataframe["open"].rolling(self.percent_change_length.value).max() - dataframe["close"]) / dataframe["close"] > self.percent_change_high.value)
-            )
-        )
+        # dont_buy_conditions.append(
+        #     (
+        #         (dataframe["pnd_volume_warn"] < 0.0)
+        #     )
+        # )
         
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
