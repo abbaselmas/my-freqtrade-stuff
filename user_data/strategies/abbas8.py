@@ -175,45 +175,31 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
     
-    # def informative_pairs(self):
-    #     pairs = self.dp.current_whitelist()
-    #     informative_pairs = []
-    #     for info_timeframe in self.info_timeframes:
-    #         informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
-    #     return informative_pairs
+    def informative_pairs(self):
+        pairs = self.dp.current_whitelist()
+        informative_pairs = []
+        for info_timeframe in self.info_timeframes:
+            informative_pairs.extend([(pair, info_timeframe) for pair in pairs])
+        return informative_pairs
     
     def informative_1h_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
-        # bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_1h), window=20, stds=2.68)
-        # informative_1h["bb20_2_low"] = bollinger["lower"]
-        # informative_1h["bb20_2_mid"] = bollinger["mid"]
-        # informative_1h["bb20_2_upp"] = bollinger["upper"]
-        # EMA
+
         informative_1h["ema_50"] = ta.EMA(informative_1h, timeperiod=50)
         informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
-        # RSI
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
-        
         return informative_1h
     
-    # def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    #     assert self.dp, "DataProvider is required for multiple timeframes."
-    #     informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")
-    #     bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_30m), window=20, stds=2.8)
-    #     informative_30m["bb20_2_low"] = bollinger["lower"]
-    #     informative_30m["bb20_2_mid"] = bollinger["mid"]
-    #     informative_30m["bb20_2_upp"] = bollinger["upper"]    
-    #     return informative_30m
+    def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_30m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="30m")    
+        return informative_30m
     
-    # def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-    #     assert self.dp, "DataProvider is required for multiple timeframes."
-    #     informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
-    #     bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=2.68)
-    #     informative_15m["bb20_2_low"] = bollinger["lower"]
-    #     informative_15m["bb20_2_mid"] = bollinger["mid"]
-    #     informative_15m["bb20_2_upp"] = bollinger["upper"]
-    #     return informative_15m
+    def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        assert self.dp, "DataProvider is required for multiple timeframes."
+        informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
+        return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
         dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
@@ -261,10 +247,10 @@ class abbas8(IStrategy):
         dataframe       = self.base_tf_5m_indicators(metadata, dataframe)
         informative_1h  = self.informative_1h_indicators(dataframe, metadata)
         dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
-        # informative_30m = self.informative_30m_indicators(dataframe, metadata)
-        # dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
-        # informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        # dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
+        informative_30m = self.informative_30m_indicators(dataframe, metadata)
+        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
+        informative_15m = self.informative_15m_indicators(dataframe, metadata)
+        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
         dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
     
