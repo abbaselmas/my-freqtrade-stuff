@@ -1,6 +1,6 @@
 from freqtrade.strategy import (IStrategy, informative)
 from typing import Dict, List
-from pandas import DataFrame
+from pandas import DataFrame, Series
 import pandas_ta as pta
 # --------------------------------
 import talib.abstract as ta
@@ -214,6 +214,12 @@ class abbas8(IStrategy):
         dataframe["bb_upperband"] = bollinger["upper"]
         dataframe["volume_mean_slow"] = dataframe["volume"].rolling(window=30).mean()
 
+        # Heiken Ashi
+        heikinashi = qtpylib.heikinashi(dataframe)
+        dataframe['ha_open'] = heikinashi['open']
+        dataframe['ha_close'] = heikinashi['close']
+        dataframe['ha_high'] = heikinashi['high']
+        dataframe['ha_low'] = heikinashi['low']
         ## BB 40
         bollinger2_40 = qtpylib.bollinger_bands(ha_typical_price(dataframe), window=40, stds=2)
         dataframe['bb_lowerband2_40'] = bollinger2_40['lower']
@@ -250,12 +256,7 @@ class abbas8(IStrategy):
         dataframe['cti'] = pta.cti(dataframe["close"], length=20)
         # BinH
         dataframe['closedelta'] = (dataframe['close'] - dataframe['close'].shift()).abs()
-        # Heiken Ashi
-        heikinashi = qtpylib.heikinashi(dataframe)
-        dataframe['ha_open'] = heikinashi['open']
-        dataframe['ha_close'] = heikinashi['close']
-        dataframe['ha_high'] = heikinashi['high']
-        dataframe['ha_low'] = heikinashi['low']
+        
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
