@@ -117,11 +117,6 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    volume_optimize = True
-    volume_mean_long = IntParameter(20, 200, default=sell_params["volume_mean_long"], space="sell", optimize=volume_optimize)
-    volume_mean_short = IntParameter(2, 50, default=sell_params["volume_mean_short"], space="sell", optimize=volume_optimize)
-    volume_warn = DecimalParameter(0.0, 10.0, default=sell_params["volume_warn"], space="sell", decimals=2, optimize=volume_optimize)
-
     order_time_in_force = {
         "entry": "gtc",
         "exit": "ioc"
@@ -336,11 +331,6 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "cond 16")
         
         dont_buy_conditions = []
-        # dont_buy_conditions.append(
-        #     (
-        #         (dataframe["pnd_volume_warn"] < 0.0)
-        #     )
-        # )
         
         if dont_buy_conditions:
             for condition in dont_buy_conditions:
