@@ -210,12 +210,6 @@ class abbas8(IStrategy):
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         return dataframe
     
-    def pump_dump_protection(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe["volume_mean_short"] = dataframe["volume"].rolling(self.volume_mean_short.value).mean()
-        dataframe["volume_mean_long"] = dataframe["volume"].rolling(self.volume_mean_long.value).mean()
-        dataframe["pnd_volume_warn"] = np.where((dataframe["volume_mean_short"] / dataframe["volume_mean_long"] > self.volume_warn.value), -1, 0)
-        return dataframe
-    
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         try:
@@ -240,7 +234,6 @@ class abbas8(IStrategy):
         dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
         informative_15m = self.informative_15m_indicators(dataframe, metadata)
         dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
-        dataframe = self.pump_dump_protection(dataframe, metadata)
         return dataframe
     
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
