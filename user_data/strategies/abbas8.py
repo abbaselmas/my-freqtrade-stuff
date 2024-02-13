@@ -2,7 +2,7 @@ from freqtrade.strategy import (IStrategy, informative)
 from typing import Dict, List
 from pandas import DataFrame
 # --------------------------------
-import talib as ta
+import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import datetime
 from datetime import datetime
@@ -148,7 +148,7 @@ class abbas8(IStrategy):
         informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
         informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
 
-        dataframe['stoch_rsi'] = ta.stochrsi(close=dataframe['close'], window=14, smooth1=3, smooth2=3)
+        dataframe['stoch_rsi'] = ta.STOCHRSI(close=dataframe['close'], window=14, smooth1=3, smooth2=3)
         return informative_1h
     
     def informative_30m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
