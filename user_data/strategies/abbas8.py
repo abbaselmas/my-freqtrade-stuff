@@ -156,9 +156,32 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
 
-        informative_15m['adx'] = ta.ADX(dataframe, timeperiod=14)
-        informative_15m['plus_di'] = ta.PLUS_DI(dataframe, timeperiod=25)
-        informative_15m['minus_di'] = ta.MINUS_DI(dataframe, timeperiod=25)
+        # Adding EMA's into the dataframe
+        informative_15m["s1_ema_xs"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xs)
+        informative_15m["s1_ema_sm"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_sm)
+        informative_15m["s1_ema_md"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_md)
+        informative_15m["s1_ema_xl"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xl)
+        informative_15m["s1_ema_xxl"] = ta.EMA(informative_15m, timeperiod=self.s1_ema_xxl)
+        s2_ema_value = ta.EMA(informative_15m, timeperiod=self.s2_ema_input)
+        s2_ema_xxl_value = ta.EMA(informative_15m, timeperiod=200)
+        informative_15m["s2_ema"] = s2_ema_value - s2_ema_value * self.s2_ema_offset_input
+        informative_15m["s2_ema_xxl_off"] = s2_ema_xxl_value - s2_ema_xxl_value * self.s2_fib_lower_value
+        informative_15m["s2_ema_xxl"] = ta.EMA(informative_15m, timeperiod=200)
+        s2_bb_sma_value = ta.SMA(informative_15m, timeperiod=self.s2_bb_sma_length)
+        s2_bb_std_dev_value = ta.STDDEV(informative_15m, self.s2_bb_std_dev_length)
+        informative_15m["s2_bb_std_dev_value"] = s2_bb_std_dev_value
+        informative_15m["s2_bb_lower_band"] = s2_bb_sma_value - (s2_bb_std_dev_value * self.s2_bb_lower_offset)
+        s2_fib_atr_value = ta.ATR(informative_15m, timeframe=self.s2_fib_atr_len)
+        s2_fib_sma_value = ta.SMA(informative_15m, timeperiod=self.s2_fib_sma_len)
+        informative_15m["s2_fib_lower_band"] = s2_fib_sma_value - s2_fib_atr_value * self.s2_fib_lower_value
+        s3_bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(informative_15m), window=20, stds=3)
+        informative_15m["s3_bb_lowerband"] = s3_bollinger["lower"]
+        # Volume weighted MACD
+        informative_15m["fastMA"] = ta.EMA(informative_15m["volume"] * informative_15m["close"], 12) / ta.EMA(informative_15m["volume"], 12)
+        informative_15m["slowMA"] = ta.EMA(informative_15m["volume"] * informative_15m["close"], 26) / ta.EMA(informative_15m["volume"], 26)
+        informative_15m["vwmacd"] = informative_15m["fastMA"] - informative_15m["slowMA"]
+        informative_15m["signal"] = ta.EMA(informative_15m["vwmacd"], 9)
+        informative_15m["hist"] = informative_15m["vwmacd"] - informative_15m["signal"]
 
         return informative_15m
 
@@ -309,13 +332,28 @@ class abbas8(IStrategy):
         
         dataframe.loc[
             (
-                (dataframe['adx_15m'] > 16) &
-                (dataframe['minus_di_15m'] > 4) &
-                (dataframe['plus_di_15m'] > 20) &
-                (qtpylib.crossed_above( dataframe['plus_di_15m'],dataframe['minus_di_15m']))
+                (dataframe["vwmacd_15m"] < dataframe["signal_15m"]) &
+                (dataframe["low_15m"] < dataframe["s1_ema_xxl_15m"]) &
+                (dataframe["close_15m"] > dataframe["s1_ema_xxl_15m"]) &
+                (qtpylib.crossed_above(dataframe["s1_ema_sm_15m"], dataframe["s1_ema_md_15m"])) &
+                (dataframe["s1_ema_xs_15m"] < dataframe["s1_ema_xl_15m"])
             ),
-            ["enter_long", "enter_tag"]] = (1, "adx 15m usdt")
+            ["enter_long", "enter_tag"]] = (1, "apollo11 buy1")
         
+        dataframe.loc[
+            (
+                (qtpylib.crossed_above(dataframe["s2_fib_lower_band_15m"], dataframe["s2_bb_lower_band_15m"])) &
+                (dataframe["close_15m"] < dataframe["s2_ema_15m"])
+            ),
+            ["enter_long", "enter_tag"]] = (1, "apollo11 buy2")
+        
+        dataframe.loc[
+            (
+                (dataframe["low_15m"] < dataframe["s3_bb_lowerband_15m"]) &
+                (dataframe["low_15m"] > dataframe["s1_ema_xxl_15m"])
+            ),
+            ["enter_long", "enter_tag"]] = (1, "apollo11 buy3")
+
         dont_buy_conditions = []
         
         if dont_buy_conditions:
