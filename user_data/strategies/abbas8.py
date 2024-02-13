@@ -258,7 +258,7 @@ class abbas8(IStrategy):
         dataframe['ha_closedelta'] = (dataframe['ha_close'] - dataframe['ha_close'].shift()).abs()
         dataframe['tail'] = (dataframe['ha_close'] - dataframe['ha_low']).abs()
         dataframe['ema_slow'] = ta.EMA(dataframe['ha_close'], timeperiod=50)
-        dataframe['rocr'] = ta.ROCR(dataframe['ha_close'], timeperiod=28)
+        #dataframe['rocr'] = ta.ROCR(dataframe['ha_close'], timeperiod=28)
         # CTI
         dataframe['cti'] = pta.cti(dataframe["close"], length=20)
         # BinH
