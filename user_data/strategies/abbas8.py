@@ -131,13 +131,6 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
 
-    is_optimize_cofi = False
-    buy_ema_cofi = DecimalParameter(0.9, 1.2, default=0.97 , optimize = is_optimize_cofi)
-    buy_fastk = IntParameter(20, 45, default=20, optimize = is_optimize_cofi)
-    buy_fastd = IntParameter(20, 45, default=20, optimize = is_optimize_cofi)
-    buy_adx = IntParameter(20, 45, default=30, optimize = is_optimize_cofi)
-    buy_ewo_high = DecimalParameter(-12, 12, default=3.553, optimize = is_optimize_cofi)
-
     is_optimize_clucha = True
     buy_clucha_bbdelta_close = DecimalParameter(0.0005, 0.042, default=0.034, decimals=5, optimize = is_optimize_clucha)
     buy_clucha_bbdelta_tail = DecimalParameter(0.7, 1.1, default=0.95, decimals=5, optimize = is_optimize_clucha)
@@ -216,7 +209,6 @@ class abbas8(IStrategy):
 
         # Heiken Ashi
         heikinashi = qtpylib.heikinashi(dataframe)
-        dataframe["ha_open"] = heikinashi["open"]
         dataframe["ha_close"] = heikinashi["close"]
         dataframe["ha_high"] = heikinashi["high"]
         dataframe["ha_low"] = heikinashi["low"]
@@ -224,22 +216,15 @@ class abbas8(IStrategy):
         bollinger2_40 = qtpylib.bollinger_bands(ha_typical_price(dataframe), window=40, stds=2)
         dataframe["bb_lowerband2_40"] = bollinger2_40["lower"]
         dataframe["bb_middleband2_40"] = bollinger2_40["mid"]
-        dataframe["bb_upperband2_40"] = bollinger2_40["upper"]
         # EMA
-        dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
-        dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
         dataframe["ema_12"] = ta.EMA(dataframe, timeperiod=12)
-        # EMA
-        dataframe["ema_8"] = ta.EMA(dataframe, timeperiod=8)
         dataframe["ema_14"] = ta.EMA(dataframe, timeperiod=14)
         dataframe["ema_20"] = ta.EMA(dataframe, timeperiod=20)
+        dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
         dataframe["ema_50"] = ta.EMA(dataframe, timeperiod=50)
         dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
         dataframe["hma_50"] = qtpylib.hull_moving_average(dataframe["close"], window=50)
         # RSI
-        dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
-        dataframe["rsi_6"] = ta.RSI(dataframe, timeperiod=6)
-        dataframe["rsi_8"] = ta.RSI(dataframe, timeperiod=8)
         dataframe["rsi_84"] = ta.RSI(dataframe, timeperiod=84)
         dataframe["rsi_112"] = ta.RSI(dataframe, timeperiod=112)
         # VWAP
@@ -248,23 +233,15 @@ class abbas8(IStrategy):
         dataframe["vwap_middleband"] = vwap
         dataframe["vwap_lowerband"] = vwap_low
         dataframe["vwap_width"] = ( (dataframe["vwap_upperband"] - dataframe["vwap_lowerband"]) / dataframe["vwap_middleband"] ) * 100
-        # Cofi
-        stoch_fast = ta.STOCHF(dataframe, 5, 3, 0, 3, 0)
-        dataframe["fastd"] = stoch_fast["fastd"]
-        dataframe["fastk"] = stoch_fast["fastk"]
-        dataframe["adx"] = ta.ADX(dataframe)
         # ClucHA
         dataframe["bb_delta_cluc"] = (dataframe["bb_middleband2_40"] - dataframe["bb_lowerband2_40"]).abs()
         dataframe["ha_closedelta"] = (dataframe["ha_close"] - dataframe["ha_close"].shift()).abs()
         dataframe["tail"] = (dataframe["ha_close"] - dataframe["ha_low"]).abs()
-        dataframe["ema_slow"] = ta.EMA(dataframe["ha_close"], timeperiod=50)
         dataframe["rocr"] = ta.ROCR(dataframe["ha_close"], timeperiod=28)
         # CTI
         dataframe["cti"] = pta.cti(dataframe["close"], length=20)
         # BinH
         dataframe["closedelta"] = (dataframe["close"] - dataframe["close"].shift()).abs()
-        # Elliot
-        dataframe["EWO"] = EWO(dataframe, 50, 200)
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -295,104 +272,103 @@ class abbas8(IStrategy):
     
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe["enter_tag"] = ""
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-        #         (dataframe["ewo"] > self.ewo_high.value) &
-        #         (dataframe["rsi"] < self.rsi_buy.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "ewo1")
+        dataframe.loc[
+            (
+                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+                (dataframe["ewo"] > self.ewo_high.value) &
+                (dataframe["rsi"] < self.rsi_buy.value) &
+                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "ewo1")
         
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-        #         (dataframe["ewo"] < self.ewo_low.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "ewolow")
+        dataframe.loc[
+            (
+                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+                (dataframe["ewo"] < self.ewo_low.value) &
+                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "ewolow")
         
-        # dataframe.loc[
-        #     (   
-        #         (dataframe["close"] > dataframe["ema_200"]) &
-        #         (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
-        #         (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-        #         (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 2")
+        dataframe.loc[
+            (   
+                (dataframe["close"] > dataframe["ema_200"]) &
+                (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
+                (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 2")
         
-        # dataframe.loc[
-        #     (   
-        #         (dataframe["rsi_1h"] < self.buy_rsi_1h_1.value) &
-        #         (dataframe["close"] < dataframe["bb_lowerband"]) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 4")
+        dataframe.loc[
+            (   
+                (dataframe["rsi_1h"] < self.buy_rsi_1h_1.value) &
+                (dataframe["close"] < dataframe["bb_lowerband"]) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 4")
         
-        # dataframe.loc[
-        #     (   
-        #         (dataframe["ema_26"] > dataframe["ema_12"]) &
-        #         ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_2.value)) &
-        #         ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
-        #         (dataframe["close"] < (dataframe["bb_lowerband"])) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 6")
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_1h"] < self.buy_rsi_1h_2.value) &
-        #         (dataframe["ema_26"] > dataframe["ema_12"]) &
-        #         ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_1.value)) &
-        #         ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-        #         (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 7")
+        dataframe.loc[
+            (   
+                (dataframe["ema_26"] > dataframe["ema_12"]) &
+                ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_2.value)) &
+                ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
+                (dataframe["close"] < (dataframe["bb_lowerband"])) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 6")
+        dataframe.loc[
+            (
+                (dataframe["rsi_1h"] < self.buy_rsi_1h_2.value) &
+                (dataframe["ema_26"] > dataframe["ema_12"]) &
+                ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_1.value)) &
+                ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(30) * self.buy_volume_pump_1.value)
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 7")
         
-        # dataframe.loc[
-        #     (
-        #         (dataframe["close"] > dataframe["ema_200"]) &
-        #         (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
-        #         (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-        #         (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-        #         (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 10")
+        dataframe.loc[
+            (
+                (dataframe["close"] > dataframe["ema_200"]) &
+                (dataframe["close"] < dataframe["bb_lowerband"] *  self.buy_bb20_close_bblowerband_safe_2.value) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
+                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
+                (dataframe["open"] - dataframe["close"] < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 10")
         
-        # dataframe.loc[
-        #     (
-        #         (dataframe["close"] > dataframe["ema_200"]) &
-        #         (dataframe["close"] > dataframe["ema_200_1h"]) &
-        #         (dataframe["close"] < dataframe["bb_lowerband"] * self.buy_bb20_close_bblowerband_safe_1.value) &
-        #         (dataframe["low"] < dataframe["bb_lowerband"] * self.buy_bb20_close_bblowerband_safe_2.value) &
-        #         (dataframe["close"].shift() > dataframe["bb_lowerband"]) &
-        #         (dataframe["rsi_1h"] < 72.8) &
-        #         (dataframe["open"] > dataframe["close"]) &
-        #         (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-        #         (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
-        #         ((dataframe["open"] - dataframe["close"]) < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 12")
+        dataframe.loc[
+            (
+                (dataframe["close"] > dataframe["ema_200"]) &
+                (dataframe["close"] > dataframe["ema_200_1h"]) &
+                (dataframe["close"] < dataframe["bb_lowerband"] * self.buy_bb20_close_bblowerband_safe_1.value) &
+                (dataframe["low"] < dataframe["bb_lowerband"] * self.buy_bb20_close_bblowerband_safe_2.value) &
+                (dataframe["close"].shift() > dataframe["bb_lowerband"]) &
+                (dataframe["rsi_1h"] < 72.8) &
+                (dataframe["open"] > dataframe["close"]) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
+                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value)) &
+                ((dataframe["open"] - dataframe["close"]) < dataframe["bb_upperband"].shift(2) - dataframe["bb_lowerband"].shift(2))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 12")
         
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_1h"] < self.buy_rsi_1h_5.value) &
-        #         (dataframe["ema_26"] > dataframe["ema_12"]) &
-        #         ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_2.value)) &
-        #         ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
-        #         (dataframe["close"] < (dataframe["bb_lowerband"])) &
-        #         (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
-        #         (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
-        #         (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "cond 16")
+        dataframe.loc[
+            (
+                (dataframe["rsi_1h"] < self.buy_rsi_1h_5.value) &
+                (dataframe["ema_26"] > dataframe["ema_12"]) &
+                ((dataframe["ema_26"] - dataframe["ema_12"]) > (dataframe["open"] * self.buy_macd_2.value)) &
+                ((dataframe["ema_26"].shift() - dataframe["ema_12"].shift()) > (dataframe["open"]/100)) &
+                (dataframe["close"] < (dataframe["bb_lowerband"])) &
+                (dataframe["volume_mean_slow"] > dataframe["volume_mean_slow"].shift(48) * self.buy_volume_pump_1.value) &
+                (dataframe["volume_mean_slow"] * self.buy_volume_pump_1.value < dataframe["volume_mean_slow"].shift(48)) &
+                (dataframe["volume"] < (dataframe["volume"].shift() * self.buy_volume_drop_1.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "cond 16")
         
-
         dataframe.loc[
             (
                 (dataframe["close"] < dataframe["vwap_lowerband"]) &
@@ -403,18 +379,6 @@ class abbas8(IStrategy):
                 (dataframe["rsi_112"] < 60)
             ),
             ["enter_long", "enter_tag"]] = (1, "vwap")
-        dataframe.loc[
-            (
-                (dataframe["open"] < dataframe["ema_8"] * self.buy_ema_cofi.value) &
-                (qtpylib.crossed_above(dataframe["fastk"], dataframe["fastd"])) &
-                (dataframe["fastk"] < self.buy_fastk.value) &
-                (dataframe["fastd"] < self.buy_fastd.value) &
-                (dataframe["adx"] > self.buy_adx.value) &
-                (dataframe["EWO"] > self.buy_ewo_high.value) &
-                (dataframe["rsi_84"] < 60) &
-                (dataframe["rsi_112"] < 60)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "cofi")
         dataframe.loc[
             (
                 (dataframe["rocr_1h"] > self.buy_clucha_rocr_1h.value ) &
@@ -443,28 +407,6 @@ def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
-
-def T3(dataframe, length=5):
-    """
-    T3 Average by HPotter on Tradingview
-    https://www.tradingview.com/script/qzoC9H1I-T3-Average/
-    """
-    df = dataframe.copy()
-
-    df["xe1"] = ta.EMA(df["close"], timeperiod=length)
-    df["xe2"] = ta.EMA(df["xe1"], timeperiod=length)
-    df["xe3"] = ta.EMA(df["xe2"], timeperiod=length)
-    df["xe4"] = ta.EMA(df["xe3"], timeperiod=length)
-    df["xe5"] = ta.EMA(df["xe4"], timeperiod=length)
-    df["xe6"] = ta.EMA(df["xe5"], timeperiod=length)
-    b = 0.7
-    c1 = -b * b * b
-    c2 = 3 * b * b + 3 * b * b * b
-    c3 = -6 * b * b - 3 * b - 3 * b * b * b
-    c4 = 1 + 3 * b + b * b * b + 3 * b * b
-    df["T3Average"] = c1 * df["xe6"] + c2 * df["xe5"] + c3 * df["xe4"] + c4 * df["xe3"]
-
-    return df["T3Average"]
 
 # VWAP bands
 def VWAPB(dataframe, window_size=20, num_of_std=1):
