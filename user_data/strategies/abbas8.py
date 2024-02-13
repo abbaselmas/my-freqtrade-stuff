@@ -250,6 +250,12 @@ class abbas8(IStrategy):
         dataframe['cti'] = pta.cti(dataframe["close"], length=20)
         # BinH
         dataframe['closedelta'] = (dataframe['close'] - dataframe['close'].shift()).abs()
+        # Heiken Ashi
+        heikinashi = qtpylib.heikinashi(dataframe)
+        dataframe['ha_open'] = heikinashi['open']
+        dataframe['ha_close'] = heikinashi['close']
+        dataframe['ha_high'] = heikinashi['high']
+        dataframe['ha_low'] = heikinashi['low']
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -404,8 +410,8 @@ class abbas8(IStrategy):
             (
                 (dataframe['rocr_1h'] > self.buy_clucha_rocr_1h.value )
                 (dataframe['bb_lowerband2_40'].shift() > 0) &
-                (dataframe['bb_delta_cluc'] > dataframe['ha_close_1h'] * self.buy_clucha_bbdelta_close.value) &
-                (dataframe['ha_closedelta'] > dataframe['ha_close_1h'] * self.buy_clucha_closedelta_close.value) &
+                (dataframe['bb_delta_cluc'] > dataframe['ha_close'] * self.buy_clucha_bbdelta_close.value) &
+                (dataframe['ha_closedelta'] > dataframe['ha_close'] * self.buy_clucha_closedelta_close.value) &
                 (dataframe['tail'] < dataframe['bb_delta_cluc'] * self.buy_clucha_bbdelta_tail.value) &
                 (dataframe['ha_close'] < dataframe['bb_lowerband2_40'].shift()) &
                 (dataframe['ha_close'] < dataframe['ha_close'].shift()) &
