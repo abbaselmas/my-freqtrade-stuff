@@ -161,6 +161,11 @@ class abbas8(IStrategy):
     def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
+
+        informative_15m['adx'] = ta.ADX(dataframe, timeperiod=14)
+        informative_15m['plus_di'] = ta.PLUS_DI(dataframe, timeperiod=25)
+        informative_15m['minus_di'] = ta.MINUS_DI(dataframe, timeperiod=25)
+
         return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
@@ -307,6 +312,15 @@ class abbas8(IStrategy):
                 (dataframe['volume'] < (dataframe['volume'].shift() * self.buy_volume_drop_1.value))
             ),
             ["enter_long", "enter_tag"]] = (1, "cond 16")
+        
+        dataframe.loc[
+            (
+                (dataframe['adx_15m'] > 16) &
+                (dataframe['minus_di_15m'] > 4) &
+                (dataframe['plus_di_15m'] > 20) &
+                (qtpylib.crossed_above( dataframe['plus_di_15m'],dataframe['minus_di_15m']))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "adx 15m usdt")
         
         dont_buy_conditions = []
         
