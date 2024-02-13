@@ -263,7 +263,8 @@ class abbas8(IStrategy):
         dataframe['cti'] = pta.cti(dataframe["close"], length=20)
         # BinH
         dataframe['closedelta'] = (dataframe['close'] - dataframe['close'].shift()).abs()
-        
+        # Elliot
+        dataframe['EWO'] = EWO(dataframe, 50, 200)
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
