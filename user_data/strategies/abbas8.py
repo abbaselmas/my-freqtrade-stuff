@@ -229,6 +229,13 @@ class abbas8(IStrategy):
         dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
         dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
         dataframe["ema_12"] = ta.EMA(dataframe, timeperiod=12)
+        # EMA
+        dataframe['ema_8'] = ta.EMA(dataframe, timeperiod=8)
+        dataframe['ema_14'] = ta.EMA(dataframe, timeperiod=14)
+        dataframe['ema_20'] = ta.EMA(dataframe, timeperiod=20)
+        dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
+        dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
+        dataframe['hma_50'] = qtpylib.hull_moving_average(dataframe['close'], window=50)
         # RSI
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe['rsi_6'] = ta.RSI(dataframe, timeperiod=6)
