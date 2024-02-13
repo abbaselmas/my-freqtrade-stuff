@@ -131,10 +131,42 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
 
+    is_optimize_cofi = False
+    buy_ema_cofi = DecimalParameter(0.9, 1.2, default=0.97 , optimize = is_optimize_cofi)
+    buy_fastk = IntParameter(20, 45, default=20, optimize = is_optimize_cofi)
+    buy_fastd = IntParameter(20, 45, default=20, optimize = is_optimize_cofi)
+    buy_adx = IntParameter(20, 45, default=30, optimize = is_optimize_cofi)
+    buy_ewo_high = DecimalParameter(-12, 12, default=3.553, optimize = is_optimize_cofi)
+
+    is_optimize_clucha = True
+    buy_clucha_bbdelta_close = DecimalParameter(0.0005, 0.042, default=0.034, decimals=5, optimize = is_optimize_clucha)
+    buy_clucha_bbdelta_tail = DecimalParameter(0.7, 1.1, default=0.95, decimals=5, optimize = is_optimize_clucha)
+    buy_clucha_closedelta_close = DecimalParameter(0.0005, 0.025, default=0.019, decimals=5, optimize = is_optimize_clucha)
+    buy_clucha_rocr_1h = DecimalParameter(0.001, 1.0, default=0.131, decimals=5, optimize = is_optimize_clucha)
+
+    is_optimize_gumbo = False
+    buy_gumbo_ema = DecimalParameter(0.9, 1.2, default=0.97 , optimize = is_optimize_gumbo)
+    buy_gumbo_ewo_low = DecimalParameter(-12.0, 5, default=-5.585, optimize = is_optimize_gumbo)
+
+    is_optimize_gumbo_protection = False
+    buy_gumbo_cti = DecimalParameter(-0.9, -0.0, default=-0.5 , optimize = is_optimize_gumbo_protection)
+    buy_gumbo_r14 = DecimalParameter(-100, -44, default=-60 , optimize = is_optimize_gumbo_protection)
+
     is_optimize_vwap = True
-    buy_vwap_width      = DecimalParameter(0.05, 10.0, default=0.80, optimize = is_optimize_vwap)
+    buy_vwap_width = DecimalParameter(0.05, 10.0, default=0.80 , optimize = is_optimize_vwap)
     buy_vwap_closedelta = DecimalParameter(10.0, 30.0, default=15.0, optimize = is_optimize_vwap)
-    buy_vwap_cti        = DecimalParameter(-0.9, -0.0, default=-0.6, optimize = is_optimize_vwap)
+    buy_vwap_cti = DecimalParameter(-0.9, -0.0, default=-0.6 , optimize = is_optimize_vwap)
+
+    is_optimize_lambo2 = True
+    buy_lambo2_ema = DecimalParameter(0.85, 1.15, default=0.942 , optimize = is_optimize_lambo2)
+    buy_lambo2_rsi4 = IntParameter(15, 45, default=45, optimize = is_optimize_lambo2)
+    buy_lambo2_rsi14 = IntParameter(15, 45, default=45, optimize = is_optimize_lambo2)
+
+    is_optimize_V = True
+    buy_V_bb_width = DecimalParameter(0.04, 0.1, default=0.01 , optimize = is_optimize_V)
+    buy_V_cti = DecimalParameter(-0.95, -0.5, default=-0.6 , optimize = is_optimize_V)
+    buy_V_r14 = DecimalParameter(-100, 0, default=-60 , optimize = is_optimize_V)
+    buy_V_mfi = DecimalParameter(10, 40, default=30 , optimize = is_optimize_V)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
@@ -183,7 +215,7 @@ class abbas8(IStrategy):
         dataframe["volume_mean_slow"] = dataframe["volume"].rolling(window=30).mean()
 
         ## BB 40
-        bollinger2_40 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=40, stds=2)
+        bollinger2_40 = qtpylib.bollinger_bands(ha_typical_price(dataframe), window=40, stds=2)
         dataframe['bb_lowerband2_40'] = bollinger2_40['lower']
         dataframe['bb_middleband2_40'] = bollinger2_40['mid']
         dataframe['bb_upperband2_40'] = bollinger2_40['upper']
@@ -372,8 +404,8 @@ class abbas8(IStrategy):
             (
                 (dataframe['rocr_1h'] > self.buy_clucha_rocr_1h.value )
                 (dataframe['bb_lowerband2_40'].shift() > 0) &
-                (dataframe['bb_delta_cluc'] > dataframe['ha_close'] * self.buy_clucha_bbdelta_close.value) &
-                (dataframe['ha_closedelta'] > dataframe['ha_close'] * self.buy_clucha_closedelta_close.value) &
+                (dataframe['bb_delta_cluc'] > dataframe['ha_close_1h'] * self.buy_clucha_bbdelta_close.value) &
+                (dataframe['ha_closedelta'] > dataframe['ha_close_1h'] * self.buy_clucha_closedelta_close.value) &
                 (dataframe['tail'] < dataframe['bb_delta_cluc'] * self.buy_clucha_bbdelta_tail.value) &
                 (dataframe['ha_close'] < dataframe['bb_lowerband2_40'].shift()) &
                 (dataframe['ha_close'] < dataframe['ha_close'].shift()) &
@@ -427,3 +459,7 @@ def VWAPB(dataframe, window_size=20, num_of_std=1):
     df['vwap_low'] = df['vwap'] - (rolling_std * num_of_std)
     df['vwap_high'] = df['vwap'] + (rolling_std * num_of_std)
     return df['vwap_low'], df['vwap'], df['vwap_high']
+
+def ha_typical_price(bars):
+    res = (bars['ha_high'] + bars['ha_low'] + bars['ha_close']) / 3.
+    return Series(index=bars.index, data=res)
