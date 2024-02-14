@@ -131,7 +131,7 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=False)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=False)
 
-    is_optimize_clucha = True
+    is_optimize_clucha = False
     buy_clucha_bbdelta_close    = DecimalParameter(0.001, 0.042,  default=0.034, space="buy", decimals=3, optimize = is_optimize_clucha)
     buy_clucha_bbdelta_tail     = DecimalParameter(0.70,   1.10,  default=0.95,  space="buy", decimals=2, optimize = is_optimize_clucha)
     buy_clucha_closedelta_close = DecimalParameter(0.001,  0.025, default=0.02,  space="buy", decimals=3, optimize = is_optimize_clucha)
@@ -145,7 +145,7 @@ class abbas8(IStrategy):
     buy_gumbo_cti = DecimalParameter(-0.90, -0.00, default=-0.50, space="buy", decimals=2, optimize = is_optimize_gumbo_protection)
     buy_gumbo_r14     = IntParameter(-100, -44,    default=-60,   space="buy", optimize = is_optimize_gumbo_protection)
 
-    is_optimize_vwap = False
+    is_optimize_vwap = True
     buy_vwap_width      = DecimalParameter(0.05, 10.0,   default=0.80,  space="buy", decimals=2, optimize = is_optimize_vwap)
     buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=15.0,  space="buy", decimals=2, optimize = is_optimize_vwap)
     buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=-0.60, space="buy", decimals=2, optimize = is_optimize_vwap)
