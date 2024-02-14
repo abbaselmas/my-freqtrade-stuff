@@ -145,7 +145,7 @@ class abbas8(IStrategy):
     buy_gumbo_cti = DecimalParameter(-0.9, -0.0, default=-0.5 , optimize = is_optimize_gumbo_protection)
     buy_gumbo_r14 = DecimalParameter(-100, -44, default=-60 , optimize = is_optimize_gumbo_protection)
 
-    is_optimize_vwap = True
+    is_optimize_vwap = False
     buy_vwap_width = DecimalParameter(0.05, 10.0, default=0.80 , optimize = is_optimize_vwap)
     buy_vwap_closedelta = DecimalParameter(10.0, 30.0, default=15.0, optimize = is_optimize_vwap)
     buy_vwap_cti = DecimalParameter(-0.9, -0.0, default=-0.6 , optimize = is_optimize_vwap)
@@ -369,29 +369,29 @@ class abbas8(IStrategy):
         #     ),
         #     ["enter_long", "enter_tag"]] = (1, "cond 16")
         
-        dataframe.loc[
-            (
-                (dataframe["close"] < dataframe["vwap_lowerband"]) &
-                (dataframe["vwap_width"] > self.buy_vwap_width.value) &
-                (dataframe["closedelta"] > dataframe["close"] * self.buy_vwap_closedelta.value / 1000 ) &
-                (dataframe["cti"] < self.buy_vwap_cti.value) &
-                (dataframe["rsi_84"] < 60) &
-                (dataframe["rsi_112"] < 60)
-            ),
-            ["enter_long", "enter_tag"]] = (1, "vwap")
         # dataframe.loc[
         #     (
-        #         (dataframe["rocr_1h"] > self.buy_clucha_rocr_1h.value ) &
-        #         (dataframe["bb_lowerband2_40"].shift() > 0) &
-        #         (dataframe["bb_delta_cluc"] > dataframe["ha_close"] * self.buy_clucha_bbdelta_close.value) &
-        #         (dataframe["ha_closedelta"] > dataframe["ha_close"] * self.buy_clucha_closedelta_close.value) &
-        #         (dataframe["tail"] < dataframe["bb_delta_cluc"] * self.buy_clucha_bbdelta_tail.value) &
-        #         (dataframe["ha_close"] < dataframe["bb_lowerband2_40"].shift()) &
-        #         (dataframe["ha_close"] < dataframe["ha_close"].shift()) &
+        #         (dataframe["close"] < dataframe["vwap_lowerband"]) &
+        #         (dataframe["vwap_width"] > self.buy_vwap_width.value) &
+        #         (dataframe["closedelta"] > dataframe["close"] * self.buy_vwap_closedelta.value / 1000 ) &
+        #         (dataframe["cti"] < self.buy_vwap_cti.value) &
         #         (dataframe["rsi_84"] < 60) &
         #         (dataframe["rsi_112"] < 60)
         #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "clucha")
+        #     ["enter_long", "enter_tag"]] = (1, "vwap")
+        dataframe.loc[
+            (
+                (dataframe["rocr_1h"] > self.buy_clucha_rocr_1h.value ) &
+                (dataframe["bb_lowerband2_40"].shift() > 0) &
+                (dataframe["bb_delta_cluc"] > dataframe["ha_close"] * self.buy_clucha_bbdelta_close.value) &
+                (dataframe["ha_closedelta"] > dataframe["ha_close"] * self.buy_clucha_closedelta_close.value) &
+                (dataframe["tail"] < dataframe["bb_delta_cluc"] * self.buy_clucha_bbdelta_tail.value) &
+                (dataframe["ha_close"] < dataframe["bb_lowerband2_40"].shift()) &
+                (dataframe["ha_close"] < dataframe["ha_close"].shift()) &
+                (dataframe["rsi_84"] < 60) &
+                (dataframe["rsi_112"] < 60)
+            ),
+            ["enter_long", "enter_tag"]] = (1, "clucha")
 
         dont_buy_conditions = []
         
