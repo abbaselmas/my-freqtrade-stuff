@@ -131,35 +131,35 @@ class abbas8(IStrategy):
     buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=False)
     buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=False)
 
-    is_optimize_clucha = False
-    buy_clucha_bbdelta_close = DecimalParameter(0.0005, 0.042, default=0.034, decimals=5, optimize = is_optimize_clucha)
-    buy_clucha_bbdelta_tail = DecimalParameter(0.7, 1.1, default=0.95, decimals=5, optimize = is_optimize_clucha)
-    buy_clucha_closedelta_close = DecimalParameter(0.0005, 0.025, default=0.019, decimals=5, optimize = is_optimize_clucha)
-    buy_clucha_rocr_1h = DecimalParameter(0.001, 1.0, default=0.131, decimals=5, optimize = is_optimize_clucha)
+    is_optimize_clucha = True
+    buy_clucha_bbdelta_close    = DecimalParameter(0.001, 0.042,  default=0.034, space="buy", decimals=3, optimize = is_optimize_clucha)
+    buy_clucha_bbdelta_tail     = DecimalParameter(0.70,   1.10,  default=0.95,  space="buy", decimals=2, optimize = is_optimize_clucha)
+    buy_clucha_closedelta_close = DecimalParameter(0.001,  0.025, default=0.02,  space="buy", decimals=3, optimize = is_optimize_clucha)
+    buy_clucha_rocr_1h          = DecimalParameter(0.01,   1.00,  default=0.13,  space="buy", decimals=2, optimize = is_optimize_clucha)
 
     is_optimize_gumbo = False
-    buy_gumbo_ema = DecimalParameter(0.9, 1.2, default=0.97 , optimize = is_optimize_gumbo)
-    buy_gumbo_ewo_low = DecimalParameter(-12.0, 5, default=-5.585, optimize = is_optimize_gumbo)
+    buy_gumbo_ema       = DecimalParameter(0.90, 1.20,   default= 0.97, space="buy", decimals=2, optimize = is_optimize_gumbo)
+    buy_gumbo_ewo_low   = DecimalParameter(-12.00, 5.00, default=-5.58, space="buy", decimals=2, optimize = is_optimize_gumbo)
 
     is_optimize_gumbo_protection = False
-    buy_gumbo_cti = DecimalParameter(-0.9, -0.0, default=-0.5 , optimize = is_optimize_gumbo_protection)
-    buy_gumbo_r14 = DecimalParameter(-100, -44, default=-60 , optimize = is_optimize_gumbo_protection)
+    buy_gumbo_cti = DecimalParameter(-0.90, -0.00, default=-0.50, space="buy", decimals=2, optimize = is_optimize_gumbo_protection)
+    buy_gumbo_r14     = IntParameter(-100, -44,    default=-60,   space="buy", optimize = is_optimize_gumbo_protection)
 
     is_optimize_vwap = False
-    buy_vwap_width = DecimalParameter(0.05, 10.0, default=0.80 , optimize = is_optimize_vwap)
-    buy_vwap_closedelta = DecimalParameter(10.0, 30.0, default=15.0, optimize = is_optimize_vwap)
-    buy_vwap_cti = DecimalParameter(-0.9, -0.0, default=-0.6 , optimize = is_optimize_vwap)
+    buy_vwap_width      = DecimalParameter(0.05, 10.0,   default=0.80,  space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=15.0,  space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=-0.60, space="buy", decimals=2, optimize = is_optimize_vwap)
 
     is_optimize_lambo2 = False
-    buy_lambo2_ema = DecimalParameter(0.85, 1.15, default=0.942 , optimize = is_optimize_lambo2)
-    buy_lambo2_rsi4 = IntParameter(15, 45, default=45, optimize = is_optimize_lambo2)
-    buy_lambo2_rsi14 = IntParameter(15, 45, default=45, optimize = is_optimize_lambo2)
+    buy_lambo2_ema = DecimalParameter(0.85, 1.15, default=0.94 , space="buy", decimals=2, optimize = is_optimize_lambo2)
+    buy_lambo2_rsi4  = IntParameter(15, 45, default=45, space="buy", optimize = is_optimize_lambo2)
+    buy_lambo2_rsi14 = IntParameter(15, 45, default=45, space="buy", optimize = is_optimize_lambo2)
 
     is_optimize_V = False
-    buy_V_bb_width = DecimalParameter(0.04, 0.1, default=0.01 , optimize = is_optimize_V)
-    buy_V_cti = DecimalParameter(-0.95, -0.5, default=-0.6 , optimize = is_optimize_V)
-    buy_V_r14 = DecimalParameter(-100, 0, default=-60 , optimize = is_optimize_V)
-    buy_V_mfi = DecimalParameter(10, 40, default=30 , optimize = is_optimize_V)
+    buy_V_bb_width = DecimalParameter(0.04, 0.10,   default=0.01, space="buy", decimals=2, optimize = is_optimize_V)
+    buy_V_cti      = DecimalParameter(-0.95, -0.50, default=-0.60, space="buy", decimals=2, optimize = is_optimize_V)
+    buy_V_r14 = IntParameter(-100, 0, default=-60, space="buy", optimize = is_optimize_V)
+    buy_V_mfi = IntParameter(10, 40, default=30, space="buy",  optimize = is_optimize_V)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
