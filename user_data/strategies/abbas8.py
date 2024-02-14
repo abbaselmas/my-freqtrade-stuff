@@ -14,6 +14,24 @@ from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal,
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 15,
+    "buy_V_bb_width": 0.01,
+    "buy_V_cti": -0.6,
+    "buy_V_mfi": 30,
+    "buy_V_r14": -60,
+    "buy_clucha_bbdelta_close": 0.041,
+    "buy_clucha_bbdelta_tail": 0.72,
+    "buy_clucha_closedelta_close": 0.01,
+    "buy_clucha_rocr_1h": 0.07,
+    "buy_gumbo_cti": -0.5,
+    "buy_gumbo_ema": 0.97,
+    "buy_gumbo_ewo_low": -5.585,
+    "buy_gumbo_r14": -60,
+    "buy_lambo2_ema": 0.942,
+    "buy_lambo2_rsi14": 45,
+    "buy_lambo2_rsi4": 45,
+    "buy_vwap_closedelta": 12.63,
+    "buy_vwap_cti": -0.87,
+    "buy_vwap_width": 0.16,
     "ewo_high": 8.32,
     "ewo_high_2": -4.44,
     "ewo_low": -6.42,
@@ -24,18 +42,15 @@ buy_params = {
     "rsi_ewo2": 18,
     "rsi_fast_ewo1": 56,
     "slow_ewo": 198,
-    "buy_bb20_close_bblowerband_safe_1": 0.983,
-    "buy_bb20_close_bblowerband_safe_2": 0.998,
-    "buy_macd_1": 0.09,
+    "buy_bb20_close_bblowerband_safe_1": 1.07,
+    "buy_bb20_close_bblowerband_safe_2": 0.97,
+    "buy_macd_1": 0.05,
     "buy_macd_2": 0.01,
-    "buy_rsi_1h_1": 26,
-    "buy_rsi_1h_2": 38.4,
-    "buy_rsi_1h_5": 58.5,
-    "buy_rsi_3": 18.4,
-    "buy_volume_drop_1": 10,
-    "buy_volume_drop_2": 1.9,
-    "buy_volume_drop_3": 10.0,
-    "buy_volume_pump_1": 0.3
+    "buy_rsi_1h_1": 12,
+    "buy_rsi_1h_2": 26,
+    "buy_rsi_1h_5": 18,
+    "buy_volume_drop_1": 9.1,
+    "buy_volume_pump_1": 0.32
 }
 # Sell hyperspace params:
 sell_params = {
@@ -123,7 +138,7 @@ class abbas8(IStrategy):
     buy_volume_pump_1 = DecimalParameter(0.10, 0.60, default=buy_params["buy_volume_pump_1"], space="buy", decimals=2, optimize=buy_volume_optimize)
     buy_volume_drop_1 = DecimalParameter(1, 10, default=buy_params["buy_volume_drop_1"], space="buy", decimals=1, optimize=buy_volume_optimize)
     
-    buy_rsi_optimize = True
+    buy_rsi_optimize = False
     buy_rsi_1h_1 = IntParameter(10, 40, default=buy_params["buy_rsi_1h_1"], space="buy", optimize=buy_rsi_optimize)
     buy_rsi_1h_2 = IntParameter(10, 40, default=buy_params["buy_rsi_1h_2"], space="buy", optimize=buy_rsi_optimize)
     buy_rsi_1h_5 = IntParameter(10, 60, default=buy_params["buy_rsi_1h_5"], space="buy", optimize=buy_rsi_optimize)
