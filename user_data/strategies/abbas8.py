@@ -131,8 +131,8 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
     
-    buy_bb20_close_bblowerband_safe_1 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_1"], space="buy", decimals=2, optimize=True)
-    buy_bb20_close_bblowerband_safe_2 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_2"], space="buy", decimals=2, optimize=True)
+    buy_bb20_close_bblowerband_safe_1 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_1"], space="buy", decimals=2, optimize=False)
+    buy_bb20_close_bblowerband_safe_2 = DecimalParameter(0.9, 1.1, default=buy_params["buy_bb20_close_bblowerband_safe_2"], space="buy", decimals=2, optimize=False)
     
     buy_volume_optimize = True
     buy_volume_pump_1 = DecimalParameter(0.10, 0.60, default=buy_params["buy_volume_pump_1"], space="buy", decimals=2, optimize=buy_volume_optimize)
@@ -143,8 +143,8 @@ class abbas8(IStrategy):
     buy_rsi_1h_2 = IntParameter(10, 40, default=buy_params["buy_rsi_1h_2"], space="buy", optimize=buy_rsi_optimize)
     buy_rsi_1h_5 = IntParameter(10, 60, default=buy_params["buy_rsi_1h_5"], space="buy", optimize=buy_rsi_optimize)
     
-    buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=True)
-    buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=True)
+    buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_1"], space="buy", decimals=2, optimize=False)
+    buy_macd_2 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_2"], space="buy", decimals=2, optimize=False)
 
     is_optimize_clucha = False
     buy_clucha_bbdelta_close    = DecimalParameter(0.001, 0.042,  default=0.034, space="buy", decimals=3, optimize = is_optimize_clucha)
