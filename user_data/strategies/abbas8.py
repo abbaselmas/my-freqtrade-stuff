@@ -369,29 +369,29 @@ class abbas8(IStrategy):
         #     ),
         #     ["enter_long", "enter_tag"]] = (1, "cond 16")
         
-        # dataframe.loc[
-        #     (
-        #         (dataframe["close"] < dataframe["vwap_lowerband"]) &
-        #         (dataframe["vwap_width"] > self.buy_vwap_width.value) &
-        #         (dataframe["closedelta"] > dataframe["close"] * self.buy_vwap_closedelta.value / 1000 ) &
-        #         (dataframe["cti"] < self.buy_vwap_cti.value) &
-        #         (dataframe["rsi_84"] < 60) &
-        #         (dataframe["rsi_112"] < 60)
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "vwap")
         dataframe.loc[
             (
-                (dataframe["rocr_1h"] > self.buy_clucha_rocr_1h.value ) &
-                (dataframe["bb_lowerband2_40"].shift() > 0) &
-                (dataframe["bb_delta_cluc"] > dataframe["ha_close"] * self.buy_clucha_bbdelta_close.value) &
-                (dataframe["ha_closedelta"] > dataframe["ha_close"] * self.buy_clucha_closedelta_close.value) &
-                (dataframe["tail"] < dataframe["bb_delta_cluc"] * self.buy_clucha_bbdelta_tail.value) &
-                (dataframe["ha_close"] < dataframe["bb_lowerband2_40"].shift()) &
-                (dataframe["ha_close"] < dataframe["ha_close"].shift()) &
+                (dataframe["close"] < dataframe["vwap_lowerband"]) &
+                (dataframe["vwap_width"] > self.buy_vwap_width.value) &
+                (dataframe["closedelta"] > dataframe["close"] * self.buy_vwap_closedelta.value / 1000 ) &
+                (dataframe["cti"] < self.buy_vwap_cti.value) &
                 (dataframe["rsi_84"] < 60) &
                 (dataframe["rsi_112"] < 60)
             ),
-            ["enter_long", "enter_tag"]] = (1, "clucha")
+            ["enter_long", "enter_tag"]] = (1, "vwap")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rocr_1h"] > self.buy_clucha_rocr_1h.value ) &
+        #         (dataframe["bb_lowerband2_40"].shift() > 0) &
+        #         (dataframe["bb_delta_cluc"] > dataframe["ha_close"] * self.buy_clucha_bbdelta_close.value) &
+        #         (dataframe["ha_closedelta"] > dataframe["ha_close"] * self.buy_clucha_closedelta_close.value) &
+        #         (dataframe["tail"] < dataframe["bb_delta_cluc"] * self.buy_clucha_bbdelta_tail.value) &
+        #         (dataframe["ha_close"] < dataframe["bb_lowerband2_40"].shift()) &
+        #         (dataframe["ha_close"] < dataframe["ha_close"].shift()) &
+        #         (dataframe["rsi_84"] < 60) &
+        #         (dataframe["rsi_112"] < 60)
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "clucha")
 
         dont_buy_conditions = []
         
