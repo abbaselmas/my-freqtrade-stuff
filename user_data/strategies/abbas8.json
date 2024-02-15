@@ -9,56 +9,41 @@
     "stoploss": {
       "stoploss": -0.067
     },
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0003,
-      "trailing_stop_positive_offset": 0.0146,
-      "trailing_only_offset_is_reached": true
-    },
     "max_open_trades": {
-      "max_open_trades": 10
+      "max_open_trades": 3
     },
     "buy": {
-      "base_nb_candles_buy": 15,
-      "ewo_high": 8.32,
-      "ewo_high_2": -4.44,
-      "ewo_low": -6.42,
-      "fast_ewo": 9,
-      "low_offset": 1.18,
-      "low_offset_2": 0.93,
-      "rsi_buy": 67,
-      "rsi_ewo2": 18,
-      "rsi_fast_ewo1": 56,
-      "slow_ewo": 198,
-      "buy_bb20_close_bblowerband_safe_1": 0.99,
-      "buy_bb20_close_bblowerband_safe_2": 0.93,
-      "buy_macd_1": 0.04,
-      "buy_macd_2": 0.02,
-      "buy_rsi_1": 31,
-      "buy_rsi_1h_1": 25,
-      "buy_rsi_1h_2": 36,
-      "buy_rsi_1h_3": 10,
-      "buy_rsi_1h_4": 31,
-      "buy_rsi_1h_5": 25,
-      "buy_rsi_2": 9,
-      "buy_rsi_3": 39,
-      "buy_volume_drop_1": 13,
-      "buy_volume_drop_2": 2,
-      "buy_volume_drop_3": 3,
-      "buy_volume_pump_1": 0.16
+      "base_nb_candles_buy": 48,
+      "buy_clucha_bbdelta_close": 0.025,
+      "buy_clucha_bbdelta_tail": 0.82,
+      "buy_clucha_closedelta_close": 0.004,
+      "buy_clucha_rocr_1h": 0.03,
+      "buy_vwap_closedelta": 10.19,
+      "buy_vwap_cti": -0.06,
+      "buy_vwap_width": 2.72,
+      "ewo_high": 4.03,
+      "ewo_high_2": 0.6,
+      "ewo_low": -13.15,
+      "fast_ewo": 28,
+      "low_offset": 1.03,
+      "low_offset_2": 0.95,
+      "rsi_buy": 70,
+      "rsi_ewo2": 34,
+      "rsi_fast_ewo1": 29,
+      "slow_ewo": 212
     },
     "sell": {
-      "base_nb_candles_sell": 15,
-      "high_offset": 1.11,
-      "percent_change_high": 0.05,
-      "percent_change_length": 60,
-      "percent_change_low": -0.05,
-      "volume_mean_long": 48,
-      "volume_mean_short": 4,
-      "volume_warn": 5.0
+      "base_nb_candles_sell": 23,
+      "high_offset": 1.01
     },
-    "protection": {}
+    "protection": {},
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0002,
+      "trailing_stop_positive_offset": 0.0242,
+      "trailing_only_offset_is_reached": true
+    }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-12 20:29:13.287988+00:00"
+  "export_time": "2024-02-15 19:00:13.212105+00:00"
 }

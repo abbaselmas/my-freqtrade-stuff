@@ -39,12 +39,7 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 15,
-    "high_offset": 1.11,
-    "pHSL": -0.073,
-    "pPF_1": 0.016,
-    "pPF_2": 0.076,
-    "pSL_1": 0.011,
-    "pSL_2": 0.028
+    "high_offset": 1.11
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -119,20 +114,20 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 449
 
-    smaoffset_optimize = False
+    smaoffset_optimize = True
     base_nb_candles_buy = IntParameter(10, 50, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
     base_nb_candles_sell = IntParameter(10, 50, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
     low_offset = DecimalParameter(0.8, 1.2, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
     low_offset_2 = DecimalParameter(0.8, 1.2, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
     high_offset = DecimalParameter(0.8, 1.2, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
-    ewo_optimize = False
+    ewo_optimize = True
     fast_ewo = IntParameter(5,40, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
     slow_ewo = IntParameter(80,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
     rsi_fast_ewo1 = IntParameter(20, 60, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
     rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
 
-    protection_optimize = False
+    protection_optimize = True
     ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
@@ -145,9 +140,9 @@ class abbas8(IStrategy):
     buy_clucha_rocr_1h          = DecimalParameter(0.01,   1.00,  default=0.13,  space="buy", decimals=2, optimize = is_optimize_clucha)
 
     is_optimize_vwap = False
-    buy_vwap_width      = DecimalParameter(0.05, 10.0,   default=0.80,  space="buy", decimals=2, optimize = is_optimize_vwap)
-    buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=15.0,  space="buy", decimals=2, optimize = is_optimize_vwap)
-    buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=-0.60, space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_width      = DecimalParameter(0.05, 10.0,   default=2.72,  space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=10.19,  space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=-0.06, space="buy", decimals=2, optimize = is_optimize_vwap)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
