@@ -626,23 +626,23 @@ class abbas8TB(abbas8):
             last_candle = dataframe.iloc[-1].squeeze()
 
             # custom sell
-            if (sell_reason not in ("stoploss_on_exchange", "trailing_stop_loss", "emergency_sell", "stop_loss", "roi", "force_sell")) and (last_candle["exit"] == 0) and (not self.trailing_on_custom_sell):
+            if (sell_reason not in ('stoploss_on_exchange', 'trailing_stop_loss', 'emergency_sell', 'stop_loss', 'roi', 'force_sell')) and (last_candle['sell'] == 0) and (not self.trailing_on_custom_sell):
                 return val
 
-            if sell_reason in ("stoploss_on_exchange", "trailing_stop_loss", "emergency_sell"):
+            if sell_reason in ('stoploss_on_exchange', 'trailing_stop_loss', 'emergency_sell'):
                 return val
 
-            if (sell_reason == "stop_loss") and not self.trailing_on_stoploss:
+            if (sell_reason == 'stop_loss') and not self.trailing_on_stoploss:
                 return val
 
-            if (sell_reason == "roi") and not self.trailing_on_roi:
+            if (sell_reason == 'roi') and not self.trailing_on_roi:
                 return val
 
-            if (sell_reason == "force_sell") and not self.trailing_on_forcesell:
+            if (sell_reason == 'force_sell') and not self.trailing_on_forcesell:
                 return val
 
             if val:
-                if self.trailing_sell_order_enabled and self.config["runmode"].value in ("live", "dry_run"):
+                if self.trailing_sell_order_enabled and self.config['runmode'].value in ('live', 'dry_run'):
                     val = False
                     
                     current_price = rate
@@ -650,28 +650,28 @@ class abbas8TB(abbas8):
                     trailing_sell_offset = self.trailing_sell_offset(dataframe, pair, current_price)
 
                     # Non-sell signal triggers. Have to manually activate the trailing
-                    if not trailing_sell["allow_sell_trailing"]:
-                        logger.info(f"Manually triggering "allow_SELL_trailing" to True for {pair} because of {sell_reason} and start *SELL* trailing")
-                        trailing_sell["allow_sell_trailing"] = True
+                    if not trailing_sell['allow_sell_trailing']:
+                        logger.info(f"Manually triggering 'allow_SELL_trailing' to True for {pair} because of {sell_reason} and start *SELL* trailing")
+                        trailing_sell['allow_sell_trailing'] = True
 
-                    if trailing_sell["allow_sell_trailing"]:
-                        if (not trailing_sell["trailing_sell_order_started"] and (last_candle["exit"] != 0)):
-                            exit_tag = last_candle["exit_tag"]
-                            if exit_tag == "":
-                                exit_tag = f"{sell_reason} (start trail price {last_candle["close"]})"
+                    if trailing_sell['allow_sell_trailing']:
+                        if (not trailing_sell['trailing_sell_order_started'] and (last_candle['sell'] != 0)):
+                            exit_tag = last_candle['exit_tag']
+                            if exit_tag == '':
+                                exit_tag = f'{sell_reason} (start trail price {last_candle["close"]})'
 
-                            trailing_sell["trailing_sell_order_started"] = True
-                            trailing_sell["trailing_sell_order_downlimit"] = last_candle["close"]
-                            trailing_sell["start_trailing_sell_price"] = last_candle["close"]
-                            trailing_sell["exit_tag"] = exit_tag
-                            trailing_sell["start_trailing_time"] = datetime.now(timezone.utc)
-                            trailing_sell["offset"] = 0
+                            trailing_sell['trailing_sell_order_started'] = True
+                            trailing_sell['trailing_sell_order_downlimit'] = last_candle['close']
+                            trailing_sell['start_trailing_sell_price'] = last_candle['close']
+                            trailing_sell['exit_tag'] = exit_tag
+                            trailing_sell['start_trailing_time'] = datetime.now(timezone.utc)
+                            trailing_sell['offset'] = 0
                             
                             self.trailing_sell_info(pair, current_price)
-                            logger.info(f"start trailing sell for {pair} at {last_candle["close"]}")
+                            logger.info(f'start trailing sell for {pair} at {last_candle["close"]}')
 
-                        elif trailing_sell["trailing_sell_order_started"]:
-                            if trailing_sell_offset == "forcesell":
+                        elif trailing_sell['trailing_sell_order_started']:
+                            if trailing_sell_offset == 'forcesell':
                                 # sell in custom conditions
                                 val = True
                                 ratio = "%.2f" % ((self.current_trailing_sell_profit_ratio(pair, current_price)) * 100)
@@ -681,37 +681,37 @@ class abbas8TB(abbas8):
                             elif trailing_sell_offset is None:
                                 # stop trailing sell custom conditions
                                 self.trailing_sell(pair, reinit=True)
-                                logger.info(f"STOP trailing sell for {pair} because "trailing sell offset" returned None")
+                                logger.info(f'STOP trailing sell for {pair} because "trailing sell offset" returned None')
 
-                            elif current_price > trailing_sell["trailing_sell_order_downlimit"]:
+                            elif current_price > trailing_sell['trailing_sell_order_downlimit']:
                                 # update downlimit
                                 old_downlimit = trailing_sell["trailing_sell_order_downlimit"]
-                                self.custom_info_trail_sell[pair]["trailing_sell"]["trailing_sell_order_downlimit"] = max(current_price * (1 - trailing_sell_offset), self.custom_info_trail_sell[pair]["trailing_sell"]["trailing_sell_order_downlimit"])
-                                self.custom_info_trail_sell[pair]["trailing_sell"]["offset"] = trailing_sell_offset
+                                self.custom_info_trail_sell[pair]['trailing_sell']['trailing_sell_order_downlimit'] = max(current_price * (1 - trailing_sell_offset), self.custom_info_trail_sell[pair]['trailing_sell']['trailing_sell_order_downlimit'])
+                                self.custom_info_trail_sell[pair]['trailing_sell']['offset'] = trailing_sell_offset
                                 self.trailing_sell_info(pair, current_price)
-                                logger.info(f"update trailing sell for {pair} at {old_downlimit} -> {self.custom_info_trail_sell[pair]["trailing_sell"]["trailing_sell_order_downlimit"]}")
+                                logger.info(f'update trailing sell for {pair} at {old_downlimit} -> {self.custom_info_trail_sell[pair]["trailing_sell"]["trailing_sell_order_downlimit"]}')
 
-                            elif current_price > (trailing_sell["start_trailing_sell_price"] * (1 - self.trailing_sell_max_sell)):
+                            elif current_price > (trailing_sell['start_trailing_sell_price'] * (1 - self.trailing_sell_max_sell)):
                                 # sell! current price < downlimit && higher than starting price
                                 val = True
                                 ratio = "%.2f" % ((self.current_trailing_sell_profit_ratio(pair, current_price)) * 100)
                                 self.trailing_sell_info(pair, current_price)
-                                logger.info(f"current price ({current_price}) < downlimit ({trailing_sell["trailing_sell_order_downlimit"]}) but higher than starting price ({(trailing_sell["start_trailing_sell_price"] * (1 + self.trailing_sell_max_sell))}). OK for {pair} ({ratio} %)")
+                                logger.info(f"current price ({current_price}) < downlimit ({trailing_sell['trailing_sell_order_downlimit']}) but higher than starting price ({(trailing_sell['start_trailing_sell_price'] * (1 + self.trailing_sell_max_sell))}). OK for {pair} ({ratio} %)")
 
-                            elif current_price < (trailing_sell["start_trailing_sell_price"] * (1 - self.trailing_sell_max_stop)):
+                            elif current_price < (trailing_sell['start_trailing_sell_price'] * (1 - self.trailing_sell_max_stop)):
                                 # stop trailing, sell fast, price too low
                                 val = True                                
                                 self.trailing_sell_info(pair, current_price)
-                                logger.info(f"STOP trailing sell for {pair} because of the price is much lower than starting price * {1 + self.trailing_sell_max_stop}")
+                                logger.info(f'STOP trailing sell for {pair} because of the price is much lower than starting price * {1 + self.trailing_sell_max_stop}')
                             else:
                                 # uplimit > current_price > max_price, continue trailing and wait for the price to go down
                                 self.trailing_sell_info(pair, current_price)
-                                logger.info(f"price too low for {pair} !")                  
+                                logger.info(f'price too low for {pair} !')                  
 
                     if val:
                         self.trailing_sell_info(pair, rate)
                         self.trailing_sell(pair, reinit=True)
-                        logger.info(f"STOP trailing sell for {pair} because I SOLD it")
+                        logger.info(f'STOP trailing sell for {pair} because I SOLD it')
 
         return val
 
