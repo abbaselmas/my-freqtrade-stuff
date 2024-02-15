@@ -729,7 +729,7 @@ class abbas8TB(abbas8):
                         # self.custom_info_trail_buy[metadata["pair"]]["trailing_buy"]["allow_trailing"] = True
                         trailing_buy["allow_trailing"] = True
                         initial_buy_tag = last_candle["entry_tag"] if "entry_tag" in last_candle else "buy signal"
-                        dataframe.loc[:, "entry_tag"] = f"{initial_buy_tag} (start trail price {last_candle["close"]})"                        
+                        dataframe.loc[:, 'entry_tag'] = f"{initial_buy_tag} (start trail price {last_candle['close']})"                         
             else:
                 if (trailing_buy["trailing_buy_order_started"] == True):
                     logger.info(f"Continue trailing for {metadata["pair"]}. Manually trigger buy signal!!")
