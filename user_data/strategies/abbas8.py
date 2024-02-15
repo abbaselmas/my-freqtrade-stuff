@@ -215,48 +215,49 @@ class abbas8(IStrategy):
     buy_volume_pump_41 = DecimalParameter(0.1, 0.9,   default=0.4,  space='buy', decimals=1, optimize=optc4, load=True)
     buy_volume_drop_41 = DecimalParameter(1, 10,      default=3.8,  space='buy', decimals=1, optimize=optc4, load=True)
 
-    optc6 = False
+    optc6 = True
     buy_c6_2 = DecimalParameter(0.980, 0.999, default=0.985, space='buy', decimals=3, optimize=optc6, load=True)
-    buy_c6_1 = DecimalParameter(0.08, 0.2, default=0.12, space='buy', decimals=2, optimize=optc6, load=True) 
-    buy_c6_2 = DecimalParameter(0.02, 0.4, default=0.28, space='buy', decimals=2, optimize=optc6, load=True)
-    buy_c6_3 = DecimalParameter(0.005, 0.04, default=0.031, space='buy', decimals=3, optimize=optc6, load=True) 
-    buy_c6_4 = DecimalParameter(0.01, 0.03, default=0.021, space='buy', decimals=3, optimize=optc6, load=True)
-    buy_c6_5 = DecimalParameter(0.2, 0.4, default=0.264, space='buy', decimals=3, optimize=optc6, load=True)
+    buy_c6_1 = DecimalParameter(0.08, 0.20,   default=0.12,  space='buy', decimals=2, optimize=optc6, load=True) 
+    buy_c6_2 = DecimalParameter(0.02, 0.40,   default=0.28,  space='buy', decimals=2, optimize=optc6, load=True)
+    buy_c6_3 = DecimalParameter(0.005, 0.040, default=0.031, space='buy', decimals=3, optimize=optc6, load=True) 
+    buy_c6_4 = DecimalParameter(0.010, 0.030, default=0.021, space='buy', decimals=3, optimize=optc6, load=True)
+    buy_c6_5 = DecimalParameter(0.20, 0.40,   default=0.26,  space='buy', decimals=2, optimize=optc6, load=True)
 
-    optc7 = False
+    optc7 = True
     buy_c7_1 = DecimalParameter(0.95, 1.10, default=1.01, space='buy', decimals=2, optimize=optc7, load=True)
     buy_c7_2 = DecimalParameter(0.95, 1.10, default=0.99, space='buy', decimals=2, optimize=optc7, load=True)
     buy_c7_3 = IntParameter(-100, -80, default=-94, space='buy', optimize= optc7, load=True)
-    buy_c7_4 = IntParameter(-90, -60, default=-75, space='buy', optimize= optc7, load=True)
-    buy_c7_5 = DecimalParameter(75.1, 90.1, default=80.0, space='buy',decimals=1, optimize= optc7, load=True)
+    buy_c7_4 = IntParameter(-90, -60,  default=-75, space='buy', optimize= optc7, load=True)
+    buy_c7_5 = IntParameter(75, 90,    default= 80, space='buy', optimize= optc7, load=True)
 
-    optc8 = False
-    buy_min_inc_1 = DecimalParameter(0.01, 0.05, default=0.022, space='buy', decimals=3, optimize=optc8, load=True)
-    buy_rsi_1h_min_1 = DecimalParameter(25.0, 40.0, default=30.0, space='buy', decimals=1, optimize=optc8, load=True)
-    buy_rsi_1h_max_1 = DecimalParameter(70.0, 90.0, default=84.0, space='buy', decimals=1, optimize=optc8, load=True)
-    buy_rsi_1 = DecimalParameter(20.0, 40.0, default=36.0, space='buy', decimals=1, optimize=optc8, load=True)
-    buy_mfi_1 = DecimalParameter(20.0, 40.0, default=26.0, space='buy', decimals=1, optimize=optc8, load=True)
+    optc8 = True
+    buy_min_inc_1 = DecimalParameter(0.010, 0.050, default=0.022, space='buy', decimals=3, optimize=optc8, load=True)
+    buy_rsi_1h_min_1 = IntParameter(25, 40, default=30, space='buy', optimize=optc8, load=True)
+    buy_rsi_1h_max_1 = IntParameter(70, 90, default=84, space='buy', optimize=optc8, load=True)
+    buy_rsi_1 = IntParameter(20, 40, default=36.0, space='buy', optimize=optc8, load=True)
+    buy_mfi_1 = IntParameter(20, 40, default=26.0, space='buy', optimize=optc8, load=True)
 
     optc9 = False
-    buy_c9_1 = DecimalParameter(25.0, 44.0, default=36.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_2 = DecimalParameter(-80.0, -67.0, default=-75.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_3 = DecimalParameter(-80.0, -67.0, default=-75.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_4 = DecimalParameter(35.0, 54.0, default=46.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_5 = DecimalParameter(20.0, 44.0, default=30.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_6 = DecimalParameter(65.0, 94.0, default=84.0, space='buy', decimals=1, optimize=optc9, load=True)
-    buy_c9_7 = DecimalParameter(-110.0, -80.0, default=-99.0, space='buy', decimals=1, optimize=optc9, load=True)
+    buy_c9_1 = IntParameter(25, 44,   default=36,  space='buy',  optimize=optc9, load=True)
+    buy_c9_2 = IntParameter(-80, -67, default=-75, space='buy',  optimize=optc9, load=True)
+    buy_c9_3 = IntParameter(-80, -67, default=-75, space='buy',  optimize=optc9, load=True)
+    buy_c9_4 = IntParameter(35, 54,   default=46,  space='buy',  optimize=optc9, load=True)
+    buy_c9_5 = IntParameter(20, 44,   default=30,  space='buy',  optimize=optc9, load=True)
+    buy_c9_6 = IntParameter(65, 94,   default=84,  space='buy',  optimize=optc9, load=True)
+    buy_c9_7 = IntParameter(-110, -80, default=-99, space='buy',  optimize=optc9, load=True)
 
     optc10 = False
-    buy_c10_1 = DecimalParameter(-110.0, -80.0, default=-99.0, space='buy', decimals=1, optimize=optc10, load=True)
-    buy_c10_2 = DecimalParameter(-1, -0.5, default=-0.78, space='buy', decimals=2, optimize=optc10, load=True)
+    buy_c10_1 = IntParameter(-110, -80, default=-99, space='buy', optimize=optc10, load=True)
+    buy_c10_2 = DecimalParameter(-1.00, -0.50, default=-0.78, space='buy', decimals=2, optimize=optc10, load=True)
 
-    buy_dip_threshold_5 = DecimalParameter(0.001, 0.05, default=0.015, space='buy', decimals=3, optimize=False, load=True)
-    buy_dip_threshold_6 = DecimalParameter(0.01, 0.2, default=0.06, space='buy', decimals=3, optimize=False, load=True)
-    buy_dip_threshold_7 = DecimalParameter(0.05, 0.4, default=0.24, space='buy', decimals=3, optimize=False, load=True)
-    buy_dip_threshold_8 = DecimalParameter(0.2, 0.5, default=0.4, space='buy', decimals=3, optimize=False, load=True)
+    dip_optimize = False
+    buy_dip_threshold_5 = DecimalParameter(0.001, 0.050, default=0.015, space='buy', decimals=3, optimize=dip_optimize, load=True)
+    buy_dip_threshold_6 = DecimalParameter(0.010, 0.200, default=0.06, space='buy', decimals=3, optimize=dip_optimize, load=True)
+    buy_dip_threshold_7 = DecimalParameter(0.050, 0.400, default=0.24, space='buy', decimals=3, optimize=dip_optimize, load=True)
+    buy_dip_threshold_8 = DecimalParameter(0.200, 0.500, default=0.4, space='buy', decimals=3, optimize=dip_optimize, load=True)
     # 24 hours
-    buy_pump_pull_threshold_1 = DecimalParameter(1.5, 3.0, default=1.75, space='buy', decimals=2, optimize=False, load=True)
-    buy_pump_threshold_1 = DecimalParameter(0.4, 1.0, default=0.5, space='buy', decimals=3, optimize=False, load=True)
+    buy_pump_pull_threshold_1 = DecimalParameter(1.50, 3.00, default=1.75, space='buy', decimals=2, optimize=False, load=True)
+    buy_pump_threshold_1 = DecimalParameter(0.400, 1.000, default=0.5, space='buy', decimals=2, optimize=False, load=True)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
@@ -566,6 +567,35 @@ class abbas8(IStrategy):
                 (dataframe['cti'] < self.buy_c10_2.value)
             ),
             ["enter_long", "enter_tag"]] = (1, "con10")
+        # BCMBİGZ
+        # dataframe.loc[
+        #     (
+        #         (dataframe["close"] > dataframe["ema_200_1h"]) & 
+        #         (dataframe["ema_50"] > dataframe["ema_200"]) &
+        #         (dataframe["ema_50_1h"] > dataframe["ema_200_1h"]) &
+        #         (((dataframe["open"].rolling(2).max() - dataframe["close"]) / dataframe["close"]) < self.buy_dip_threshold_1.value) &
+        #         (((dataframe["open"].rolling(12).max() - dataframe["close"]) / dataframe["close"])< self.buy_dip_threshold_2.value) &
+        #         dataframe["lower"].shift().gt(0) &
+        #         dataframe["bbdelta"].gt(dataframe["close"] * self.buy_bb40_bbdelta_close.value) &
+        #         dataframe["closedelta"].gt(dataframe["close"] * self.buy_bb40_closedelta_close.value) &
+        #         dataframe["tail"].lt(dataframe["bbdelta"] * self.buy_bb40_tail_bbdelta.value) &
+        #         dataframe["close"].lt(dataframe["lower"].shift()) &
+        #         dataframe["close"].le(dataframe["close"].shift())
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 0")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["close"] > dataframe["ema_200"]) &
+        #         (dataframe["close"] > dataframe["ema_200_1h"]) &
+        #         (dataframe["ema_50_1h"] > dataframe["ema_100_1h"]) &
+        #         (dataframe["ema_50_1h"] > dataframe["ema_200_1h"]) &
+        #         (((dataframe["open"].rolling(2).max() - dataframe["close"]) / dataframe["close"]) < self.buy_dip_threshold_1.value) &
+        #         (((dataframe["open"].rolling(12).max() - dataframe["close"])/ dataframe["close"]) < self.buy_dip_threshold_2.value) &
+        #         (dataframe["close"] < dataframe["ema_50"]) &
+        #         (dataframe["close"] < self.buy_bb20_close_bblowerband.value * dataframe["bb_lowerband"]) &
+        #         (dataframe["volume"] < (dataframe["volume_mean_slow"].shift(1) * self.buy_bb20_volume.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 1")
 
         dont_buy_conditions = []
         
