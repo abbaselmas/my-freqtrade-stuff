@@ -19,34 +19,79 @@ logger = logging.getLogger(__name__)
 
 # Buy hyperspace params:
 buy_params = {
-    "base_nb_candles_buy": 15,
-    "buy_clucha_bbdelta_close": 0.041,
-    "buy_clucha_bbdelta_tail": 0.72,
-    "buy_clucha_closedelta_close": 0.01,
-    "buy_clucha_rocr_1h": 0.07,
-    "buy_vwap_closedelta": 12.63,
-    "buy_vwap_cti": -0.87,
-    "buy_vwap_width": 0.16,
-    "ewo_high": 8.32,
-    "ewo_high_2": -4.44,
-    "ewo_low": -6.42,
-    "fast_ewo": 9,
-    "low_offset": 1.18,
-    "low_offset_2": 0.93,
-    "rsi_buy": 67,
-    "rsi_ewo2": 18,
-    "rsi_fast_ewo1": 56,
-    "slow_ewo": 198
+    "base_nb_candles_buy": 48,
+    "buy_bb_delta": 0.021,
+    "buy_bb_factor": 0.999,
+    "buy_bb_width": 0.093,
+    "buy_c2_1": 0.024,
+    "buy_c2_2": 0.995,
+    "buy_c2_3": -0.3,
+    "buy_c6_1": 0.19,
+    "buy_c6_2": 0.1,
+    "buy_c6_3": 0.036,
+    "buy_c6_4": 0.014,
+    "buy_c6_5": 0.25,
+    "buy_c7_1": 1.0,
+    "buy_c7_2": 0.95,
+    "buy_c7_3": -95,
+    "buy_c7_4": -68,
+    "buy_c7_5": 89,
+    "buy_cci": -104,
+    "buy_cci_length": 41,
+    "buy_closedelta": 14.0,
+    "buy_clucha_bbdelta_close": 0.025,
+    "buy_clucha_bbdelta_tail": 0.82,
+    "buy_clucha_closedelta_close": 0.004,
+    "buy_clucha_rocr_1h": 0.03,
+    "buy_con3_1": 0.022,
+    "buy_con3_2": 0.987,
+    "buy_con3_3": 0.973,
+    "buy_con3_4": -0.88,
+    "buy_dip_threshold_5": 0.015,
+    "buy_dip_threshold_6": 0.06,
+    "buy_dip_threshold_7": 0.24,
+    "buy_dip_threshold_8": 0.4,
+    "buy_macd_41": 0.01,
+    "buy_mfi_1": 38,
+    "buy_min_inc_1": 0.016,
+    "buy_pump_pull_threshold_1": 1.75,
+    "buy_pump_threshold_1": 0.5,
+    "buy_rmi": 37,
+    "buy_rmi_length": 14,
+    "buy_rsi_1": 20,
+    "buy_rsi_1h_42": 39,
+    "buy_rsi_1h_max_1": 81,
+    "buy_rsi_1h_min_1": 30,
+    "buy_srsi_fk": 50,
+    "buy_volume_drop_41": 8.8,
+    "buy_volume_pump_41": 0.7,
+    "buy_vwap_closedelta": 10.19,
+    "buy_vwap_cti": -0.06,
+    "buy_vwap_width": 2.72,
+    "ewo_high": 4.03,
+    "ewo_high_2": 0.6,
+    "ewo_low": -13.15,
+    "fast_ewo": 28,
+    "low_offset": 1.03,
+    "low_offset_2": 0.95,
+    "rsi_buy": 70,
+    "rsi_ewo2": 34,
+    "rsi_fast_ewo1": 29,
+    "slow_ewo": 212,
+    "buy_c10_1": -105,
+    "buy_c10_2": -0.91,
+    "buy_c9_1": 34,
+    "buy_c9_2": -68,
+    "buy_c9_3": -68,
+    "buy_c9_4": 36,
+    "buy_c9_5": 26,
+    "buy_c9_6": 74,
+    "buy_c9_7": -103
 }
 # Sell hyperspace params:
 sell_params = {
-    "base_nb_candles_sell": 15,
-    "high_offset": 1.11,
-    "pHSL": -0.073,
-    "pPF_1": 0.016,
-    "pPF_2": 0.076,
-    "pSL_1": 0.011,
-    "pSL_2": 0.028
+    "base_nb_candles_sell": 23,
+    "high_offset": 1.01
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -146,8 +191,8 @@ class abbas8(IStrategy):
     }
     stoploss = -0.067
     trailing_stop = True
-    trailing_stop_positive = 0.0003
-    trailing_stop_positive_offset = 0.0146
+    trailing_stop_positive = 0.0004
+    trailing_stop_positive_offset = 0.0174
     trailing_only_offset_is_reached = True
     use_exit_signal = False
     ignore_roi_if_entry_signal = False
@@ -187,35 +232,35 @@ class abbas8(IStrategy):
     # BeastBotXBLR
     ###########################################################################
     # Buy
-    optc1 = False
-    buy_rmi_length = IntParameter(8, 20, default=8, optimize = optc1, load=True)
-    buy_rmi = IntParameter(30, 50, default=35, optimize= optc1, load=True)
-    buy_cci_length = IntParameter(25, 45, default=25, optimize = optc1, load=True)
-    buy_cci = IntParameter(-135, -90, default=-133, optimize= optc1, load=True)
-    buy_srsi_fk = IntParameter(30, 50, default=25, optimize= optc1, load=True)
-    buy_bb_width   = DecimalParameter(0.065, 0.135, default=0.095, decimals=3, optimize = optc1, load=True)
-    buy_bb_delta   = DecimalParameter(0.018, 0.035, default=0.025, decimals=3, optimize = optc1, load=True)
-    buy_bb_factor  = DecimalParameter(0.990, 0.999, default=0.995, decimals=3, optimize = optc1, load=True)
-    buy_closedelta = DecimalParameter( 12.0, 18.0,  default=15.0,  decimals=1, optimize = optc1, load=True)
+    optc1 = True
+    buy_rmi_length = IntParameter(8, 20,     default=8,    space='buy', optimize= optc1, load=True)
+    buy_rmi        = IntParameter(30, 50,    default=35,   space='buy', optimize= optc1, load=True)
+    buy_cci_length = IntParameter(25, 45,    default=25,   space='buy', optimize= optc1, load=True)
+    buy_cci        = IntParameter(-135, -90, default=-133, space='buy', optimize= optc1, load=True)
+    buy_srsi_fk    = IntParameter(30, 50,    default=25,   space='buy', optimize= optc1, load=True)
+    buy_bb_width   = DecimalParameter(0.065, 0.135, default=0.095, space='buy', decimals=3, optimize = optc1, load=True)
+    buy_bb_delta   = DecimalParameter(0.018, 0.035, default=0.025, space='buy', decimals=3, optimize = optc1, load=True)
+    buy_bb_factor  = DecimalParameter(0.990, 0.999, default=0.995, space='buy', decimals=3, optimize = optc1, load=True)
+    buy_closedelta = DecimalParameter( 12.0, 18.0,  default=15.0,  space='buy', decimals=1, optimize = optc1, load=True)
 
-    optc2 = False
+    optc2 = True
     buy_c2_1 = DecimalParameter(0.010, 0.025, default=0.018, space='buy', decimals=3, optimize=optc2, load=True)
     buy_c2_2 = DecimalParameter(0.980, 0.995, default=0.982, space='buy', decimals=3, optimize=optc2, load=True)
     buy_c2_3 = DecimalParameter(-0.8, -0.3,   default=-0.5,  space='buy', decimals=1, optimize=optc2, load=True)
     
-    optc3 = False
+    optc3 = True
     buy_con3_1 = DecimalParameter(0.010, 0.025, default=0.017, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_2 = DecimalParameter(0.980, 0.995, default=0.984, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_3 = DecimalParameter(0.955, 0.975, default=0.965, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_4 = DecimalParameter(-0.95, -0.70, default=-0.85, space='buy', decimals=2, optimize=optc3, load=True)
 
-    optc4 = False
+    optc4 = True
     buy_rsi_1h_42      = IntParameter(10, 50, default=15, space='buy', optimize=optc4, load=True)
     buy_macd_41        = DecimalParameter(0.01, 0.09, default=0.02, space='buy', decimals=2, optimize=optc4, load=True)
     buy_volume_pump_41 = DecimalParameter(0.1, 0.9,   default=0.4,  space='buy', decimals=1, optimize=optc4, load=True)
     buy_volume_drop_41 = DecimalParameter(1, 10,      default=3.8,  space='buy', decimals=1, optimize=optc4, load=True)
 
-    optc6 = False
+    optc6 = True
     buy_c6_2 = DecimalParameter(0.980, 0.999, default=0.985, space='buy', decimals=3, optimize=optc6, load=True)
     buy_c6_1 = DecimalParameter(0.08, 0.20,   default=0.12,  space='buy', decimals=2, optimize=optc6, load=True) 
     buy_c6_2 = DecimalParameter(0.02, 0.40,   default=0.28,  space='buy', decimals=2, optimize=optc6, load=True)
@@ -223,14 +268,14 @@ class abbas8(IStrategy):
     buy_c6_4 = DecimalParameter(0.010, 0.030, default=0.021, space='buy', decimals=3, optimize=optc6, load=True)
     buy_c6_5 = DecimalParameter(0.20, 0.40,   default=0.26,  space='buy', decimals=2, optimize=optc6, load=True)
 
-    optc7 = False
+    optc7 = True
     buy_c7_1 = DecimalParameter(0.95, 1.10, default=1.01, space='buy', decimals=2, optimize=optc7, load=True)
     buy_c7_2 = DecimalParameter(0.95, 1.10, default=0.99, space='buy', decimals=2, optimize=optc7, load=True)
     buy_c7_3 = IntParameter(-100, -80, default=-94, space='buy', optimize= optc7, load=True)
     buy_c7_4 = IntParameter(-90, -60,  default=-75, space='buy', optimize= optc7, load=True)
     buy_c7_5 = IntParameter(75, 90,    default= 80, space='buy', optimize= optc7, load=True)
 
-    optc8 = False
+    optc8 = True
     buy_min_inc_1 = DecimalParameter(0.010, 0.050, default=0.022, space='buy', decimals=3, optimize=optc8, load=True)
     buy_rsi_1h_min_1 = IntParameter(25, 40, default=30, space='buy', optimize=optc8, load=True)
     buy_rsi_1h_max_1 = IntParameter(70, 90, default=84, space='buy', optimize=optc8, load=True)
@@ -250,14 +295,14 @@ class abbas8(IStrategy):
     buy_c10_1 = IntParameter(-110, -80, default=-99, space='buy', optimize=optc10, load=True)
     buy_c10_2 = DecimalParameter(-1.00, -0.50, default=-0.78, space='buy', decimals=2, optimize=optc10, load=True)
 
-    dip_optimize = False
+    dip_optimize = True
     buy_dip_threshold_5 = DecimalParameter(0.001, 0.050, default=0.015, space='buy', decimals=3, optimize=dip_optimize, load=True)
     buy_dip_threshold_6 = DecimalParameter(0.010, 0.200, default=0.06, space='buy', decimals=3, optimize=dip_optimize, load=True)
     buy_dip_threshold_7 = DecimalParameter(0.050, 0.400, default=0.24, space='buy', decimals=3, optimize=dip_optimize, load=True)
     buy_dip_threshold_8 = DecimalParameter(0.200, 0.500, default=0.4, space='buy', decimals=3, optimize=dip_optimize, load=True)
     # 24 hours
-    buy_pump_pull_threshold_1 = DecimalParameter(1.50, 3.00, default=1.75, space='buy', decimals=2, optimize=False, load=True)
-    buy_pump_threshold_1 = DecimalParameter(0.400, 1.000, default=0.5, space='buy', decimals=2, optimize=False, load=True)
+    buy_pump_pull_threshold_1 = DecimalParameter(1.50, 3.00, default=1.75, space='buy', decimals=2, optimize=True, load=True)
+    buy_pump_threshold_1 = DecimalParameter(0.400, 1.000, default=0.5, space='buy', decimals=2, optimize=True, load=True)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist()
