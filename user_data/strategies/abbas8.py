@@ -43,20 +43,9 @@ sell_params = {
 }
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.8.3"
+        return "v9.8.5"
     INTERFACE_VERSION = 3
     class HyperOpt:
-        # Define a custom stoploss space.
-        def stoploss_space():
-            return [SKDecimal(-0.08, -0.05, decimals=3, name="stoploss")]
-        # Define custom trailing space
-        def trailing_space() -> List[Dimension]:
-            return[
-                Categorical([True], name="trailing_stop"),
-                SKDecimal(0.0002, 0.0006, decimals=4, name="trailing_stop_positive"),
-                SKDecimal(0.010,  0.020, decimals=3, name="trailing_stop_positive_offset_p1"),
-                Categorical([True], name="trailing_only_offset_is_reached"),
-            ]
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
@@ -76,6 +65,14 @@ class abbas8(IStrategy):
         "99": 0,
         "140": -0.015,
         "232": -0.03
+    }
+    order_time_in_force = {
+        "entry": "gtc",
+        "exit": "ioc"
+    }
+    slippage_protection = {
+        "retries": 3,
+        "max_slippage": -0.002
     }
     stoploss = -0.067
     trailing_stop = True
@@ -106,15 +103,6 @@ class abbas8(IStrategy):
     ewo_high_2 = DecimalParameter(-6.0, 12.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
     rsi_buy = IntParameter(50, 85, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
-    order_time_in_force = {
-        "entry": "gtc",
-        "exit": "ioc"
-    }
-    slippage_protection = {
-        "retries": 3,
-        "max_slippage": -0.002
-    }
-    
     is_optimize_clucha = False
     buy_clucha_bbdelta_close    = DecimalParameter(0.001, 0.042,  default=0.034, space="buy", decimals=3, optimize = is_optimize_clucha)
     buy_clucha_bbdelta_tail     = DecimalParameter(0.70,   1.10,  default=0.95,  space="buy", decimals=2, optimize = is_optimize_clucha)
@@ -137,10 +125,6 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
-        informative_1h["ema_50"] = ta.EMA(informative_1h, timeperiod=50)
-        informative_1h["ema_200"] = ta.EMA(informative_1h, timeperiod=200)
-        informative_1h["rsi"] = ta.RSI(informative_1h, timeperiod=14)
-
         # Heikin Ashi
         inf_heikinashi = qtpylib.heikinashi(informative_1h)
         informative_1h["ha_close"] = inf_heikinashi["close"]
@@ -156,7 +140,6 @@ class abbas8(IStrategy):
     def informative_15m_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_15m = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="15m")
-
         return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
@@ -166,10 +149,6 @@ class abbas8(IStrategy):
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
-        dataframe["bb_lowerband"] = bollinger["lower"]
-        dataframe["bb_middleband"] = bollinger["mid"]
-        dataframe["bb_upperband"] = bollinger["upper"]
         dataframe["volume_mean_slow"] = dataframe["volume"].rolling(window=30).mean()
 
         # Heiken Ashi
@@ -181,14 +160,6 @@ class abbas8(IStrategy):
         bollinger2_40 = qtpylib.bollinger_bands(ha_typical_price(dataframe), window=40, stds=2)
         dataframe["bb_lowerband2_40"] = bollinger2_40["lower"]
         dataframe["bb_middleband2_40"] = bollinger2_40["mid"]
-        # EMA
-        dataframe["ema_12"] = ta.EMA(dataframe, timeperiod=12)
-        dataframe["ema_14"] = ta.EMA(dataframe, timeperiod=14)
-        dataframe["ema_20"] = ta.EMA(dataframe, timeperiod=20)
-        dataframe["ema_26"] = ta.EMA(dataframe, timeperiod=26)
-        dataframe["ema_50"] = ta.EMA(dataframe, timeperiod=50)
-        dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
-        dataframe["hma_50"] = qtpylib.hull_moving_average(dataframe["close"], window=50)
         # RSI
         dataframe["rsi_84"] = ta.RSI(dataframe, timeperiod=84)
         dataframe["rsi_112"] = ta.RSI(dataframe, timeperiod=112)
