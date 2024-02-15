@@ -545,7 +545,7 @@ class abbas8TB(abbas8):
             val = super().confirm_trade_entry(pair, order_type, amount, rate, time_in_force, **kwargs)
             
             if val:
-                if self.trailing_buy_order_enabled and self.config["runmode"].value in ("live", "dry_run"):
+                if self.trailing_buy_order_enabled and self.config['runmode'].value in ('live', 'dry_run'):
                     val = False
                     dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
                     if(len(dataframe) >= 1):
@@ -554,22 +554,22 @@ class abbas8TB(abbas8):
                         trailing_buy = self.trailing_buy(pair)
                         trailing_buy_offset = self.trailing_buy_offset(dataframe, pair, current_price)
 
-                        if trailing_buy["allow_trailing"]:
-                            if (not trailing_buy["trailing_buy_order_started"] and (last_candle["entry_long"] == 1)):
+                        if trailing_buy['allow_trailing']:
+                            if (not trailing_buy['trailing_buy_order_started'] and (last_candle['buy'] == 1)):
                                 # start trailing buy
                                 
-                                trailing_buy["trailing_buy_order_started"] = True
-                                trailing_buy["trailing_buy_order_uplimit"] = last_candle["close"]
-                                trailing_buy["start_trailing_price"] = last_candle["close"]
-                                trailing_buy["entry_tag"] = last_candle["entry_tag"]
-                                trailing_buy["start_trailing_time"] = datetime.now(timezone.utc)
-                                trailing_buy["offset"] = 0
+                                trailing_buy['trailing_buy_order_started'] = True
+                                trailing_buy['trailing_buy_order_uplimit'] = last_candle['close']
+                                trailing_buy['start_trailing_price'] = last_candle['close']
+                                trailing_buy['buy_tag'] = last_candle['buy_tag']
+                                trailing_buy['start_trailing_time'] = datetime.now(timezone.utc)
+                                trailing_buy['offset'] = 0
                                 
                                 self.trailing_buy_info(pair, current_price)
-                                logger.info(f"start trailing buy for {pair} at {last_candle["close"]}")
+                                logger.info(f'start trailing buy for {pair} at {last_candle["close"]}')
 
-                            elif trailing_buy["trailing_buy_order_started"]:
-                                if trailing_buy_offset == "forcebuy":
+                            elif trailing_buy['trailing_buy_order_started']:
+                                if trailing_buy_offset == 'forcebuy':
                                     # buy in custom conditions
                                     val = True
                                     ratio = "%.2f" % ((self.current_trailing_buy_profit_ratio(pair, current_price)) * 100)
@@ -579,31 +579,31 @@ class abbas8TB(abbas8):
                                 elif trailing_buy_offset is None:
                                     # stop trailing buy custom conditions
                                     self.trailing_buy(pair, reinit=True)
-                                    logger.info(f"STOP trailing buy for {pair} because "trailing buy offset" returned None")
+                                    logger.info(f'STOP trailing buy for {pair} because "trailing buy offset" returned None')
 
-                                elif current_price < trailing_buy["trailing_buy_order_uplimit"]:
+                                elif current_price < trailing_buy['trailing_buy_order_uplimit']:
                                     # update uplimit
                                     old_uplimit = trailing_buy["trailing_buy_order_uplimit"]
-                                    self.custom_info_trail_buy[pair]["trailing_buy"]["trailing_buy_order_uplimit"] = min(current_price * (1 + trailing_buy_offset), self.custom_info_trail_buy[pair]["trailing_buy"]["trailing_buy_order_uplimit"])
-                                    self.custom_info_trail_buy[pair]["trailing_buy"]["offset"] = trailing_buy_offset
+                                    self.custom_info_trail_buy[pair]['trailing_buy']['trailing_buy_order_uplimit'] = min(current_price * (1 + trailing_buy_offset), self.custom_info_trail_buy[pair]['trailing_buy']['trailing_buy_order_uplimit'])
+                                    self.custom_info_trail_buy[pair]['trailing_buy']['offset'] = trailing_buy_offset
                                     self.trailing_buy_info(pair, current_price)
-                                    logger.info(f"update trailing buy for {pair} at {old_uplimit} -> {self.custom_info_trail_buy[pair]["trailing_buy"]["trailing_buy_order_uplimit"]}")
-                                elif current_price < (trailing_buy["start_trailing_price"] * (1 + self.trailing_buy_max_buy)):
+                                    logger.info(f'update trailing buy for {pair} at {old_uplimit} -> {self.custom_info_trail_buy[pair]["trailing_buy"]["trailing_buy_order_uplimit"]}')
+                                elif current_price < (trailing_buy['start_trailing_price'] * (1 + self.trailing_buy_max_buy)):
                                     # buy ! current price > uplimit && lower thant starting price
                                     val = True
                                     ratio = "%.2f" % ((self.current_trailing_buy_profit_ratio(pair, current_price)) * 100)
                                     self.trailing_buy_info(pair, current_price)
-                                    logger.info(f"current price ({current_price}) > uplimit ({trailing_buy["trailing_buy_order_uplimit"]}) and lower than starting price price ({(trailing_buy["start_trailing_price"] * (1 + self.trailing_buy_max_buy))}). OK for {pair} ({ratio} %), order may not be triggered if all slots are full")
+                                    logger.info(f"current price ({current_price}) > uplimit ({trailing_buy['trailing_buy_order_uplimit']}) and lower than starting price price ({(trailing_buy['start_trailing_price'] * (1 + self.trailing_buy_max_buy))}). OK for {pair} ({ratio} %), order may not be triggered if all slots are full")
 
-                                elif current_price > (trailing_buy["start_trailing_price"] * (1 + self.trailing_buy_max_stop)):
+                                elif current_price > (trailing_buy['start_trailing_price'] * (1 + self.trailing_buy_max_stop)):
                                     # stop trailing buy because price is too high
                                     self.trailing_buy(pair, reinit=True)
                                     self.trailing_buy_info(pair, current_price)
-                                    logger.info(f"STOP trailing buy for {pair} because of the price is higher than starting price * {1 + self.trailing_buy_max_stop}")
+                                    logger.info(f'STOP trailing buy for {pair} because of the price is higher than starting price * {1 + self.trailing_buy_max_stop}')
                                 else:
                                     # uplimit > current_price > max_price, continue trailing and wait for the price to go down
                                     self.trailing_buy_info(pair, current_price)
-                                    logger.info(f"price too high for {pair} !")
+                                    logger.info(f'price too high for {pair} !')
 
                         else:
                             logger.info(f"Wait for next buy signal for {pair}")
@@ -611,7 +611,7 @@ class abbas8TB(abbas8):
                     if (val == True):
                         self.trailing_buy_info(pair, rate)
                         self.trailing_buy(pair, reinit=True)
-                        logger.info(f"STOP trailing buy for {pair} because I buy it")
+                        logger.info(f'STOP trailing buy for {pair} because I buy it')
             
             return val
 
