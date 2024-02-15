@@ -187,33 +187,33 @@ class abbas8(IStrategy):
     # BeastBotXBLR
     ###########################################################################
     # Buy
-    optc1 = False
+    optc1 = True
     buy_rmi_length = IntParameter(8, 20, default=8, optimize = optc1, load=True)
     buy_rmi = IntParameter(30, 50, default=35, optimize= optc1, load=True)
     buy_cci_length = IntParameter(25, 45, default=25, optimize = optc1, load=True)
     buy_cci = IntParameter(-135, -90, default=-133, optimize= optc1, load=True)
     buy_srsi_fk = IntParameter(30, 50, default=25, optimize= optc1, load=True)
-    buy_bb_width = DecimalParameter(0.065, 0.135, default=0.095, optimize = optc1, load=True)
-    buy_bb_delta = DecimalParameter(0.018, 0.035, default=0.025, optimize = optc1, load=True)
-    buy_bb_factor = DecimalParameter(0.990, 0.999, default=0.995, optimize = optc1, load=True)
-    buy_closedelta = DecimalParameter(12.0, 18.0, default=15.0, optimize = optc1, load=True)
+    buy_bb_width   = DecimalParameter(0.065, 0.135, default=0.095, decimals=3, optimize = optc1, load=True)
+    buy_bb_delta   = DecimalParameter(0.018, 0.035, default=0.025, decimals=3, optimize = optc1, load=True)
+    buy_bb_factor  = DecimalParameter(0.990, 0.999, default=0.995, decimals=3, optimize = optc1, load=True)
+    buy_closedelta = DecimalParameter( 12.0, 18.0,  default=15.0,  decimals=1, optimize = optc1, load=True)
 
-    optc2 = False
+    optc2 = True
     buy_c2_1 = DecimalParameter(0.010, 0.025, default=0.018, space='buy', decimals=3, optimize=optc2, load=True)
     buy_c2_2 = DecimalParameter(0.980, 0.995, default=0.982, space='buy', decimals=3, optimize=optc2, load=True)
-    buy_c2_3 = DecimalParameter(-0.8, -0.3, default=-0.5, space='buy', decimals=1, optimize=optc2, load=True)
+    buy_c2_3 = DecimalParameter(-0.8, -0.3,   default=-0.5,  space='buy', decimals=1, optimize=optc2, load=True)
     
-    optc3 = False
+    optc3 = True
     buy_con3_1 = DecimalParameter(0.010, 0.025, default=0.017, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_2 = DecimalParameter(0.980, 0.995, default=0.984, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_3 = DecimalParameter(0.955, 0.975, default=0.965, space='buy', decimals=3, optimize=optc3, load=True)
     buy_con3_4 = DecimalParameter(-0.95, -0.70, default=-0.85, space='buy', decimals=2, optimize=optc3, load=True)
 
-    optc4 = False
-    buy_rsi_1h_42 = DecimalParameter(10.0, 50.0, default=15.0, space='buy', decimals=1, optimize=optc4, load=True)
-    buy_macd_41 = DecimalParameter(0.01, 0.09, default=0.02, space='buy', decimals=2, optimize=optc4, load=True)
-    buy_volume_pump_41 = DecimalParameter(0.1, 0.9, default=0.4, space='buy', decimals=1, optimize=optc4, load=True)
-    buy_volume_drop_41 = DecimalParameter(1, 10, default=3.8, space='buy', decimals=1, optimize=optc4, load=True)
+    optc4 = True
+    buy_rsi_1h_42      = IntParameter(10, 50, default=15, space='buy', optimize=optc4, load=True)
+    buy_macd_41        = DecimalParameter(0.01, 0.09, default=0.02, space='buy', decimals=2, optimize=optc4, load=True)
+    buy_volume_pump_41 = DecimalParameter(0.1, 0.9,   default=0.4,  space='buy', decimals=1, optimize=optc4, load=True)
+    buy_volume_drop_41 = DecimalParameter(1, 10,      default=3.8,  space='buy', decimals=1, optimize=optc4, load=True)
 
     optc6 = False
     buy_c6_2 = DecimalParameter(0.980, 0.999, default=0.985, space='buy', decimals=3, optimize=optc6, load=True)
