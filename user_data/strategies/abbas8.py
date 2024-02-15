@@ -746,7 +746,7 @@ class abbas8TB(abbas8):
             if (last_candle["exit"] != 0):
                 trailing_buy = self.trailing_buy(metadata["pair"])
                 if trailing_buy["trailing_buy_order_started"]:
-                    logger.info(f"Sell signal for {metadata["pair"]} is triggered!!! Abort trailing")
+                    logger.info(f"Sell signal for {metadata['pair']} is triggered!!! Abort trailing")
                     self.trailing_buy(metadata["pair"], reinit=True)        
 
         if self.trailing_sell_order_enabled and self.config["runmode"].value in ("live", "dry_run"): 
@@ -757,14 +757,14 @@ class abbas8TB(abbas8):
                     open_trades = Trade.get_trades([Trade.pair == metadata["pair"], Trade.is_open.is_(True), ]).all()
                     #if not open_trades: 
                     if open_trades:
-                        logger.info(f"Setting "allow_SELL_trailing" to True for {metadata["pair"]} and start *SELL* trailing")
+                        logger.info(f"Setting 'allow_SELL_trailing' to True for {metadata['pair']} and start *SELL* trailing")
                         # self.custom_info_trail_buy[metadata["pair"]]["trailing_buy"]["allow_trailing"] = True
                         trailing_sell["allow_sell_trailing"] = True
                         initial_sell_tag = last_candle["exit_tag"] if "exit_tag" in last_candle else "sell signal"
                         dataframe.loc[:, "exit_tag"] = f"{initial_sell_tag} (start trail price {last_candle["close"]})"
             else:
                 if (trailing_sell["trailing_sell_order_started"] == True):
-                    logger.info(f"Continue trailing for {metadata["pair"]}. Manually trigger sell signal!")
+                    logger.info(f"Continue trailing for {metadata['pair']}. Manually trigger sell signal!")
                     dataframe.loc[:,"exit"] = 1
                     dataframe.loc[:, "exit_tag"] = trailing_sell["exit_tag"]
 
