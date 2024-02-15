@@ -393,12 +393,12 @@ class abbas8TB(abbas8):
         finally:
             logger.info(
                 f"pair: {pair} : "
-                f"start: {trailing_buy["start_trailing_price"]:.4f}, "
+                f"start: {trailing_buy['start_trailing_price']:.4f}, "
                 f"duration: {duration}, "
                 f"current: {current_price:.4f}, "
-                f"uplimit: {trailing_buy["trailing_buy_order_uplimit"]:.4f}, "
+                f"uplimit: {trailing_buy['trailing_buy_order_uplimit']:.4f}, "
                 f"profit: {self.current_trailing_buy_profit_ratio(pair, current_price)*100:.2f}%, "
-                f"offset: {trailing_buy["offset"]}")
+                f"offset: {trailing_buy['offset']}")
 
     def trailing_sell_info(self, pair: str, current_price: float):
         # current_time live, dry run
@@ -413,14 +413,14 @@ class abbas8TB(abbas8):
         except TypeError:
             duration = 0
         finally:
-            logger.info(""\033[36m"SELL: "
+            logger.info("'\033[36m'SELL: "
                 f"pair: {pair} : "
-                f"start: {trailing_sell["start_trailing_sell_price"]:.4f}, "
+                f"start: {trailing_sell['start_trailing_sell_price']:.4f}, "
                 f"duration: {duration}, "
                 f"current: {current_price:.4f}, "
-                f"downlimit: {trailing_sell["trailing_sell_order_downlimit"]:.4f}, "
+                f"downlimit: {trailing_sell['trailing_sell_order_downlimit']:.4f}, "
                 f"profit: {self.current_trailing_sell_profit_ratio(pair, current_price)*100:.2f}%, "
-                f"offset: {trailing_sell["offset"]}")
+                f"offset: {trailing_sell['offset']}")
 
     def current_trailing_buy_profit_ratio(self, pair: str, current_price: float) -> float:
         trailing_buy = self.trailing_buy(pair)
