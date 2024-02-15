@@ -100,7 +100,7 @@ class abbas8(IStrategy):
     }
     stoploss = -0.067
     
-    trailing_stop = True
+    trailing_stop = False
     trailing_stop_positive = 0.0003
     trailing_stop_positive_offset = 0.0146
     trailing_only_offset_is_reached = True
@@ -284,34 +284,83 @@ class abbas8(IStrategy):
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
     
-    ## Trailing params
-    use_custom_stoploss = False
-    # hard stoploss profit
-    pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
-    # profit threshold 1, trigger point, SL_1 is used
-    pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', load=True, optimize=True)
-    pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', load=True, optimize=True)
-    # profit threshold 2, SL_2 is used
-    pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', load=True, optimize=True)
-    pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', load=True, optimize=True)
-    # Custom Trailing stoploss ( credit to Perkmeister for this custom stoploss to help the strategy ride a green candle )
+    # ## Trailing params
+    # use_custom_stoploss = False
+    # # hard stoploss profit
+    # pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
+    # # profit threshold 1, trigger point, SL_1 is used
+    # pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', load=True, optimize=True)
+    # pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', load=True, optimize=True)
+    # # profit threshold 2, SL_2 is used
+    # pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', load=True, optimize=True)
+    # pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', load=True, optimize=True)
+    # # Custom Trailing stoploss ( credit to Perkmeister for this custom stoploss to help the strategy ride a green candle )
+    # def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime, current_rate: float, current_profit: float, **kwargs) -> float:
+    #     # hard stoploss profit
+    #     HSL = self.pHSL.value
+    #     PF_1 = self.pPF_1.value
+    #     SL_1 = self.pSL_1.value
+    #     PF_2 = self.pPF_2.value
+    #     SL_2 = self.pSL_2.value
+    #     # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
+    #     # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
+    #     # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
+    #     if (current_profit > PF_2):
+    #         sl_profit = SL_2 + (current_profit - PF_2)
+    #     elif (current_profit > PF_1):
+    #         sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
+    #     else:
+    #         sl_profit = HSL
+    #     # Only for hyperopt invalid return
+    #     if (sl_profit >= current_profit):
+    #         return -0.99
+    #     return stoploss_from_open(sl_profit, current_profit)
+
+
+    ## RR trailing stoploss
+    custom_info = {
+        'risk_reward_ratio': 3.5,
+        'set_to_break_even_at_profit': 1,
+    }
+    use_custom_stoploss = True
+
     def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime, current_rate: float, current_profit: float, **kwargs) -> float:
-        # hard stoploss profit
-        HSL = self.pHSL.value
-        PF_1 = self.pPF_1.value
-        SL_1 = self.pSL_1.value
-        PF_2 = self.pPF_2.value
-        SL_2 = self.pSL_2.value
-        # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
-        # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
-        # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
-        if (current_profit > PF_2):
-            sl_profit = SL_2 + (current_profit - PF_2)
-        elif (current_profit > PF_1):
-            sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
-        else:
-            sl_profit = HSL
-        # Only for hyperopt invalid return
-        if (sl_profit >= current_profit):
-            return -0.99
-        return stoploss_from_open(sl_profit, current_profit)
+
+        """
+            custom_stoploss using a risk/reward ratio
+        """
+        result = break_even_sl = takeprofit_sl = -1
+        custom_info_pair = self.custom_info.get(pair)
+        if custom_info_pair is not None:
+            # using current_time/open_date directly via custom_info_pair[trade.open_daten]
+            # would only work in backtesting/hyperopt.
+            # in live/dry-run, we have to search for nearest row before it
+            open_date_mask = custom_info_pair.index.unique().get_loc(trade.open_date_utc, method='ffill')
+            open_df = custom_info_pair.iloc[open_date_mask]
+            # trade might be open too long for us to find opening candle
+            if(len(open_df) != 1):
+                return -1 # won't update current stoploss
+            initial_sl_abs = open_df['stoploss_rate']
+            # calculate initial stoploss at open_date
+            initial_sl = initial_sl_abs/current_rate-1
+            # calculate take profit treshold
+            # by using the initial risk and multiplying it
+            risk_distance = trade.open_rate-initial_sl_abs
+            reward_distance = risk_distance*self.custom_info['risk_reward_ratio']
+            # take_profit tries to lock in profit once price gets over
+            # risk/reward ratio treshold
+            take_profit_price_abs = trade.open_rate+reward_distance
+            # take_profit gets triggerd at this profit
+            take_profit_pct = take_profit_price_abs/trade.open_rate-1
+            # break_even tries to set sl at open_rate+fees (0 loss)
+            break_even_profit_distance = risk_distance*self.custom_info['set_to_break_even_at_profit']
+            # break_even gets triggerd at this profit
+            break_even_profit_pct = (break_even_profit_distance+current_rate)/current_rate-1
+            result = initial_sl
+            if(current_profit >= break_even_profit_pct):
+                break_even_sl = (trade.open_rate*(1+trade.fee_open+trade.fee_close) / current_rate)-1
+                result = break_even_sl
+            if(current_profit >= take_profit_pct):
+                takeprofit_sl = take_profit_price_abs/current_rate-1
+                result = takeprofit_sl
+        return result
