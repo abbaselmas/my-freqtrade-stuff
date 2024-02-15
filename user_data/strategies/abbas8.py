@@ -725,7 +725,7 @@ class abbas8TB(abbas8):
                 if not trailing_buy["trailing_buy_order_started"]:
                     open_trades = Trade.get_trades([Trade.pair == metadata["pair"], Trade.is_open.is_(True), ]).all()
                     if not open_trades:
-                        logger.info(f"Setting "allow_trailing" to True for {metadata["pair"]} and start buy trailing!!!")
+                        logger.info(f"Setting 'allow_trailing' to True for {metadata['pair']} and start buy trailing!!!")
                         # self.custom_info_trail_buy[metadata["pair"]]["trailing_buy"]["allow_trailing"] = True
                         trailing_buy["allow_trailing"] = True
                         initial_buy_tag = last_candle["entry_tag"] if "entry_tag" in last_candle else "buy signal"
