@@ -9,15 +9,62 @@
     "stoploss": {
       "stoploss": -0.067
     },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0002,
+      "trailing_stop_positive_offset": 0.0242,
+      "trailing_only_offset_is_reached": true
+    },
     "max_open_trades": {
       "max_open_trades": 3
     },
     "buy": {
       "base_nb_candles_buy": 48,
+      "buy_bb_delta": 0.021,
+      "buy_bb_factor": 0.999,
+      "buy_bb_width": 0.093,
+      "buy_c2_1": 0.024,
+      "buy_c2_2": 0.995,
+      "buy_c2_3": -0.3,
+      "buy_c6_1": 0.19,
+      "buy_c6_2": 0.1,
+      "buy_c6_3": 0.036,
+      "buy_c6_4": 0.014,
+      "buy_c6_5": 0.25,
+      "buy_c7_1": 1.0,
+      "buy_c7_2": 0.95,
+      "buy_c7_3": -95,
+      "buy_c7_4": -68,
+      "buy_c7_5": 89,
+      "buy_cci": -104,
+      "buy_cci_length": 41,
+      "buy_closedelta": 14.0,
       "buy_clucha_bbdelta_close": 0.025,
       "buy_clucha_bbdelta_tail": 0.82,
       "buy_clucha_closedelta_close": 0.004,
       "buy_clucha_rocr_1h": 0.03,
+      "buy_con3_1": 0.022,
+      "buy_con3_2": 0.987,
+      "buy_con3_3": 0.973,
+      "buy_con3_4": -0.88,
+      "buy_dip_threshold_5": 0.015,
+      "buy_dip_threshold_6": 0.06,
+      "buy_dip_threshold_7": 0.24,
+      "buy_dip_threshold_8": 0.4,
+      "buy_macd_41": 0.01,
+      "buy_mfi_1": 38,
+      "buy_min_inc_1": 0.016,
+      "buy_pump_pull_threshold_1": 1.75,
+      "buy_pump_threshold_1": 0.5,
+      "buy_rmi": 37,
+      "buy_rmi_length": 14,
+      "buy_rsi_1": 20,
+      "buy_rsi_1h_42": 39,
+      "buy_rsi_1h_max_1": 81,
+      "buy_rsi_1h_min_1": 30,
+      "buy_srsi_fk": 50,
+      "buy_volume_drop_41": 8.8,
+      "buy_volume_pump_41": 0.7,
       "buy_vwap_closedelta": 10.19,
       "buy_vwap_cti": -0.06,
       "buy_vwap_width": 2.72,
@@ -30,20 +77,23 @@
       "rsi_buy": 70,
       "rsi_ewo2": 34,
       "rsi_fast_ewo1": 29,
-      "slow_ewo": 212
+      "slow_ewo": 212,
+      "buy_c10_1": -105,
+      "buy_c10_2": -0.91,
+      "buy_c9_1": 34,
+      "buy_c9_2": -68,
+      "buy_c9_3": -68,
+      "buy_c9_4": 36,
+      "buy_c9_5": 26,
+      "buy_c9_6": 74,
+      "buy_c9_7": -103
     },
     "sell": {
       "base_nb_candles_sell": 23,
       "high_offset": 1.01
     },
-    "protection": {},
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0002,
-      "trailing_stop_positive_offset": 0.0242,
-      "trailing_only_offset_is_reached": true
-    }
+    "protection": {}
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-15 19:00:13.212105+00:00"
+  "export_time": "2024-02-15 22:18:39.541326+00:00"
 }
