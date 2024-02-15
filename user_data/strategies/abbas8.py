@@ -311,7 +311,7 @@ class abbas8TB(abbas8):
     trailing_expire_seconds_uptrend = 90
     min_uptrend_trailing_profit = 0.02
 
-    debug_mode = True
+    debug_mode = False
     trailing_buy_max_stop = 0.02  # stop trailing buy if current_price > starting_price * (1+trailing_buy_max_stop)
     trailing_buy_max_buy = 0.000  # buy if price between uplimit (=min of serie (current_price * (1 + trailing_buy_offset())) and (start_price * 1+trailing_buy_max_buy))
     
@@ -545,7 +545,7 @@ class abbas8TB(abbas8):
             val = super().confirm_trade_entry(pair, order_type, amount, rate, time_in_force, **kwargs)
             
             if val:
-                if self.trailing_buy_order_enabled and self.config['runmode'].value in ('live', 'dry_run'):
+                if self.trailing_buy_order_enabled:
                     val = False
                     dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
                     if(len(dataframe) >= 1):
@@ -642,7 +642,7 @@ class abbas8TB(abbas8):
                 return val
 
             if val:
-                if self.trailing_sell_order_enabled and self.config['runmode'].value in ('live', 'dry_run'):
+                if self.trailing_sell_order_enabled:
                     val = False
                     
                     current_price = rate
@@ -718,7 +718,7 @@ class abbas8TB(abbas8):
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe = super().populate_entry_trend(dataframe, metadata)
 
-        if self.trailing_buy_order_enabled and self.config["runmode"].value in ("live", "dry_run"): 
+        if self.trailing_buy_order_enabled: 
             last_candle = dataframe.iloc[-1].squeeze()
             trailing_buy = self.trailing_buy(metadata["pair"])
             if (last_candle["entry_long"] == 1):
@@ -741,7 +741,7 @@ class abbas8TB(abbas8):
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe = super().populate_exit_trend(dataframe, metadata)
 
-        if self.trailing_buy_order_enabled and self.abort_trailing_when_sell_signal_triggered and self.config["runmode"].value in ("live", "dry_run"):
+        if self.trailing_buy_order_enabled and self.abort_trailing_when_sell_signal_triggered:
             last_candle = dataframe.iloc[-1].squeeze()
             if (last_candle["exit"] != 0):
                 trailing_buy = self.trailing_buy(metadata["pair"])
@@ -749,7 +749,7 @@ class abbas8TB(abbas8):
                     logger.info(f"Sell signal for {metadata['pair']} is triggered!!! Abort trailing")
                     self.trailing_buy(metadata["pair"], reinit=True)        
 
-        if self.trailing_sell_order_enabled and self.config["runmode"].value in ("live", "dry_run"): 
+        if self.trailing_sell_order_enabled: 
             last_candle = dataframe.iloc[-1].squeeze()
             trailing_sell = self.trailing_sell(metadata["pair"])
             if (last_candle["exit"] != 0):
