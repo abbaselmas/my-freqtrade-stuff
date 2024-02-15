@@ -67,9 +67,20 @@ def ha_typical_price(bars):
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.8.5"
+        return "v9.8.6"
     INTERFACE_VERSION = 3
     class HyperOpt:
+        # Define a custom stoploss space.
+        def stoploss_space():
+            return [SKDecimal(-0.12, -0.03, decimals=3, name="stoploss")]
+        # Define custom trailing space
+        def trailing_space() -> List[Dimension]:
+            return[
+                Categorical([True], name="trailing_stop"),
+                SKDecimal(0.0002, 0.0020, decimals=4, name="trailing_stop_positive"),
+                SKDecimal(0.010,  0.030, decimals=3, name="trailing_stop_positive_offset_p1"),
+                Categorical([True], name="trailing_only_offset_is_reached"),
+            ]
         # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
@@ -99,8 +110,7 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
     stoploss = -0.067
-    
-    trailing_stop = False
+    trailing_stop = True
     trailing_stop_positive = 0.0003
     trailing_stop_positive_offset = 0.0146
     trailing_only_offset_is_reached = True
@@ -285,7 +295,7 @@ class abbas8(IStrategy):
         return dataframe
     
     # ## Trailing params
-    # use_custom_stoploss = False
+    # use_custom_stoploss = True
     # # hard stoploss profit
     # pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
     # # profit threshold 1, trigger point, SL_1 is used
@@ -315,52 +325,3 @@ class abbas8(IStrategy):
     #     if (sl_profit >= current_profit):
     #         return -0.99
     #     return stoploss_from_open(sl_profit, current_profit)
-
-
-    ## RR trailing stoploss
-    custom_info = {
-        'risk_reward_ratio': 3.5,
-        'set_to_break_even_at_profit': 1,
-    }
-    use_custom_stoploss = True
-
-    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime, current_rate: float, current_profit: float, **kwargs) -> float:
-
-        """
-            custom_stoploss using a risk/reward ratio
-        """
-        result = break_even_sl = takeprofit_sl = -1
-        custom_info_pair = self.custom_info.get(pair)
-        if custom_info_pair is not None:
-            # using current_time/open_date directly via custom_info_pair[trade.open_daten]
-            # would only work in backtesting/hyperopt.
-            # in live/dry-run, we have to search for nearest row before it
-            open_date_mask = custom_info_pair.index.unique().get_loc(trade.open_date_utc, method='ffill')
-            open_df = custom_info_pair.iloc[open_date_mask]
-            # trade might be open too long for us to find opening candle
-            if(len(open_df) != 1):
-                return -1 # won't update current stoploss
-            initial_sl_abs = open_df['stoploss_rate']
-            # calculate initial stoploss at open_date
-            initial_sl = initial_sl_abs/current_rate-1
-            # calculate take profit treshold
-            # by using the initial risk and multiplying it
-            risk_distance = trade.open_rate-initial_sl_abs
-            reward_distance = risk_distance*self.custom_info['risk_reward_ratio']
-            # take_profit tries to lock in profit once price gets over
-            # risk/reward ratio treshold
-            take_profit_price_abs = trade.open_rate+reward_distance
-            # take_profit gets triggerd at this profit
-            take_profit_pct = take_profit_price_abs/trade.open_rate-1
-            # break_even tries to set sl at open_rate+fees (0 loss)
-            break_even_profit_distance = risk_distance*self.custom_info['set_to_break_even_at_profit']
-            # break_even gets triggerd at this profit
-            break_even_profit_pct = (break_even_profit_distance+current_rate)/current_rate-1
-            result = initial_sl
-            if(current_profit >= break_even_profit_pct):
-                break_even_sl = (trade.open_rate*(1+trade.fee_open+trade.fee_close) / current_rate)-1
-                result = break_even_sl
-            if(current_profit >= take_profit_pct):
-                takeprofit_sl = take_profit_price_abs/current_rate-1
-                result = takeprofit_sl
-        return result
