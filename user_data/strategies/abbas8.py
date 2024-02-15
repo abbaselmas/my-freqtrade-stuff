@@ -18,10 +18,6 @@ logger = logging.getLogger(__name__)
 # Buy hyperspace params:
 buy_params = {
     "base_nb_candles_buy": 15,
-    "buy_V_bb_width": 0.01,
-    "buy_V_cti": -0.6,
-    "buy_V_mfi": 30,
-    "buy_V_r14": -60,
     "buy_clucha_bbdelta_close": 0.041,
     "buy_clucha_bbdelta_tail": 0.72,
     "buy_clucha_closedelta_close": 0.01,
@@ -43,7 +39,12 @@ buy_params = {
 # Sell hyperspace params:
 sell_params = {
     "base_nb_candles_sell": 15,
-    "high_offset": 1.11
+    "high_offset": 1.11,
+    "pHSL": -0.073,
+    "pPF_1": 0.016,
+    "pPF_2": 0.076,
+    "pSL_1": 0.011,
+    "pSL_2": 0.028
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
@@ -98,8 +99,8 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
     stoploss = -0.067
-    use_custom_stoploss = True
-    trailing_stop = False
+    
+    trailing_stop = True
     trailing_stop_positive = 0.0003
     trailing_stop_positive_offset = 0.0146
     trailing_only_offset_is_reached = True
@@ -284,39 +285,33 @@ class abbas8(IStrategy):
         return dataframe
     
     ## Trailing params
+    use_custom_stoploss = False
     # hard stoploss profit
     pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
     # profit threshold 1, trigger point, SL_1 is used
     pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', load=True, optimize=True)
     pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', load=True, optimize=True)
-
     # profit threshold 2, SL_2 is used
     pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', load=True, optimize=True)
     pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', load=True, optimize=True)
     # Custom Trailing stoploss ( credit to Perkmeister for this custom stoploss to help the strategy ride a green candle )
-    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime,
-                        current_rate: float, current_profit: float, **kwargs) -> float:
-
+    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime, current_rate: float, current_profit: float, **kwargs) -> float:
         # hard stoploss profit
         HSL = self.pHSL.value
         PF_1 = self.pPF_1.value
         SL_1 = self.pSL_1.value
         PF_2 = self.pPF_2.value
         SL_2 = self.pSL_2.value
-
         # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
         # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
         # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
-
         if (current_profit > PF_2):
             sl_profit = SL_2 + (current_profit - PF_2)
         elif (current_profit > PF_1):
             sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
         else:
             sl_profit = HSL
-
         # Only for hyperopt invalid return
         if (sl_profit >= current_profit):
             return -0.99
-
         return stoploss_from_open(sl_profit, current_profit)
