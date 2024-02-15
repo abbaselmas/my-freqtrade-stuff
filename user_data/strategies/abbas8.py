@@ -9,7 +9,7 @@ import datetime
 import logging
 from datetime import datetime
 from freqtrade.persistence import Trade
-from freqtrade.strategy import merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter
+from freqtrade.strategy import merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter, stoploss_from_open
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
 from datetime import datetime, timedelta, timezone
 
@@ -98,7 +98,8 @@ class abbas8(IStrategy):
         "max_slippage": -0.002
     }
     stoploss = -0.067
-    trailing_stop = True
+    use_custom_stoploss = True
+    trailing_stop = False
     trailing_stop_positive = 0.0003
     trailing_stop_positive_offset = 0.0146
     trailing_only_offset_is_reached = True
@@ -281,3 +282,41 @@ class abbas8(IStrategy):
     
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
+    
+    ## Trailing params
+    # hard stoploss profit
+    pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
+    # profit threshold 1, trigger point, SL_1 is used
+    pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', load=True, optimize=True)
+    pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', load=True, optimize=True)
+
+    # profit threshold 2, SL_2 is used
+    pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', load=True, optimize=True)
+    pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', load=True, optimize=True)
+    # Custom Trailing stoploss ( credit to Perkmeister for this custom stoploss to help the strategy ride a green candle )
+    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime,
+                        current_rate: float, current_profit: float, **kwargs) -> float:
+
+        # hard stoploss profit
+        HSL = self.pHSL.value
+        PF_1 = self.pPF_1.value
+        SL_1 = self.pSL_1.value
+        PF_2 = self.pPF_2.value
+        SL_2 = self.pSL_2.value
+
+        # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
+        # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
+        # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
+
+        if (current_profit > PF_2):
+            sl_profit = SL_2 + (current_profit - PF_2)
+        elif (current_profit > PF_1):
+            sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
+        else:
+            sl_profit = HSL
+
+        # Only for hyperopt invalid return
+        if (sl_profit >= current_profit):
+            return -0.99
+
+        return stoploss_from_open(sl_profit, current_profit)
