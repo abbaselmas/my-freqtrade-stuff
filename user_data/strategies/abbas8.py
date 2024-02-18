@@ -319,8 +319,8 @@ class abbas8(IStrategy):
 
     #  Strategy: BigZ07
     # Buy HyperParam
-    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=False)
-    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=False)
+    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=True)
+    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=True)
     bzv7_buy_volume_drop_3 = DecimalParameter(1, 10,    default=2.7, space="buy", decimals=1, optimize=False)
 
     bzv7_rsi_optimize = False
@@ -328,14 +328,14 @@ class abbas8(IStrategy):
     bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=15, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=20, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=35, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=True)
 
     bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_3    = IntParameter(4, 20,  default=14, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
     bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space="buy", decimals=2, optimize=False) # 0.09-0.01 = 0.08 | 8
-    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=False) # 0.09-0.01 = 0.08 | 8
+    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=True) # 0.09-0.01 = 0.08 | 8
 
     buy_dip_threshold_optimize = False
     buy_dip_threshold_1 = DecimalParameter(0.20, 0.40, default=buy_params["buy_dip_threshold_1"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)

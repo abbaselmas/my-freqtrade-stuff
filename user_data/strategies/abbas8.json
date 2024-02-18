@@ -6,6 +6,15 @@
       "140": -0.015,
       "232": -0.03
     },
+    "stoploss": {
+      "stoploss": -0.07
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.0003,
+      "trailing_stop_positive_offset": 0.015,
+      "trailing_only_offset_is_reached": true
+    },
     "max_open_trades": {
       "max_open_trades": 30
     },
@@ -77,31 +86,22 @@
       "buy_vwap_cti": -0.14,
       "buy_vwap_width": 3.3,
       "bzv7_buy_macd_1": 0.02,
-      "bzv7_buy_macd_2": 0.01,
       "bzv7_buy_rsi_1": 9,
       "bzv7_buy_rsi_1h_1": 23,
       "bzv7_buy_rsi_1h_2": 45,
       "bzv7_buy_rsi_1h_3": 32,
       "bzv7_buy_rsi_1h_4": 10,
-      "bzv7_buy_rsi_1h_5": 64,
       "bzv7_buy_rsi_2": 10,
       "bzv7_buy_rsi_3": 18,
-      "bzv7_buy_volume_drop_1": 5.7,
       "bzv7_buy_volume_drop_3": 1.2,
-      "bzv7_buy_volume_pump_1": 0.1
+      "bzv7_buy_macd_2": 0.025,
+      "bzv7_buy_rsi_1h_5": 60,
+      "bzv7_buy_volume_drop_1": 5.9,
+      "bzv7_buy_volume_pump_1": 0.6
     },
     "sell": {},
-    "protection": {},
-    "stoploss": {
-      "stoploss": -0.07
-    },
-    "trailing": {
-      "trailing_stop": true,
-      "trailing_stop_positive": 0.0003,
-      "trailing_stop_positive_offset": 0.015,
-      "trailing_only_offset_is_reached": true
-    }
+    "protection": {}
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-18 21:25:19.718074+00:00"
+  "export_time": "2024-02-18 21:50:30.500511+00:00"
 }
