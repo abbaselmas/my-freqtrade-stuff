@@ -19,108 +19,91 @@ logger = logging.getLogger(__name__)
 
 # Buy hyperspace params:
 buy_params = {
-    "buy_bb20_close_bblowerband": 0.98,
-    "buy_bb20_volume": 25,
-    "buy_bb40_bbdelta_close": 0.038,
+    "buy_bb20_close_bblowerband": 0.988,
+    "buy_bb20_volume": 24,
+    "buy_bb40_bbdelta_close": 0.029,
     "buy_bb40_closedelta_close": 0.015,
-    "buy_bb40_tail_bbdelta": 0.3,
-    "base_nb_candles_buy": 48,  # value loaded from strategy
-    "buy_bb_delta": 0.034,  # value loaded from strategy
-    "buy_bb_factor": 0.994,  # value loaded from strategy
-    "buy_bb_width": 0.077,  # value loaded from strategy
-    "buy_c10_1": -110,  # value loaded from strategy
-    "buy_c10_2": -0.98,  # value loaded from strategy
-    "buy_c2_1": 0.024,  # value loaded from strategy
-    "buy_c2_2": 0.986,  # value loaded from strategy
-    "buy_c2_3": -0.7,  # value loaded from strategy
-    "buy_c6_1": 0.17,  # value loaded from strategy
-    "buy_c6_2": 0.18,  # value loaded from strategy
-    "buy_c6_3": 0.038,  # value loaded from strategy
-    "buy_c6_4": 0.014,  # value loaded from strategy
-    "buy_c6_5": 0.34,  # value loaded from strategy
-    "buy_c7_1": 1.01,  # value loaded from strategy
-    "buy_c7_2": 1.04,  # value loaded from strategy
-    "buy_c7_3": -89,  # value loaded from strategy
-    "buy_c7_4": -61,  # value loaded from strategy
-    "buy_c7_5": 81,  # value loaded from strategy
-    "buy_c9_1": 37,  # value loaded from strategy
-    "buy_c9_2": -71,  # value loaded from strategy
-    "buy_c9_3": -68,  # value loaded from strategy
-    "buy_c9_4": 54,  # value loaded from strategy
-    "buy_c9_5": 31,  # value loaded from strategy
-    "buy_c9_6": 65,  # value loaded from strategy
-    "buy_c9_7": -92,  # value loaded from strategy
-    "buy_cci": -134,  # value loaded from strategy
-    "buy_cci_length": 40,  # value loaded from strategy
-    "buy_closedelta": 16.3,  # value loaded from strategy
-    "buy_clucha_bbdelta_close": 0.037,
-    "buy_clucha_bbdelta_tail": 0.7,
-    "buy_clucha_closedelta_close": 0.006,
-    "buy_clucha_rocr_1h": 0.93,
-    "buy_con3_1": 0.023,  # value loaded from strategy
-    "buy_con3_2": 0.995,  # value loaded from strategy
-    "buy_con3_3": 0.958,  # value loaded from strategy
-    "buy_con3_4": -0.87,  # value loaded from strategy
-    "buy_dip_threshold_1": 0.28,  # value loaded from strategy
-    "buy_dip_threshold_2": 0.3,  # value loaded from strategy
-    "buy_dip_threshold_3": 0.4,  # value loaded from strategy
-    "buy_dip_threshold_5": 0.024,  # value loaded from strategy
-    "buy_dip_threshold_6": 0.061,  # value loaded from strategy
-    "buy_dip_threshold_7": 0.07,  # value loaded from strategy
-    "buy_dip_threshold_8": 0.214,  # value loaded from strategy
-    "buy_ema_open_mult_1": 0.02,  # value loaded from strategy
-    "buy_macd_41": 0.02,  # value loaded from strategy
-    "buy_mfi": 36.0,  # value loaded from strategy
-    "buy_mfi_1": 39,  # value loaded from strategy
-    "buy_min_inc": 0.01,  # value loaded from strategy
-    "buy_min_inc_1": 0.015,  # value loaded from strategy
-    "buy_pump_pull_threshold_1": 2.16,  # value loaded from strategy
-    "buy_pump_threshold_1": 0.751,  # value loaded from strategy
-    "buy_rmi": 32,  # value loaded from strategy
-    "buy_rmi_length": 19,  # value loaded from strategy
-    "buy_rsi": 38.5,  # value loaded from strategy
-    "buy_rsi_1": 38,  # value loaded from strategy
-    "buy_rsi_1h": 67.0,  # value loaded from strategy
-    "buy_rsi_1h_42": 45,  # value loaded from strategy
-    "buy_rsi_1h_max_1": 88,  # value loaded from strategy
-    "buy_rsi_1h_min_1": 26,  # value loaded from strategy
-    "buy_rsi_diff": 50.48,  # value loaded from strategy
-    "buy_srsi_fk": 39,  # value loaded from strategy
-    "buy_volume_1": 2.0,  # value loaded from strategy
-    "buy_volume_drop_41": 1.8,  # value loaded from strategy
-    "buy_volume_pump_41": 0.3,  # value loaded from strategy
-    "buy_vwap_closedelta": 10.19,  # value loaded from strategy
-    "buy_vwap_cti": -0.06,  # value loaded from strategy
-    "buy_vwap_width": 2.72,  # value loaded from strategy
-    "bzv7_buy_macd_1": 0.02,  # value loaded from strategy
-    "bzv7_buy_macd_2": 0.03,  # value loaded from strategy
-    "bzv7_buy_rsi_1": 28,  # value loaded from strategy
-    "bzv7_buy_rsi_1h_1": 16,  # value loaded from strategy
-    "bzv7_buy_rsi_1h_2": 15,  # value loaded from strategy
-    "bzv7_buy_rsi_1h_3": 20,  # value loaded from strategy
-    "bzv7_buy_rsi_1h_4": 35,  # value loaded from strategy
-    "bzv7_buy_rsi_1h_5": 39,  # value loaded from strategy
-    "bzv7_buy_rsi_2": 10,  # value loaded from strategy
-    "bzv7_buy_rsi_3": 14,  # value loaded from strategy
-    "bzv7_buy_volume_drop_1": 9.3,  # value loaded from strategy
-    "bzv7_buy_volume_drop_3": 1.0,  # value loaded from strategy
-    "bzv7_buy_volume_pump_1": 0.1,  # value loaded from strategy
-    "ewo_high": 4.03,  # value loaded from strategy
-    "ewo_high_2": 0.6,  # value loaded from strategy
-    "ewo_low": -13.15,  # value loaded from strategy
-    "fast_ewo": 28,  # value loaded from strategy
-    "low_offset": 1.03,  # value loaded from strategy
-    "low_offset_2": 0.95,  # value loaded from strategy
-    "rsi_buy": 70,  # value loaded from strategy
-    "rsi_ewo2": 34,  # value loaded from strategy
-    "rsi_fast_ewo1": 29,  # value loaded from strategy
-    "slow_ewo": 212  # value loaded from strategy
+    "buy_bb40_tail_bbdelta": 0.256,
+    "buy_bb_delta": 0.034,
+    "buy_bb_factor": 0.994,
+    "buy_bb_width": 0.077,
+    "buy_c10_1": -110,
+    "buy_c10_2": -0.98,
+    "buy_c2_1": 0.024,
+    "buy_c2_2": 0.986,
+    "buy_c2_3": -0.7,
+    "buy_c7_1": 1.01,
+    "buy_c7_2": 1.04,
+    "buy_c7_3": -89,
+    "buy_c7_4": -61,
+    "buy_c7_5": 81,
+    "buy_c9_1": 37,
+    "buy_c9_2": -71,
+    "buy_c9_3": -68,
+    "buy_c9_4": 54,
+    "buy_c9_5": 31,
+    "buy_c9_6": 65,
+    "buy_c9_7": -92,
+    "buy_cci": -134,
+    "buy_cci_length": 40,
+    "buy_closedelta": 16.3,
+    "buy_clucha_bbdelta_close": 0.032,
+    "buy_clucha_bbdelta_tail": 0.76,
+    "buy_clucha_closedelta_close": 0.01,
+    "buy_clucha_rocr_1h": 0.75,
+    "buy_con3_1": 0.023,
+    "buy_con3_2": 0.995,
+    "buy_con3_3": 0.958,
+    "buy_con3_4": -0.87,
+    "buy_dip_threshold_1": 0.39,
+    "buy_dip_threshold_2": 0.35,
+    "buy_dip_threshold_3": 0.55,
+    "buy_dip_threshold_5": 0.024,
+    "buy_dip_threshold_6": 0.061,
+    "buy_dip_threshold_7": 0.07,
+    "buy_dip_threshold_8": 0.214,
+    "buy_ema_open_mult_1": 0.014,
+    "buy_macd_41": 0.02,
+    "buy_mfi": 58,
+    "buy_mfi_1": 27,
+    "buy_min_inc": 0.032,
+    "buy_min_inc_1": 0.039,
+    "buy_pump_pull_threshold_1": 2.16,
+    "buy_pump_threshold_1": 0.751,
+    "buy_rmi_length": 19,
+    "buy_rsi": 37,
+    "buy_rsi_1": 36,
+    "buy_rsi_1h": 66,
+    "buy_rsi_1h_42": 45,
+    "buy_rsi_1h_max_1": 79,
+    "buy_rsi_1h_min_1": 33,
+    "buy_rsi_diff": 42,
+    "buy_srsi_fk": 39,
+    "buy_volume_1": 8,
+    "buy_volume_drop_41": 1.8,
+    "buy_volume_pump_41": 0.3,
+    "buy_vwap_closedelta": 10.2,
+    "buy_vwap_cti": -0.14,
+    "buy_vwap_width": 3.3,
+    "bzv7_buy_macd_1": 0.02,
+    "bzv7_buy_macd_2": 0.01,
+    "bzv7_buy_rsi_1": 9,
+    "bzv7_buy_rsi_1h_1": 23,
+    "bzv7_buy_rsi_1h_2": 45,
+    "bzv7_buy_rsi_1h_3": 32,
+    "bzv7_buy_rsi_1h_4": 10,
+    "bzv7_buy_rsi_1h_5": 64,
+    "bzv7_buy_rsi_2": 10,
+    "bzv7_buy_rsi_3": 18,
+    "bzv7_buy_volume_drop_1": 5.7,
+    "bzv7_buy_volume_drop_3": 1.2,
+    "bzv7_buy_volume_pump_1": 0.1
 }
-# Sell hyperspace params:
-sell_params = {
-    "base_nb_candles_sell": 23,
-    "high_offset": 1.01
-}
+# # Sell hyperspace params:
+# sell_params = {
+#     "base_nb_candles_sell": 23,
+#     "high_offset": 1.01
+# }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
@@ -185,7 +168,7 @@ def MFV(dataframe):
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.8.6"
+        return "v9.9"
     INTERFACE_VERSION = 3
     class HyperOpt:
         # Define a custom stoploss space.
@@ -237,24 +220,24 @@ class abbas8(IStrategy):
     process_only_new_candles = True
     startup_candle_count = 449
 
-    smaoffset_optimize = False
-    base_nb_candles_buy = IntParameter(20, 55, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    base_nb_candles_sell = IntParameter(8, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    low_offset = DecimalParameter(0.90, 1.25, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    low_offset_2 = DecimalParameter(0.90, 1.25, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    high_offset = DecimalParameter(0.90, 1.30, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
+    # smaoffset_optimize = False
+    # base_nb_candles_buy = IntParameter(20, 55, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
+    # base_nb_candles_sell = IntParameter(8, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
+    # low_offset = DecimalParameter(0.90, 1.25, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    # low_offset_2 = DecimalParameter(0.90, 1.25, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
+    # high_offset = DecimalParameter(0.90, 1.30, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
 
-    ewo_optimize = False
-    fast_ewo = IntParameter(5,30, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
-    slow_ewo = IntParameter(120,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
-    rsi_fast_ewo1 = IntParameter(40, 70, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
-    rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
+    # ewo_optimize = False
+    # fast_ewo = IntParameter(5,30, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
+    # slow_ewo = IntParameter(120,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
+    # rsi_fast_ewo1 = IntParameter(40, 70, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
+    # rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
 
-    protection_optimize = False
-    ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
-    ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
-    ewo_high_2 = DecimalParameter(-7.0, 13.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
-    rsi_buy = IntParameter(45, 75, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
+    # protection_optimize = False
+    # ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
+    # ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
+    # ewo_high_2 = DecimalParameter(-7.0, 13.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
+    # rsi_buy = IntParameter(45, 75, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
 
     is_optimize_clucha = False
     buy_clucha_bbdelta_close    = DecimalParameter(0.010, 0.060,  default=buy_params["buy_clucha_bbdelta_close"],    space="buy", decimals=3, optimize = is_optimize_clucha)
@@ -336,37 +319,37 @@ class abbas8(IStrategy):
 
     #  Strategy: BigZ07
     # Buy HyperParam
-    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=True)
-    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=True)
-    bzv7_buy_volume_drop_3 = DecimalParameter(1, 10,    default=2.7, space="buy", decimals=1, optimize=True)
+    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=False)
+    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=False)
+    bzv7_buy_volume_drop_3 = DecimalParameter(1, 10,    default=2.7, space="buy", decimals=1, optimize=False)
 
-    bzv7_rsi_optimize = True
+    bzv7_rsi_optimize = False
     bzv7_buy_rsi_1h_1 = IntParameter(8, 30, default=16, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=15, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=20, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=35, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=bzv7_rsi_optimize)
 
-    bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=True) # 40-7 = 33
-    bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=True) # 40-7 = 33
-    bzv7_buy_rsi_3    = IntParameter(4, 20,  default=14, space="buy", optimize=True) # 40-7 = 33
+    bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
+    bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
+    bzv7_buy_rsi_3    = IntParameter(4, 20,  default=14, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
-    bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space="buy", decimals=2, optimize=True) # 0.09-0.01 = 0.08 | 8
-    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=True) # 0.09-0.01 = 0.08 | 8
+    bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space="buy", decimals=2, optimize=False) # 0.09-0.01 = 0.08 | 8
+    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=False) # 0.09-0.01 = 0.08 | 8
 
-    buy_dip_threshold_optimize = True
+    buy_dip_threshold_optimize = False
     buy_dip_threshold_1 = DecimalParameter(0.20, 0.40, default=buy_params["buy_dip_threshold_1"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
     buy_dip_threshold_2 = DecimalParameter(0.20, 0.50, default=buy_params["buy_dip_threshold_2"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
     buy_dip_threshold_3 = DecimalParameter(0.30, 0.60, default=buy_params["buy_dip_threshold_3"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
 
-    bb40_optimize = True
+    bb40_optimize = False
     buy_bb40_bbdelta_close     = DecimalParameter(0.025, 0.045, default=buy_params["buy_bb40_bbdelta_close"],       space="buy", decimals=3, optimize=bb40_optimize)
     buy_bb40_closedelta_close  = DecimalParameter(0.010, 0.030, default=buy_params["buy_bb40_closedelta_close"],    space="buy", decimals=3, optimize=bb40_optimize)
     buy_bb40_tail_bbdelta      = DecimalParameter(0.250, 0.350, default=buy_params["buy_bb40_tail_bbdelta"],        space="buy", decimals=3, optimize=bb40_optimize)
     buy_bb20_close_bblowerband = DecimalParameter(0.950, 1.050, default=buy_params["buy_bb20_close_bblowerband"],   space="buy", decimals=3, optimize=bb40_optimize)
     buy_bb20_volume = IntParameter(18, 36, default=buy_params["buy_bb20_volume"], space="buy", optimize=bb40_optimize)
     
-    bzv7_rsimfi_optimize = True
+    bzv7_rsimfi_optimize = False
     buy_rsi_diff        =  IntParameter(34, 60, default=buy_params["buy_rsi_diff"], space="buy",  optimize=bzv7_rsimfi_optimize)
     buy_rsi_1h          =  IntParameter(40, 70, default=buy_params["buy_rsi_1h"], space="buy",  optimize=bzv7_rsimfi_optimize)
     buy_rsi             =  IntParameter(30, 40, default=buy_params["buy_rsi"], space="buy",  optimize=bzv7_rsimfi_optimize)
@@ -428,9 +411,9 @@ class abbas8(IStrategy):
         return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
-        dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
-        dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
-        dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
+        # dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
+        # dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
+        # dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
@@ -552,23 +535,23 @@ class abbas8(IStrategy):
     
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe["enter_tag"] = ""
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] > self.ewo_high.value) &
-                (dataframe["rsi"] < self.rsi_buy.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewo1")
-        dataframe.loc[
-            (
-                (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-                (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-                (dataframe["ewo"] < self.ewo_low.value) &
-                (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "ewolow")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] > self.ewo_high.value) &
+        #         (dataframe["rsi"] < self.rsi_buy.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewo1")
+        # dataframe.loc[
+        #     (
+        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
+        #         (dataframe["ewo"] < self.ewo_low.value) &
+        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
+        #     ),
+        #     ["enter_long", "enter_tag"]] = (1, "ewolow")
         dataframe.loc[
             (
                 (dataframe["close"] < dataframe["vwap_lowerband"]) &
