@@ -97,13 +97,21 @@ buy_params = {
     "bzv7_buy_rsi_3": 18,
     "bzv7_buy_volume_drop_1": 5.7,
     "bzv7_buy_volume_drop_3": 1.2,
-    "bzv7_buy_volume_pump_1": 0.1
+    "bzv7_buy_volume_pump_1": 0.1,
+    "ewo_candles_buy": 13,
+    "ewo_candles_sell": 19,
+    "ewo_high_offset": 1.04116,
+    "ewo_low": -11.424,
+    "ewo_low_offset": 0.97463,
+    "ewo_low_rsi_4": 35,
+    "fast_ewo": 7,
+    "slow_ewo": 180
 }
-# # Sell hyperspace params:
-# sell_params = {
-#     "base_nb_candles_sell": 23,
-#     "high_offset": 1.01
-# }
+# Sell hyperspace params:
+sell_params = {
+    "base_nb_candles_sell": 23,
+    "high_offset": 1.01
+}
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
@@ -168,7 +176,7 @@ def MFV(dataframe):
 
 class abbas8(IStrategy):
     def version(self) -> str:
-        return "v9.9"
+        return "v9.10"
     INTERFACE_VERSION = 3
     class HyperOpt:
         # Define a custom stoploss space.
@@ -187,13 +195,17 @@ class abbas8(IStrategy):
             return [
                 Integer(  6, 60, name="roi_t1"),
                 Integer( 60, 120, name="roi_t2"),
-                Integer(120, 200, name="roi_t3")
+                Integer(120, 200, name="roi_t3"),
+                Integer(200, 300, name="roi_t4"),
+                Integer(300, 500, name="roi_t5")
             ]
         def generate_roi_table(params: Dict) -> Dict[int, float]:
             roi_table = {}
             roi_table[params["roi_t1"]] = 0
-            roi_table[params["roi_t2"]] = -0.015
-            roi_table[params["roi_t3"]] = -0.030
+            roi_table[params["roi_t2"]] = -0.010
+            roi_table[params["roi_t3"]] = -0.020
+            roi_table[params["roi_t4"]] = -0.030
+            roi_table[params["roi_t5"]] = -0.040
             return roi_table
     timeframe = "5m"
     info_timeframes = ["15m", "30m", "1h"]
@@ -212,34 +224,26 @@ class abbas8(IStrategy):
     }
     stoploss = -0.067
     trailing_stop = True
-    trailing_stop_positive = 0.0004
-    trailing_stop_positive_offset = 0.0174
+    trailing_stop_positive = 0.0005
+    trailing_stop_positive_offset = 0.015
     trailing_only_offset_is_reached = True
     use_exit_signal = False
     ignore_roi_if_entry_signal = False
     process_only_new_candles = True
     startup_candle_count = 449
 
-    # smaoffset_optimize = False
-    # base_nb_candles_buy = IntParameter(20, 55, default=buy_params["base_nb_candles_buy"], space="buy", optimize=smaoffset_optimize)
-    # base_nb_candles_sell = IntParameter(8, 30, default=sell_params["base_nb_candles_sell"], space="sell", optimize=smaoffset_optimize)
-    # low_offset = DecimalParameter(0.90, 1.25, default=buy_params["low_offset"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    # low_offset_2 = DecimalParameter(0.90, 1.25, default=buy_params["low_offset_2"], space="buy", decimals=2, optimize=smaoffset_optimize)
-    # high_offset = DecimalParameter(0.90, 1.30, default=sell_params["high_offset"], space="sell", decimals=2, optimize=smaoffset_optimize)
+    # ewo_1 and ewo_low
+    ewo1_low_optimize = False
+    ewo_candles_buy = IntParameter(2, 30, default=buy_params['ewo_candles_buy'], space='buy', optimize=ewo1_low_optimize)
+    ewo_candles_sell = IntParameter(2, 35, default=buy_params['ewo_candles_sell'], space='buy', optimize=ewo1_low_optimize)
+    ewo_low_offset = DecimalParameter(0.7, 1.2, default=buy_params['ewo_low_offset'], decimals=5, space='buy', optimize=ewo1_low_optimize)
+    ewo_high_offset = DecimalParameter(0.75, 1.5, default=buy_params['ewo_high_offset'], decimals=5, space='buy', optimize=ewo1_low_optimize)
+    ewo_low_rsi_4 = IntParameter(1, 50, default=buy_params['ewo_low_rsi_4'], space='buy', optimize=ewo1_low_optimize)
+    ewo_low = DecimalParameter(-20.0, -8.0, default=buy_params['ewo_low'], space='buy', optimize=ewo1_low_optimize)
+    fast_ewo = IntParameter(5,30, default=buy_params["fast_ewo"], space="buy", optimize=ewo1_low_optimize)
+    slow_ewo = IntParameter(120,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo1_low_optimize)
 
-    # ewo_optimize = False
-    # fast_ewo = IntParameter(5,30, default=buy_params["fast_ewo"], space="buy", optimize=ewo_optimize)
-    # slow_ewo = IntParameter(120,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo_optimize)
-    # rsi_fast_ewo1 = IntParameter(40, 70, default=buy_params["rsi_fast_ewo1"], space="buy", optimize=ewo_optimize)
-    # rsi_ewo2 = IntParameter(10, 40, default=buy_params["rsi_ewo2"], space="buy", optimize=ewo_optimize)
-
-    # protection_optimize = False
-    # ewo_low = DecimalParameter(-20.0, -4.0, default=buy_params["ewo_low"], space="buy", decimals=2, optimize=protection_optimize)
-    # ewo_high = DecimalParameter(2.0, 12.0, default=buy_params["ewo_high"], space="buy", decimals=2, optimize=protection_optimize)
-    # ewo_high_2 = DecimalParameter(-7.0, 13.0, default=buy_params["ewo_high_2"], space="buy", decimals=2, optimize=protection_optimize)
-    # rsi_buy = IntParameter(45, 75, default=buy_params["rsi_buy"], space="buy", optimize=protection_optimize)
-
-    is_optimize_clucha = False
+    is_optimize_clucha = True
     buy_clucha_bbdelta_close    = DecimalParameter(0.010, 0.060,  default=buy_params["buy_clucha_bbdelta_close"],    space="buy", decimals=3, optimize = is_optimize_clucha)
     buy_clucha_bbdelta_tail     = DecimalParameter(0.40,   1.00,  default=buy_params["buy_clucha_bbdelta_tail"],     space="buy", decimals=2, optimize = is_optimize_clucha)
     buy_clucha_closedelta_close = DecimalParameter(0.001,  0.030, default=buy_params["buy_clucha_closedelta_close"], space="buy", decimals=3, optimize = is_optimize_clucha)
@@ -319,8 +323,8 @@ class abbas8(IStrategy):
 
     #  Strategy: BigZ07
     # Buy HyperParam
-    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=True)
-    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=True)
+    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=False)
+    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=False)
     bzv7_buy_volume_drop_3 = DecimalParameter(1, 10,    default=2.7, space="buy", decimals=1, optimize=False)
 
     bzv7_rsi_optimize = False
@@ -328,14 +332,14 @@ class abbas8(IStrategy):
     bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=15, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=20, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=35, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=True)
+    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=bzv7_rsi_optimize)
 
     bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_3    = IntParameter(4, 20,  default=14, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
     bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space="buy", decimals=2, optimize=False) # 0.09-0.01 = 0.08 | 8
-    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=True) # 0.09-0.01 = 0.08 | 8
+    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=False) # 0.09-0.01 = 0.08 | 8
 
     buy_dip_threshold_optimize = False
     buy_dip_threshold_1 = DecimalParameter(0.20, 0.40, default=buy_params["buy_dip_threshold_1"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
@@ -411,10 +415,13 @@ class abbas8(IStrategy):
         return informative_15m
 
     def base_tf_5m_indicators(self, metadata: dict, dataframe: DataFrame) -> DataFrame:
-        # dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_buy.value))
-        # dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] = ta.EMA(dataframe, timeperiod=int(self.base_nb_candles_sell.value))
-        # dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
+        dataframe[f'ma_buy_{self.ewo_candles_buy.value}'] = ta.EMA(dataframe, timeperiod=int(self.ewo_candles_buy.value))
+        dataframe[f'ma_sell_{self.ewo_candles_sell.value}'] = ta.EMA(dataframe, timeperiod=int(self.ewo_candles_sell.value))
+        dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
+        dataframe['rsi_4'] = ta.RSI(dataframe, timeperiod=4)
+        dataframe['rsi_14'] = ta.RSI(dataframe, timeperiod=14)
+
         dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
         dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
         dataframe["volume_mean_slow_30"] = dataframe["volume"].rolling(window=30).mean()
@@ -458,7 +465,7 @@ class abbas8(IStrategy):
 
         # Volume
         dataframe['volume_mean_slow'] = dataframe['volume'].rolling(window=48).mean()
-
+        
         dataframe['r_14'] = williams_r(dataframe, period=14)
         dataframe['r_32'] = williams_r(dataframe, period=32)
         dataframe['r_64'] = williams_r(dataframe, period=64)
@@ -535,23 +542,14 @@ class abbas8(IStrategy):
     
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe["enter_tag"] = ""
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-        #         (dataframe["ewo"] > self.ewo_high.value) &
-        #         (dataframe["rsi"] < self.rsi_buy.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "ewo1")
-        # dataframe.loc[
-        #     (
-        #         (dataframe["rsi_fast"] < self.rsi_fast_ewo1.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_buy_{self.base_nb_candles_buy.value}"] * self.low_offset.value)) &
-        #         (dataframe["ewo"] < self.ewo_low.value) &
-        #         (dataframe["close"] < (dataframe[f"ma_sell_{self.base_nb_candles_sell.value}"] * self.high_offset.value))
-        #     ),
-        #     ["enter_long", "enter_tag"]] = (1, "ewolow")
+        dataframe.loc[
+            (
+                (dataframe['rsi_4'] <  self.ewo_low_rsi_4.value) &
+                (dataframe['close'] < (dataframe[f'ma_buy_{self.ewo_candles_buy.value}'] * self.ewo_low_offset.value)) &
+                (dataframe['ewo'] < self.ewo_low.value) &
+                (dataframe['close'] < (dataframe[f'ma_sell_{self.ewo_candles_sell.value}'] * self.ewo_high_offset.value))
+            ),
+            ["enter_long", "enter_tag"]] = (1, "ewolow__")
         dataframe.loc[
             (
                 (dataframe["close"] < dataframe["vwap_lowerband"]) &
@@ -575,7 +573,6 @@ class abbas8(IStrategy):
                 (dataframe["rsi_112"] < 60)
             ),
             ["enter_long", "enter_tag"]] = (1, "clucha")
-        
         dataframe.loc[
             (
                 (dataframe['ema_200_1h'] > dataframe['ema_200_1h'].shift(12)) &
@@ -803,44 +800,12 @@ class abbas8(IStrategy):
             ),
             ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 22")
 
-        dont_buy_conditions = []
+        # dont_buy_conditions = []
         
-        if dont_buy_conditions:
-            for condition in dont_buy_conditions:
-                dataframe.loc[condition, "enter_long"] = 0
+        # if dont_buy_conditions:
+        #     for condition in dont_buy_conditions:
+        #         dataframe.loc[condition, "enter_long"] = 0
         return dataframe
     
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         return dataframe
-    
-    # ## Trailing params
-    # use_custom_stoploss = True
-    # # hard stoploss profit
-    # pHSL = DecimalParameter(-0.10, -0.040, default=-0.08, decimals=3, space='sell', load=True, optimize=True)
-    # # profit threshold 1, trigger point, SL_1 is used
-    # pPF_1 = DecimalParameter(0.008, 0.020, default=0.016, decimals=3, space='sell', load=True, optimize=True)
-    # pSL_1 = DecimalParameter(0.008, 0.020, default=0.011, decimals=3, space='sell', load=True, optimize=True)
-    # # profit threshold 2, SL_2 is used
-    # pPF_2 = DecimalParameter(0.040, 0.100, default=0.080, decimals=3, space='sell', load=True, optimize=True)
-    # pSL_2 = DecimalParameter(0.020, 0.070, default=0.040, decimals=3, space='sell', load=True, optimize=True)
-    # # Custom Trailing stoploss ( credit to Perkmeister for this custom stoploss to help the strategy ride a green candle )
-    # def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime, current_rate: float, current_profit: float, **kwargs) -> float:
-    #     # hard stoploss profit
-    #     HSL = self.pHSL.value
-    #     PF_1 = self.pPF_1.value
-    #     SL_1 = self.pSL_1.value
-    #     PF_2 = self.pPF_2.value
-    #     SL_2 = self.pSL_2.value
-    #     # For profits between PF_1 and PF_2 the stoploss (sl_profit) used is linearly interpolated
-    #     # between the values of SL_1 and SL_2. For all profits above PL_2 the sl_profit value
-    #     # rises linearly with current profit, for profits below PF_1 the hard stoploss profit is used.
-    #     if (current_profit > PF_2):
-    #         sl_profit = SL_2 + (current_profit - PF_2)
-    #     elif (current_profit > PF_1):
-    #         sl_profit = SL_1 + ((current_profit - PF_1) * (SL_2 - SL_1) / (PF_2 - PF_1))
-    #     else:
-    #         sl_profit = HSL
-    #     # Only for hyperopt invalid return
-    #     if (sl_profit >= current_profit):
-    #         return -0.99
-    #     return stoploss_from_open(sl_profit, current_profit)

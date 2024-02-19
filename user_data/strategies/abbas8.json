@@ -2,17 +2,19 @@
   "strategy_name": "abbas8",
   "params": {
     "roi": {
-      "99": 0,
-      "140": -0.015,
-      "232": -0.03
+      "55": 0,
+      "65": -0.01,
+      "178": -0.02,
+      "286": -0.03,
+      "500": -0.04
     },
     "stoploss": {
-      "stoploss": -0.07
+      "stoploss": -0.098
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.0003,
-      "trailing_stop_positive_offset": 0.015,
+      "trailing_stop_positive": 0.0002,
+      "trailing_stop_positive_offset": 0.0262,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
@@ -47,10 +49,6 @@
       "buy_cci": -134,
       "buy_cci_length": 40,
       "buy_closedelta": 16.3,
-      "buy_clucha_bbdelta_close": 0.032,
-      "buy_clucha_bbdelta_tail": 0.76,
-      "buy_clucha_closedelta_close": 0.01,
-      "buy_clucha_rocr_1h": 0.75,
       "buy_con3_1": 0.023,
       "buy_con3_2": 0.995,
       "buy_con3_3": 0.958,
@@ -86,22 +84,34 @@
       "buy_vwap_cti": -0.14,
       "buy_vwap_width": 3.3,
       "bzv7_buy_macd_1": 0.02,
+      "bzv7_buy_macd_2": 0.025,
       "bzv7_buy_rsi_1": 9,
       "bzv7_buy_rsi_1h_1": 23,
       "bzv7_buy_rsi_1h_2": 45,
       "bzv7_buy_rsi_1h_3": 32,
       "bzv7_buy_rsi_1h_4": 10,
+      "bzv7_buy_rsi_1h_5": 60,
       "bzv7_buy_rsi_2": 10,
       "bzv7_buy_rsi_3": 18,
-      "bzv7_buy_volume_drop_3": 1.2,
-      "bzv7_buy_macd_2": 0.025,
-      "bzv7_buy_rsi_1h_5": 60,
       "bzv7_buy_volume_drop_1": 5.9,
-      "bzv7_buy_volume_pump_1": 0.6
+      "bzv7_buy_volume_drop_3": 1.2,
+      "bzv7_buy_volume_pump_1": 0.6,
+      "ewo_candles_buy": 13,
+      "ewo_candles_sell": 19,
+      "ewo_high_offset": 1.04116,
+      "ewo_low": -6.42,
+      "ewo_low_offset": 0.97463,
+      "ewo_low_rsi_4": 35,
+      "fast_ewo": 9,
+      "slow_ewo": 198,
+      "buy_clucha_bbdelta_close": 0.031,
+      "buy_clucha_bbdelta_tail": 0.49,
+      "buy_clucha_closedelta_close": 0.006,
+      "buy_clucha_rocr_1h": 0.94
     },
     "sell": {},
     "protection": {}
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-18 21:50:30.500511+00:00"
+  "export_time": "2024-02-19 18:21:32.941434+00:00"
 }
