@@ -213,16 +213,16 @@ class abbas8(IStrategy):
     fast_ewo = IntParameter(5,30, default=buy_params["fast_ewo"], space="buy", optimize=ewo1_low_optimize)
     slow_ewo = IntParameter(120,250, default=buy_params["slow_ewo"], space="buy", optimize=ewo1_low_optimize)
 
-    is_optimize_clucha = True
-    buy_clucha_bbdelta_close    = DecimalParameter(0.010, 0.060,  default=buy_params["buy_clucha_bbdelta_close"],    space="buy", decimals=3, optimize = is_optimize_clucha)
-    buy_clucha_bbdelta_tail     = DecimalParameter(0.40,   1.00,  default=buy_params["buy_clucha_bbdelta_tail"],     space="buy", decimals=2, optimize = is_optimize_clucha)
-    buy_clucha_closedelta_close = DecimalParameter(0.001,  0.030, default=buy_params["buy_clucha_closedelta_close"], space="buy", decimals=3, optimize = is_optimize_clucha)
-    buy_clucha_rocr_1h          = DecimalParameter(0.050,   1.00, default=buy_params["buy_clucha_rocr_1h"],          space="buy", decimals=2, optimize = is_optimize_clucha)
+    is_optimize_clucha = False
+    buy_clucha_bbdelta_close    = DecimalParameter(0.010, 0.060,  default=buy_params["buy_clucha_bbdelta_close"],    space="buy", decimals=3, optimize = is_optimize_clucha) # 0.060-0.010 = 0.050 | 50
+    buy_clucha_bbdelta_tail     = DecimalParameter(0.40,   1.00,  default=buy_params["buy_clucha_bbdelta_tail"],     space="buy", decimals=2, optimize = is_optimize_clucha) # 1.00-0.40 = 0.60 | 60
+    buy_clucha_closedelta_close = DecimalParameter(0.001,  0.030, default=buy_params["buy_clucha_closedelta_close"], space="buy", decimals=3, optimize = is_optimize_clucha) # 0.030-0.001 = 0.029 | 29
+    buy_clucha_rocr_1h          = DecimalParameter(0.050,   1.00, default=buy_params["buy_clucha_rocr_1h"],          space="buy", decimals=2, optimize = is_optimize_clucha) # 1.00-0.050 = 0.950 | 95
 
     is_optimize_vwap = False
-    buy_vwap_width      = DecimalParameter(0.5, 10.0,    default=buy_params["buy_vwap_width"],      space="buy", decimals=1, optimize = is_optimize_vwap)
-    buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=buy_params["buy_vwap_closedelta"], space="buy", decimals=1, optimize = is_optimize_vwap)
-    buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=buy_params["buy_vwap_cti"],        space="buy", decimals=2, optimize = is_optimize_vwap)
+    buy_vwap_width      = DecimalParameter(0.5, 10.0,    default=buy_params["buy_vwap_width"],      space="buy", decimals=1, optimize = is_optimize_vwap) # 10.0-0.5 = 9.5 | 95
+    buy_vwap_closedelta = DecimalParameter(10.0, 30.0,   default=buy_params["buy_vwap_closedelta"], space="buy", decimals=1, optimize = is_optimize_vwap) # 30.0-10.0 = 20.0 | 200
+    buy_vwap_cti        = DecimalParameter(-0.90, -0.00, default=buy_params["buy_vwap_cti"],        space="buy", decimals=2, optimize = is_optimize_vwap) # -0.00-(-0.90) = 0.90 | 90
 
     # BeastBotXBLR
     ###########################################################################
@@ -249,7 +249,7 @@ class abbas8(IStrategy):
     buy_volume_pump_41 = DecimalParameter(0.1, 0.9,   default=buy_params["buy_volume_pump_41"], space='buy', decimals=1, optimize=optc4) # 0.9-0.1 = 0.8 | 8
     buy_volume_drop_41 = DecimalParameter(1, 10,      default=buy_params["buy_volume_drop_41"], space='buy', decimals=1, optimize=optc4) # 10-1 = 9 | 90
 
-    optc7 = False
+    optc7 = False #Cant optimize
     buy_c7_1 = DecimalParameter(0.95, 1.10, default=buy_params["buy_c7_1"], space='buy', decimals=2, optimize=optc7) # 1.10-0.95 = 0.15 | 15
     buy_c7_2 = DecimalParameter(0.95, 1.10, default=buy_params["buy_c7_2"], space='buy', decimals=2, optimize=optc7) # 1.10-0.95 = 0.15 | 15
     buy_c7_3 = IntParameter(-100, -80, default=buy_params["buy_c7_3"], space='buy', optimize=optc7) # -80-(-100) = 20
@@ -297,7 +297,6 @@ class abbas8(IStrategy):
     bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=20, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=35, space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=bzv7_rsi_optimize)
-
     bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
