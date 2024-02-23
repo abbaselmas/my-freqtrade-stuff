@@ -1,23 +1,13 @@
 {
   "strategy_name": "abbas8",
   "params": {
-    "roi": {
-      "60": 0,
-      "85": -0.01,
-      "195": -0.02,
-      "261": -0.03,
-      "392": -0.04
-    },
-    "stoploss": {
-      "stoploss": -0.067
-    },
     "max_open_trades": {
-      "max_open_trades": 30
+      "max_open_trades": 3
     },
     "buy": {
-      "buy_bb40_bbdelta_close": 0.032,
-      "buy_bb40_closedelta_close": 0.011,
-      "buy_bb40_tail_bbdelta": 0.33,
+      "buy_bb40_bbdelta_close": 0.031,
+      "buy_bb40_closedelta_close": 0.015,
+      "buy_bb40_tail_bbdelta": 0.344,
       "buy_c10_1": -105,
       "buy_c10_2": -1.0,
       "buy_c2_1": 0.023,
@@ -45,14 +35,14 @@
       "buy_con3_2": 0.991,
       "buy_con3_3": 0.975,
       "buy_con3_4": -0.76,
-      "buy_dip_threshold_1": 0.22,
-      "buy_dip_threshold_2": 0.21,
-      "buy_dip_threshold_3": 0.55,
+      "buy_dip_threshold_1": 0.28,
+      "buy_dip_threshold_2": 0.22,
+      "buy_dip_threshold_3": 0.51,
       "buy_dip_threshold_5": 0.022,
       "buy_dip_threshold_6": 0.05,
       "buy_dip_threshold_7": 0.058,
       "buy_dip_threshold_8": 0.19,
-      "buy_ema_open_mult_1": 0.01,
+      "buy_ema_open_mult_1": 0.012,
       "buy_macd_41": 0.02,
       "buy_mfi_1": 30,
       "buy_min_inc_1": 0.043,
@@ -63,22 +53,22 @@
       "buy_rsi_1h_42": 33,
       "buy_rsi_1h_max_1": 85,
       "buy_rsi_1h_min_1": 25,
-      "buy_volume_1": 6,
+      "buy_volume_1": 4,
       "buy_volume_drop_41": 3.2,
       "buy_volume_pump_41": 0.3,
       "buy_vwap_closedelta": 14.8,
       "buy_vwap_cti": -0.01,
       "buy_vwap_width": 3.9,
-      "bzv7_buy_macd_1": 0.07,
-      "bzv7_buy_macd_2": 0.026,
-      "bzv7_buy_rsi_1": 5,
+      "bzv7_buy_macd_1": 0.02,
+      "bzv7_buy_macd_2": 0.012,
+      "bzv7_buy_rsi_1": 12,
       "bzv7_buy_rsi_1h_1": 30,
-      "bzv7_buy_rsi_1h_2": 39,
-      "bzv7_buy_rsi_1h_3": 22,
-      "bzv7_buy_rsi_1h_4": 10,
-      "bzv7_buy_rsi_1h_5": 49,
-      "bzv7_buy_rsi_2": 5,
-      "bzv7_buy_volume_drop_1": 1.2,
+      "bzv7_buy_rsi_1h_2": 42,
+      "bzv7_buy_rsi_1h_3": 41,
+      "bzv7_buy_rsi_1h_4": 16,
+      "bzv7_buy_rsi_1h_5": 41,
+      "bzv7_buy_rsi_2": 4,
+      "bzv7_buy_volume_drop_1": 9.2,
       "bzv7_buy_volume_pump_1": 0.5,
       "ewo_candles_buy": 23,
       "ewo_candles_sell": 4,
@@ -91,13 +81,24 @@
     },
     "sell": {},
     "protection": {},
+    "roi": {
+      "23": 0.015,
+      "63": 0.01,
+      "96": 0.005,
+      "176": 0,
+      "254": -0.02,
+      "387": -0.04
+    },
+    "stoploss": {
+      "stoploss": -0.067
+    },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.0002,
-      "trailing_stop_positive_offset": 0.0242,
+      "trailing_stop_positive": 0.002,
+      "trailing_stop_positive_offset": 0.026,
       "trailing_only_offset_is_reached": true
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2024-02-21 10:01:09.057893+00:00"
+  "export_time": "2024-02-23 06:03:23.053730+00:00"
 }

@@ -7,99 +7,94 @@ import numpy as np
 import talib.abstract as ta
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import datetime
-import logging
 from datetime import datetime
 from freqtrade.persistence import Trade
-from freqtrade.strategy import merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter, stoploss_from_open
+from freqtrade.strategy import merge_informative_pair, DecimalParameter, IntParameter, CategoricalParameter, BooleanParameter
 from freqtrade.optimize.space import Categorical, Dimension, Integer, SKDecimal, Real
-from datetime import datetime, timedelta, timezone
-from technical.indicators import RMI,vwmacd
-
-logger = logging.getLogger(__name__)
+from datetime import datetime
+from technical.indicators import RMI
 
 # Buy hyperspace params:
 buy_params = {
-    "buy_bb40_bbdelta_close": 0.029,
+    "buy_bb40_bbdelta_close": 0.031,
     "buy_bb40_closedelta_close": 0.015,
-    "buy_bb40_tail_bbdelta": 0.256,
-    "buy_c10_1": -110,
-    "buy_c10_2": -0.98,
-    "buy_c2_1": 0.024,
-    "buy_c2_2": 0.986,
-    "buy_c2_3": -0.7,
-    "buy_c7_1": 1.01,
-    "buy_c7_2": 1.04,
-    "buy_c7_3": -89,
-    "buy_c7_4": -61,
-    "buy_c7_5": 81,
-    "buy_c9_1": 37,
-    "buy_c9_2": -71,
-    "buy_c9_3": -68,
-    "buy_c9_4": 54,
-    "buy_c9_5": 31,
-    "buy_c9_6": 65,
-    "buy_c9_7": -92,
-    "buy_cci": -134,
-    "buy_cci_length": 40,
-    "buy_clucha_bbdelta_close": 0.031,
-    "buy_clucha_bbdelta_tail": 0.49,
-    "buy_clucha_closedelta_close": 0.006,
-    "buy_clucha_rocr_1h": 0.94,
-    "buy_con3_1": 0.023,
-    "buy_con3_2": 0.995,
-    "buy_con3_3": 0.958,
-    "buy_con3_4": -0.87,
-    "buy_dip_threshold_1": 0.39,
-    "buy_dip_threshold_2": 0.35,
-    "buy_dip_threshold_3": 0.55,
-    "buy_dip_threshold_5": 0.024,
-    "buy_dip_threshold_6": 0.061,
-    "buy_dip_threshold_7": 0.07,
-    "buy_dip_threshold_8": 0.214,
-    "buy_ema_open_mult_1": 0.014,
+    "buy_bb40_tail_bbdelta": 0.344,
+    "buy_c10_1": -105,
+    "buy_c10_2": -1.0,
+    "buy_c2_1": 0.023,
+    "buy_c2_2": 0.982,
+    "buy_c2_3": -0.6,
+    "buy_c7_1": 1.03,
+    "buy_c7_2": 0.96,
+    "buy_c7_3": -82,
+    "buy_c7_4": -70,
+    "buy_c7_5": 77,
+    "buy_c9_1": 35,
+    "buy_c9_2": -73,
+    "buy_c9_3": -74,
+    "buy_c9_4": 35,
+    "buy_c9_5": 34,
+    "buy_c9_6": 87,
+    "buy_c9_7": -91,
+    "buy_cci": -122,
+    "buy_cci_length": 28,
+    "buy_clucha_bbdelta_close": 0.017,
+    "buy_clucha_bbdelta_tail": 0.5,
+    "buy_clucha_closedelta_close": 0.009,
+    "buy_clucha_rocr_1h": 0.82,
+    "buy_con3_1": 0.012,
+    "buy_con3_2": 0.991,
+    "buy_con3_3": 0.975,
+    "buy_con3_4": -0.76,
+    "buy_dip_threshold_1": 0.28,
+    "buy_dip_threshold_2": 0.22,
+    "buy_dip_threshold_3": 0.51,
+    "buy_dip_threshold_5": 0.022,
+    "buy_dip_threshold_6": 0.05,
+    "buy_dip_threshold_7": 0.058,
+    "buy_dip_threshold_8": 0.19,
+    "buy_ema_open_mult_1": 0.012,
     "buy_macd_41": 0.02,
-    "buy_mfi_1": 27,
-    "buy_min_inc_1": 0.039,
-    "buy_pump_pull_threshold_1": 2.16,
-    "buy_pump_threshold_1": 0.751,
-    "buy_rmi_length": 19,
+    "buy_mfi_1": 30,
+    "buy_min_inc_1": 0.043,
+    "buy_pump_pull_threshold_1": 2.42,
+    "buy_pump_threshold_1": 0.941,
+    "buy_rmi_length": 12,
     "buy_rsi_1": 36,
-    "buy_rsi_1h_42": 45,
-    "buy_rsi_1h_max_1": 79,
-    "buy_rsi_1h_min_1": 33,
-    "buy_volume_1": 8,
-    "buy_volume_drop_41": 1.8,
+    "buy_rsi_1h_42": 33,
+    "buy_rsi_1h_max_1": 85,
+    "buy_rsi_1h_min_1": 25,
+    "buy_volume_1": 4,
+    "buy_volume_drop_41": 3.2,
     "buy_volume_pump_41": 0.3,
-    "buy_vwap_closedelta": 10.2,
-    "buy_vwap_cti": -0.14,
-    "buy_vwap_width": 3.3,
+    "buy_vwap_closedelta": 14.8,
+    "buy_vwap_cti": -0.01,
+    "buy_vwap_width": 3.9,
     "bzv7_buy_macd_1": 0.02,
-    "bzv7_buy_macd_2": 0.025,
-    "bzv7_buy_rsi_1": 9,
-    "bzv7_buy_rsi_1h_1": 23,
-    "bzv7_buy_rsi_1h_2": 45,
-    "bzv7_buy_rsi_1h_3": 32,
-    "bzv7_buy_rsi_1h_4": 10,
-    "bzv7_buy_rsi_1h_5": 60,
-    "bzv7_buy_rsi_2": 10,
-    "bzv7_buy_volume_drop_1": 5.9,
-    "bzv7_buy_volume_pump_1": 0.6,
-    "ewo_candles_buy": 13,
-    "ewo_candles_sell": 19,
-    "ewo_high_offset": 1.04116,
-    "ewo_low": -6.42,
-    "ewo_low_offset": 0.97463,
-    "ewo_low_rsi_4": 35,
-    "fast_ewo": 9,
-    "slow_ewo": 198
+    "bzv7_buy_macd_2": 0.012,
+    "bzv7_buy_rsi_1": 12,
+    "bzv7_buy_rsi_1h_1": 30,
+    "bzv7_buy_rsi_1h_2": 42,
+    "bzv7_buy_rsi_1h_3": 41,
+    "bzv7_buy_rsi_1h_4": 16,
+    "bzv7_buy_rsi_1h_5": 41,
+    "bzv7_buy_rsi_2": 4,
+    "bzv7_buy_volume_drop_1": 9.2,
+    "bzv7_buy_volume_pump_1": 0.5,
+    "ewo_candles_buy": 23,
+    "ewo_candles_sell": 4,
+    "ewo_high_offset": 1.18302,
+    "ewo_low": -9.842,
+    "ewo_low_offset": 1.10711,
+    "ewo_low_rsi_4": 49,
+    "fast_ewo": 6,
+    "slow_ewo": 188
 }
 
 def EWO(dataframe, ema_length=5, ema2_length=35):
     ema1 = ta.EMA(dataframe, timeperiod=ema_length)
     ema2 = ta.EMA(dataframe, timeperiod=ema2_length)
     return (ema1 - ema2) / dataframe["low"] * 100
-
-# VWAP bands
 def VWAPB(dataframe, window_size=20, num_of_std=1):
     df = dataframe.copy()
     df["vwap"] = qtpylib.rolling_vwap(df,window=window_size)
@@ -107,12 +102,9 @@ def VWAPB(dataframe, window_size=20, num_of_std=1):
     df["vwap_low"] = df["vwap"] - (rolling_std * num_of_std)
     df["vwap_high"] = df["vwap"] + (rolling_std * num_of_std)
     return df["vwap_low"], df["vwap"], df["vwap_high"]
-
 def ha_typical_price(bars):
     res = (bars["ha_high"] + bars["ha_low"] + bars["ha_close"]) / 3.
     return Series(index=bars.index, data=res)
-
-# Williams %R
 def williams_r(dataframe: DataFrame, period: int = 14) -> Series:
     highest_high = dataframe["high"].rolling(center=False, window=period).max()
     lowest_low = dataframe["low"].rolling(center=False, window=period).min()
@@ -121,8 +113,6 @@ def williams_r(dataframe: DataFrame, period: int = 14) -> Series:
         name=f"{period} Williams %R",
         )
     return WR * -100
-
-# SSL Channels
 def SSLChannels(dataframe, length=7):
     df = dataframe.copy()
     df["ATR"] = ta.ATR(df, timeperiod=14)
@@ -134,25 +124,13 @@ def SSLChannels(dataframe, length=7):
     df["sslUp"] = np.where(df["hlv"] < 0, df["smaLow"], df["smaHigh"])
     return df["sslDown"], df["sslUp"]
 
-# Chaikin Money Flow Volume
-def MFV(dataframe):
-    df = dataframe.copy()
-    N = ((df["close"] - df["low"]) - (df["high"] - df["close"])) / (
-        df["high"] - df["low"]
-    )
-    M = N * df["volume"]
-    return M
-
-
 class abbas8(IStrategy):
     def version(self) -> str:
         return "v9.10"
     INTERFACE_VERSION = 3
     class HyperOpt:
-        # Define a custom stoploss space.
         def stoploss_space():
             return [SKDecimal(-0.12, -0.03, decimals=3, name="stoploss")]
-        # Define custom trailing space
         def trailing_space() -> List[Dimension]:
             return[
                 Categorical([True], name="trailing_stop"),
@@ -160,29 +138,33 @@ class abbas8(IStrategy):
                 SKDecimal(0.010,  0.030, decimals=3, name="trailing_stop_positive_offset_p1"),
                 Categorical([True], name="trailing_only_offset_is_reached"),
             ]
-        # Define custom ROI space
         def roi_space() -> List[Dimension]:
             return [
-                Integer(  6, 60, name="roi_t1"),
-                Integer( 60, 120, name="roi_t2"),
-                Integer(120, 200, name="roi_t3"),
-                Integer(200, 300, name="roi_t4"),
-                Integer(300, 500, name="roi_t5")
+                Integer(  6,  34, name="roi_t1"),
+                Integer( 20,  64, name="roi_t2"),
+                Integer( 50, 104, name="roi_t3"),
+                Integer( 80, 194, name="roi_t4"),
+                Integer(180, 264, name="roi_t5"),
+                Integer(250, 400, name="roi_t6"),
             ]
         def generate_roi_table(params: Dict) -> Dict[int, float]:
             roi_table = {}
-            roi_table[params["roi_t1"]] = 0
-            roi_table[params["roi_t2"]] = -0.010
-            roi_table[params["roi_t3"]] = -0.020
-            roi_table[params["roi_t4"]] = -0.030
-            roi_table[params["roi_t5"]] = -0.040
+            roi_table[params["roi_t1"]] = 0.015
+            roi_table[params["roi_t2"]] = 0.010
+            roi_table[params["roi_t3"]] = 0.005
+            roi_table[params["roi_t4"]] = 0
+            roi_table[params["roi_t5"]] = -0.02
+            roi_table[params["roi_t6"]] = -0.04
             return roi_table
     timeframe = "5m"
     info_timeframes = ["15m", "30m", "1h"]
     minimal_roi = {
-        "99": 0,
-        "140": -0.015,
-        "232": -0.03
+        "23": 0.015,
+        "63": 0.01,
+        "96": 0.005,
+        "176": 0,
+        "254": -0.02,
+        "387": -0.04
     }
     order_time_in_force = {
         "entry": "gtc",
@@ -194,8 +176,8 @@ class abbas8(IStrategy):
     }
     stoploss = -0.067
     trailing_stop = True
-    trailing_stop_positive = 0.0005
-    trailing_stop_positive_offset = 0.015
+    trailing_stop_positive = 0.0003
+    trailing_stop_positive_offset = 0.020
     trailing_only_offset_is_reached = True
     use_exit_signal = False
     ignore_roi_if_entry_signal = False
@@ -288,20 +270,22 @@ class abbas8(IStrategy):
 
     #  Strategy: BigZ07
     # Buy HyperParam
-    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=0.4, space="buy", decimals=1, optimize=False)
-    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=3.8, space="buy", decimals=1, optimize=False)
+    pump_dump_optimize = False
+    bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=buy_params["bzv7_buy_volume_pump_1"], space="buy", decimals=1, optimize=pump_dump_optimize)
+    bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=buy_params["bzv7_buy_volume_drop_1"], space="buy", decimals=1, optimize=pump_dump_optimize)
 
     bzv7_rsi_optimize = False
-    bzv7_buy_rsi_1h_1 = IntParameter(8, 30, default=16, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=15, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=20, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=35, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=39, space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1    = IntParameter(4, 20,  default=28, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
-    bzv7_buy_rsi_2    = IntParameter(4, 20,  default=10, space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
+    bzv7_buy_rsi_1h_1 = IntParameter(8, 30, default=buy_params["bzv7_buy_rsi_1h_1"], space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=buy_params["bzv7_buy_rsi_1h_2"], space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=buy_params["bzv7_buy_rsi_1h_3"], space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=buy_params["bzv7_buy_rsi_1h_4"], space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=buy_params["bzv7_buy_rsi_1h_5"], space="buy", optimize=bzv7_rsi_optimize)
+    bzv7_buy_rsi_1    = IntParameter(4, 20,  default=buy_params["bzv7_buy_rsi_1"], space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
+    bzv7_buy_rsi_2    = IntParameter(4, 20,  default=buy_params["bzv7_buy_rsi_2"], space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
-    bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space="buy", decimals=2, optimize=False) # 0.09-0.01 = 0.08 | 8
-    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["buy_macd_41"], space="buy", decimals=3, optimize=False) # 0.09-0.01 = 0.08 | 8
+    bzv7_macd_optimize = False
+    bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["bzv7_buy_macd_1"], space="buy", decimals=2, optimize=bzv7_macd_optimize) # 0.09-0.01 = 0.08 | 8
+    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["bzv7_buy_macd_2"], space="buy", decimals=3, optimize=bzv7_macd_optimize) # 0.09-0.01 = 0.08 | 8
 
     buy_dip_threshold_optimize = False
     buy_dip_threshold_1 = DecimalParameter(0.20, 0.40, default=buy_params["buy_dip_threshold_1"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
@@ -328,13 +312,15 @@ class abbas8(IStrategy):
         assert self.dp, "DataProvider is required for multiple timeframes."
         informative_1h = self.dp.get_pair_dataframe(pair=metadata["pair"], timeframe="1h")
 
+        # EMA
+        informative_1h['ema_12'] = ta.EMA(informative_1h, timeperiod=12)
         informative_1h['ema_50'] = ta.EMA(informative_1h, timeperiod=50)
         informative_1h['ema_100'] = ta.EMA(informative_1h, timeperiod=100)
         informative_1h['ema_200'] = ta.EMA(informative_1h, timeperiod=200)
+
         informative_1h['sma_200'] = ta.SMA(informative_1h, timeperiod=200)
 
         informative_1h['rsi'] = ta.RSI(informative_1h, timeperiod=14)
-        #informative_1h['not_downtrend'] = ((informative_1h['close'] > informative_1h['close'].shift(2)) | (informative_1h['rsi'] > 50))
         informative_1h['r_480'] = williams_r(dataframe, period=480)
         informative_1h['safe_pump_24'] = ((((informative_1h['open'].rolling(24).max() - informative_1h['close'].rolling(24).min()) /
             informative_1h['close'].rolling(24).min()) < self.buy_pump_threshold_1.value) | (((informative_1h['open'].rolling(24).max() - informative_1h['close'].rolling(24).min()) /
@@ -343,14 +329,7 @@ class abbas8(IStrategy):
         informative_1h['cti'] = pta.cti(informative_1h["close"], length=20) 
 
         ssl_down_1h, ssl_up_1h = SSLChannels(informative_1h, 20)
-        # informative_1h["ssl_down"] = ssl_down_1h
-        # informative_1h["ssl_up"] = ssl_up_1h
         informative_1h["ssl-dir"] = np.where(ssl_up_1h > ssl_down_1h, "up", "down")
-
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
-        informative_1h["bb_lowerband"] = bollinger["lower"]
-        informative_1h["bb_middleband"] = bollinger["mid"]
-        informative_1h["bb_upperband"] = bollinger["upper"]
 
         # Heikin Ashi
         inf_heikinashi = qtpylib.heikinashi(informative_1h)
@@ -375,96 +354,66 @@ class abbas8(IStrategy):
         dataframe["ewo"] = EWO(dataframe, int(self.fast_ewo.value), int(self.slow_ewo.value))
         dataframe["rsi"] = ta.RSI(dataframe, timeperiod=14)
         dataframe['rsi_4'] = ta.RSI(dataframe, timeperiod=4)
-        dataframe['rsi_14'] = ta.RSI(dataframe, timeperiod=14)
-
-        dataframe["rsi_fast"] = ta.RSI(dataframe, timeperiod=4)
-        dataframe["rsi_slow"] = ta.RSI(dataframe, timeperiod=20)
         dataframe["volume_mean_slow_30"] = dataframe["volume"].rolling(window=30).mean()
-
-        bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=2)
-        dataframe['bb_lowerband'] = bollinger['lower']
-        dataframe['bb_middleband'] = bollinger['mid']
-        dataframe['bb_upperband'] = bollinger['upper']
-        # nuevo #
-        
-        bollinger3 = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
-        dataframe['bb_lowerband3'] = bollinger3['lower']
-        dataframe['bb_width'] = ((dataframe['bb_upperband'] - dataframe['bb_lowerband']) / dataframe['bb_middleband'])
-        dataframe['bb_delta'] = ((dataframe['bb_lowerband'] - dataframe['bb_lowerband3']) / dataframe['bb_lowerband'])
         dataframe['tail'] = (dataframe['close'] - dataframe['low']).abs()
-
-        bb_40 = qtpylib.bollinger_bands(dataframe["close"], window=21, stds=2.68)
-        dataframe["lower"] = bb_40["lower"]
-        dataframe["mid"] = bb_40["mid"]
-        dataframe["bbdelta"] = (bb_40["mid"] - dataframe["lower"]).abs()
-
-        # MACD
+        bb_21268 = qtpylib.bollinger_bands(dataframe["close"], window=21, stds=2.68)
+        dataframe["bb_lowerband"] = bb_21268["lower"]
+        dataframe["bb_upperband"] = bb_21268["upper"]
+        dataframe["bbdelta"] = (bb_21268["mid"] - bb_21268["lower"]).abs()
         dataframe["macd"], dataframe["signal"], dataframe["hist"] = ta.MACD(dataframe["close"], fastperiod=12, slowperiod=26, signalperiod=9)
-
-        # Chaikin A/D Oscillator
-        dataframe["mfv"] = MFV(dataframe)
-        dataframe["cmf"] = (dataframe["mfv"].rolling(20).sum() / dataframe["volume"].rolling(20).sum())
-
-        # CCI hyperopt
         for val in self.buy_cci_length.range:
             dataframe[f'cci_length_{val}'] = ta.CCI(dataframe, val)
-
         dataframe['cci'] = ta.CCI(dataframe, 26)
-
         for val in self.buy_rmi_length.range:
             dataframe[f'rmi_length_{val}'] = RMI(dataframe, length=val, mom=4)
-
-        # SRSI hyperopt ?
-        stoch = ta.STOCHRSI(dataframe, 15, 20, 2, 2)
-        dataframe['srsi_fk'] = stoch['fastk']
-
-        # Volume
         dataframe['volume_mean_slow'] = dataframe['volume'].rolling(window=48).mean()
-        
         dataframe['r_14'] = williams_r(dataframe, period=14)
         dataframe['r_32'] = williams_r(dataframe, period=32)
         dataframe['r_64'] = williams_r(dataframe, period=64)
-        dataframe["sma_5"] = ta.SMA(dataframe, timeperiod=5)
         dataframe['ema_12'] = ta.EMA(dataframe, timeperiod=12)
         dataframe['ema_20'] = ta.EMA(dataframe, timeperiod=20)
         dataframe['ema_26'] = ta.EMA(dataframe, timeperiod=26)
         dataframe['ema_50'] = ta.EMA(dataframe, timeperiod=50)
         dataframe['ema_200'] = ta.EMA(dataframe, timeperiod=200)
         dataframe['sma_200'] = ta.SMA(dataframe, timeperiod=200)
-        # MFI
         dataframe['mfi'] = ta.MFI(dataframe)
         
+        # Dip protection
+        # dataframe['safe_dips_normal'] = ((((dataframe['open'] - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_1.value) &
+        #                           (((dataframe['open'].rolling(2).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_2.value) &
+        #                           (((dataframe['open'].rolling(12).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_3.value) &
+        #                           (((dataframe['open'].rolling(144).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_4.value))
+
         dataframe['safe_dips_strict'] = ((((dataframe['open'] - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_5.value) &
                                   (((dataframe['open'].rolling(2).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_6.value) &
                                   (((dataframe['open'].rolling(12).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_7.value) &
                                   (((dataframe['open'].rolling(144).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_8.value))
-        # Heiken Ashi
+
+        # dataframe['safe_dips_loose'] = ((((dataframe['open'] - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_9.value) &
+        #                           (((dataframe['open'].rolling(2).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_10.value) &
+        #                           (((dataframe['open'].rolling(12).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_11.value) &
+        #                           (((dataframe['open'].rolling(144).max() - dataframe['close']) / dataframe['close']) < self.buy_dip_threshold_12.value))
+
         heikinashi = qtpylib.heikinashi(dataframe)
         dataframe["ha_close"] = heikinashi["close"]
         dataframe["ha_high"] = heikinashi["high"]
         dataframe["ha_low"] = heikinashi["low"]
-        # RSI
         dataframe["rsi_84"] = ta.RSI(dataframe, timeperiod=84)
         dataframe["rsi_112"] = ta.RSI(dataframe, timeperiod=112)
-        # VWAP
         vwap_low, vwap, vwap_high = VWAPB(dataframe, 20, 1)
         dataframe["vwap_upperband"] = vwap_high
         dataframe["vwap_middleband"] = vwap
         dataframe["vwap_lowerband"] = vwap_low
         dataframe["vwap_width"] = ( (dataframe["vwap_upperband"] - dataframe["vwap_lowerband"]) / dataframe["vwap_middleband"] ) * 100
-        ## BB 40
         bollinger2_40 = qtpylib.bollinger_bands(ha_typical_price(dataframe), window=40, stds=2)
         dataframe["bb_lowerband2_40"] = bollinger2_40["lower"]
         dataframe["bb_middleband2_40"] = bollinger2_40["mid"]
-        # ClucHA
         dataframe["bb_delta_cluc"] = (dataframe["bb_middleband2_40"] - dataframe["bb_lowerband2_40"]).abs()
         dataframe["ha_closedelta"] = (dataframe["ha_close"] - dataframe["ha_close"].shift()).abs()
         dataframe["ha_tail"] = (dataframe["ha_close"] - dataframe["ha_low"]).abs()
-        dataframe["rocr"] = ta.ROCR(dataframe["ha_close"], timeperiod=28)
-        # CTI
         dataframe["cti"] = pta.cti(dataframe["close"], length=20)
-        # BinH
         dataframe["closedelta"] = (dataframe["close"] - dataframe["close"].shift()).abs()
+
         return dataframe
     
     def confirm_trade_exit(self, pair: str, trade: Trade, order_type: str, amount: float, rate: float, time_in_force: str, sell_reason: str, current_time: datetime, **kwargs) -> bool:
@@ -487,15 +436,14 @@ class abbas8(IStrategy):
         dataframe       = self.base_tf_5m_indicators(metadata, dataframe)
         informative_1h  = self.informative_1h_indicators(dataframe, metadata)
         dataframe       = merge_informative_pair(dataframe, informative_1h, self.timeframe, "1h", ffill=True)
-        informative_30m = self.informative_30m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
-        informative_15m = self.informative_15m_indicators(dataframe, metadata)
-        dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
-
+        # informative_30m = self.informative_30m_indicators(dataframe, metadata)
+        # dataframe       = merge_informative_pair(dataframe, informative_30m, self.timeframe, "30m", ffill=True)
+        # informative_15m = self.informative_15m_indicators(dataframe, metadata)
+        # dataframe       = merge_informative_pair(dataframe, informative_15m, self.timeframe, "15m", ffill=True)
         return dataframe
-    
+
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe["enter_tag"] = ""
+        
         dataframe.loc[
             (
                 (dataframe['rsi_4'] <  self.ewo_low_rsi_4.value) &
@@ -572,10 +520,8 @@ class abbas8(IStrategy):
             (
                 (dataframe['ema_50_1h'] > dataframe['ema_200_1h']) &
                 (dataframe['sma_200'] > dataframe['sma_200'].shift(50)) &
-
                 (dataframe['safe_dips_strict']) &
                 (dataframe['safe_pump_24_1h']) &
-
                 (((dataframe['close'] - dataframe['open'].rolling(36).min()) / dataframe['open'].rolling(36).min()) > self.buy_min_inc_1.value) &
                 (dataframe['rsi_1h'] > self.buy_rsi_1h_min_1.value) &
                 (dataframe['rsi_1h'] < self.buy_rsi_1h_max_1.value) &
@@ -617,11 +563,11 @@ class abbas8(IStrategy):
                 (dataframe["ema_50_1h"] > dataframe["ema_200_1h"]) &
                 (((dataframe["open"].rolling(2).max() - dataframe["close"]) / dataframe["close"]) < self.buy_dip_threshold_1.value) &
                 (((dataframe["open"].rolling(12).max() - dataframe["close"]) / dataframe["close"])< self.buy_dip_threshold_2.value) &
-                dataframe["lower"].shift().gt(0) &
+                dataframe["bb_lowerband"].shift().gt(0) &
                 dataframe["bbdelta"].gt(dataframe["close"] * self.buy_bb40_bbdelta_close.value) &
                 dataframe["closedelta"].gt(dataframe["close"] * self.buy_bb40_closedelta_close.value) &
                 dataframe["tail"].lt(dataframe["bbdelta"] * self.buy_bb40_tail_bbdelta.value) &
-                dataframe["close"].lt(dataframe["lower"].shift()) &
+                dataframe["close"].lt(dataframe["bb_lowerband"].shift()) &
                 dataframe["close"].le(dataframe["close"].shift())
             ),
             ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 0")
@@ -754,11 +700,6 @@ class abbas8(IStrategy):
             ),
             ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 22")
 
-        # dont_buy_conditions = []
-        
-        # if dont_buy_conditions:
-        #     for condition in dont_buy_conditions:
-        #         dataframe.loc[condition, "enter_long"] = 0
         return dataframe
     
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
