@@ -209,43 +209,36 @@ class abbas8(IStrategy):
     # BeastBotXBLR
     ###########################################################################
     # Buy
-    optc1 = False
+    optc1 = True
     buy_rmi_length = IntParameter(8, 20,     default=buy_params["buy_rmi_length"],    space='buy', optimize= optc1) # 20-8 = 12
     buy_cci_length = IntParameter(25, 45,    default=buy_params["buy_cci_length"],    space='buy', optimize= optc1) # 45-25 = 20
     buy_cci        = IntParameter(-135, -90, default=buy_params["buy_cci"],           space='buy', optimize= optc1) # -90-(-135) = 45
 
-    optc2 = False
+    optc2 = True
     buy_c2_1 = DecimalParameter(0.010, 0.025, default=buy_params["buy_c2_1"], space='buy', decimals=3, optimize=optc2) # 0.025-0.010 = 0.015 | 15
     buy_c2_2 = DecimalParameter(0.980, 0.995, default=buy_params["buy_c2_2"], space='buy', decimals=3, optimize=optc2) # 0.995-0.980 = 0.015 | 15
     buy_c2_3 = DecimalParameter(-0.8, -0.3,   default=buy_params["buy_c2_3"], space='buy', decimals=1, optimize=optc2) # -0.3-(-0.8) = 0.5 | 5
     
-    optc3 = False
+    optc3 = True
     buy_con3_1 = DecimalParameter(0.010, 0.025, default=buy_params["buy_con3_1"], space='buy', decimals=3, optimize=optc3) # 0.025-0.010 = 0.015 | 15
     buy_con3_2 = DecimalParameter(0.980, 0.995, default=buy_params["buy_con3_2"], space='buy', decimals=3, optimize=optc3) # 0.995-0.980 = 0.015 | 15
     buy_con3_3 = DecimalParameter(0.955, 0.975, default=buy_params["buy_con3_3"], space='buy', decimals=3, optimize=optc3) # 0.975-0.955 = 0.020 | 20
     buy_con3_4 = DecimalParameter(-0.95, -0.70, default=buy_params["buy_con3_4"], space='buy', decimals=2, optimize=optc3) # -0.70-(-0.95) = 0.25 | 25
 
-    optc4 = False
+    optc4 = True
     buy_rsi_1h_42      = IntParameter(10, 50,         default=buy_params["buy_rsi_1h_42"], space='buy', optimize=optc4) # 50-10 = 40
     buy_macd_41        = DecimalParameter(0.01, 0.09, default=buy_params["buy_macd_41"], space='buy', decimals=2, optimize=optc4) # 0.09-0.01 = 0.08 | 8
     buy_volume_pump_41 = DecimalParameter(0.1, 0.9,   default=buy_params["buy_volume_pump_41"], space='buy', decimals=1, optimize=optc4) # 0.9-0.1 = 0.8 | 8
     buy_volume_drop_41 = DecimalParameter(1, 10,      default=buy_params["buy_volume_drop_41"], space='buy', decimals=1, optimize=optc4) # 10-1 = 9 | 90
 
-    optc7 = False #Cant optimize
-    buy_c7_1 = DecimalParameter(0.95, 1.10, default=buy_params["buy_c7_1"], space='buy', decimals=2, optimize=optc7) # 1.10-0.95 = 0.15 | 15
-    buy_c7_2 = DecimalParameter(0.95, 1.10, default=buy_params["buy_c7_2"], space='buy', decimals=2, optimize=optc7) # 1.10-0.95 = 0.15 | 15
-    buy_c7_3 = IntParameter(-100, -80, default=buy_params["buy_c7_3"], space='buy', optimize=optc7) # -80-(-100) = 20
-    buy_c7_4 = IntParameter(-90, -60,  default=buy_params["buy_c7_4"], space='buy', optimize=optc7) # -60-(-90) = 30
-    buy_c7_5 = IntParameter(75, 90,    default=buy_params["buy_c7_5"], space='buy', optimize=optc7) # 90-75 = 15
-
-    optc8 = False
+    optc8 = True
     buy_min_inc_1 = DecimalParameter(0.010, 0.050, default=buy_params["buy_min_inc_1"], space='buy', decimals=3, optimize=optc8) # 0.050-0.010 = 0.040 | 40
     buy_rsi_1h_min_1 = IntParameter(25, 40, default=buy_params["buy_rsi_1h_min_1"], space='buy', optimize=optc8) # 40-25 = 15
     buy_rsi_1h_max_1 = IntParameter(70, 90, default=buy_params["buy_rsi_1h_max_1"], space='buy', optimize=optc8) # 90-70 = 20
     buy_rsi_1        = IntParameter(20, 40, default=buy_params["buy_rsi_1"], space='buy', optimize=optc8) # 40-20 = 20
     buy_mfi_1        = IntParameter(20, 40, default=buy_params["buy_mfi_1"], space='buy', optimize=optc8) # 40-20 = 20
 
-    optc9 = False
+    optc9 = True
     buy_c9_1 = IntParameter(25, 44,   default=buy_params["buy_c9_1"], space='buy', optimize=optc9) # 44-25 = 19
     buy_c9_2 = IntParameter(-80, -67, default=buy_params["buy_c9_2"], space='buy', optimize=optc9) # -67-(-80) = 13
     buy_c9_3 = IntParameter(-80, -67, default=buy_params["buy_c9_3"], space='buy', optimize=optc9) # -67-(-80) = 13
@@ -254,50 +247,46 @@ class abbas8(IStrategy):
     buy_c9_6 = IntParameter(65, 94,   default=buy_params["buy_c9_6"], space='buy', optimize=optc9) # 94-65 = 29
     buy_c9_7 = IntParameter(-110, -80, default=buy_params["buy_c9_7"], space='buy', optimize=optc9) # -80-(-110) = 30
 
-    optc10 = False
+    optc10 = True
     buy_c10_1 = IntParameter(-110, -80,        default=buy_params["buy_c10_1"], space='buy', optimize=optc10) # -80-(-110) = 30
     buy_c10_2 = DecimalParameter(-1.00, -0.50, default=buy_params["buy_c10_2"], space='buy', decimals=2, optimize=optc10) # -0.50-(-1.00) = 0.50 | 50
 
-    dip_optimize = False
+    dip_optimize = True
     buy_dip_threshold_5 = DecimalParameter(0.020, 0.070, default=buy_params["buy_dip_threshold_5"], space='buy', decimals=3, optimize=dip_optimize) ## 0.070-0.020 = 0.050 | 50
     buy_dip_threshold_6 = DecimalParameter(0.050, 0.100, default=buy_params["buy_dip_threshold_6"], space='buy', decimals=3, optimize=dip_optimize) # 0.100-0.050 = 0.050 | 50
     buy_dip_threshold_7 = DecimalParameter(0.050, 0.100, default=buy_params["buy_dip_threshold_7"], space='buy', decimals=3, optimize=dip_optimize) # 0.100-0.050 = 0.050 | 50
     buy_dip_threshold_8 = DecimalParameter(0.150, 0.250, default=buy_params["buy_dip_threshold_8"], space='buy', decimals=3, optimize=dip_optimize) # 0.250-0.150 = 0.100 | 100
     # 24 hours
-    buy_pump_optimize = False
+    buy_pump_optimize = True
     buy_pump_pull_threshold_1 = DecimalParameter(1.50, 3.00, default=buy_params["buy_pump_pull_threshold_1"], space='buy', decimals=2, optimize=buy_pump_optimize) # 3.00-1.50 = 1.50 | 150
     buy_pump_threshold_1    = DecimalParameter(0.600, 1.000, default=buy_params["buy_pump_threshold_1"], space='buy', decimals=3, optimize=buy_pump_optimize) # 1.000-0.600 = 0.400 | 400
 
     #  Strategy: BigZ07
     # Buy HyperParam
-    pump_dump_optimize = False
+    pump_dump_optimize = True
     bzv7_buy_volume_pump_1 = DecimalParameter(0.1, 0.9, default=buy_params["bzv7_buy_volume_pump_1"], space="buy", decimals=1, optimize=pump_dump_optimize)
     bzv7_buy_volume_drop_1 = DecimalParameter(1, 10,    default=buy_params["bzv7_buy_volume_drop_1"], space="buy", decimals=1, optimize=pump_dump_optimize)
 
-    bzv7_rsi_optimize = False
+    bzv7_rsi_optimize = True
     bzv7_buy_rsi_1h_1 = IntParameter(8, 30, default=buy_params["bzv7_buy_rsi_1h_1"], space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_2 = IntParameter(20, 45, default=buy_params["bzv7_buy_rsi_1h_2"], space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_3 = IntParameter(20, 45, default=buy_params["bzv7_buy_rsi_1h_3"], space="buy", optimize=bzv7_rsi_optimize)
     bzv7_buy_rsi_1h_4 = IntParameter(10, 30, default=buy_params["bzv7_buy_rsi_1h_4"], space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1h_5 = IntParameter(30, 65, default=buy_params["bzv7_buy_rsi_1h_5"], space="buy", optimize=bzv7_rsi_optimize)
-    bzv7_buy_rsi_1    = IntParameter(4, 20,  default=buy_params["bzv7_buy_rsi_1"], space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
     bzv7_buy_rsi_2    = IntParameter(4, 20,  default=buy_params["bzv7_buy_rsi_2"], space="buy", optimize=bzv7_rsi_optimize) # 40-7 = 33
 
-    bzv7_macd_optimize = False
+    bzv7_macd_optimize = True
     bzv7_buy_macd_1 = DecimalParameter(0.01, 0.09, default=buy_params["bzv7_buy_macd_1"], space="buy", decimals=2, optimize=bzv7_macd_optimize) # 0.09-0.01 = 0.08 | 8
-    bzv7_buy_macd_2 = DecimalParameter(0.001, 0.030, default=buy_params["bzv7_buy_macd_2"], space="buy", decimals=3, optimize=bzv7_macd_optimize) # 0.09-0.01 = 0.08 | 8
 
-    buy_dip_threshold_optimize = False
+    buy_dip_threshold_optimize = True
     buy_dip_threshold_1 = DecimalParameter(0.20, 0.40, default=buy_params["buy_dip_threshold_1"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
     buy_dip_threshold_2 = DecimalParameter(0.20, 0.50, default=buy_params["buy_dip_threshold_2"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
     buy_dip_threshold_3 = DecimalParameter(0.30, 0.60, default=buy_params["buy_dip_threshold_3"], space="buy", decimals=2, optimize=buy_dip_threshold_optimize)
 
-    bcmbigz0 = False
+    bcmbigz0 = True
     buy_bb40_bbdelta_close     = DecimalParameter(0.025, 0.045, default=buy_params["buy_bb40_bbdelta_close"],       space="buy", decimals=3, optimize=bcmbigz0)
     buy_bb40_closedelta_close  = DecimalParameter(0.010, 0.030, default=buy_params["buy_bb40_closedelta_close"],    space="buy", decimals=3, optimize=bcmbigz0)
     buy_bb40_tail_bbdelta      = DecimalParameter(0.250, 0.350, default=buy_params["buy_bb40_tail_bbdelta"],        space="buy", decimals=3, optimize=bcmbigz0)
     
-    bcmbigz4 = False
+    bcmbigz4 = True
     buy_volume_1        =  IntParameter(1, 10,  default=buy_params["buy_volume_1"], space="buy",  optimize=bcmbigz4)
     buy_ema_open_mult_1 =  DecimalParameter(0.010, 0.050, default=buy_params["buy_ema_open_mult_1"], space="buy", decimals=3, optimize=bcmbigz4)
 
@@ -509,15 +498,6 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "con4")
         dataframe.loc[
             (
-                (dataframe['ema_200'] > (dataframe['ema_200'].shift(12) * self.buy_c7_1.value)) &
-                (dataframe['close'] < (dataframe['bb_lowerband'] * self.buy_c7_2.value)) &
-                (dataframe['r_14'] < self.buy_c7_3.value) &
-                (dataframe['r_64'] < self.buy_c7_4.value) &
-                (dataframe['rsi_1h'] < self.buy_c7_5.value) 
-            ),
-            ["enter_long", "enter_tag"]] = (1, "con7")
-        dataframe.loc[
-            (
                 (dataframe['ema_50_1h'] > dataframe['ema_200_1h']) &
                 (dataframe['sma_200'] > dataframe['sma_200'].shift(50)) &
                 (dataframe['safe_dips_strict']) &
@@ -645,18 +625,6 @@ class abbas8(IStrategy):
             ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 14")
         dataframe.loc[
             (
-                (dataframe['rsi_1h'] < self.bzv7_buy_rsi_1h_5.value) &
-                (dataframe['ema_26'] > dataframe['ema_12']) &
-                ((dataframe['ema_26'] - dataframe['ema_12']) > (dataframe['open'] * self.bzv7_buy_macd_2.value)) &
-                ((dataframe['ema_26'].shift() - dataframe['ema_12'].shift()) > (dataframe['open']/100)) &
-                (dataframe['close'] < (dataframe['bb_lowerband'])) &
-                (dataframe['volume_mean_slow'] > dataframe['volume_mean_slow'].shift(48) * self.bzv7_buy_volume_pump_1.value) &
-                (dataframe['volume_mean_slow'] * self.bzv7_buy_volume_pump_1.value < dataframe['volume_mean_slow'].shift(48)) &
-                (dataframe['volume'] < (dataframe['volume'].shift() * self.bzv7_buy_volume_drop_1.value))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 16")
-        dataframe.loc[
-            (
                 (dataframe['rsi_1h'] < self.bzv7_buy_rsi_1h_2.value) &
                 (dataframe['ema_26'] > dataframe['ema_12']) &
                 ((dataframe['ema_26'] - dataframe['ema_12']) > (dataframe['open'] * self.bzv7_buy_macd_1.value)) &
@@ -666,15 +634,6 @@ class abbas8(IStrategy):
                 (dataframe['volume_mean_slow'] * self.bzv7_buy_volume_pump_1.value < dataframe['volume_mean_slow'].shift(48))
             ),
             ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 17")
-        dataframe.loc[
-            (
-                (dataframe['rsi_1h'] < self.bzv7_buy_rsi_1h_3.value) &
-                (dataframe['rsi'] < self.bzv7_buy_rsi_1.value) &
-                (dataframe['volume'] < (dataframe['volume'].shift() * self.bzv7_buy_volume_drop_1.value)) &
-                (dataframe['volume_mean_slow'] > dataframe['volume_mean_slow'].shift(48) * self.bzv7_buy_volume_pump_1.value) &
-                (dataframe['volume_mean_slow'] * self.bzv7_buy_volume_pump_1.value < dataframe['volume_mean_slow'].shift(48))
-            ),
-            ["enter_long", "enter_tag"]] = (1, "BCMBİGZ 18")
         dataframe.loc[
             (
                 (dataframe['rsi_1h'] < self.bzv7_buy_rsi_1h_4.value) &
